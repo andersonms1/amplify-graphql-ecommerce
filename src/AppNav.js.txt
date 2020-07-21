@@ -1,0 +1,182 @@
+// Not showing icon (only when minimized on the hamburguer menu)
+// Not possible to add search bar?
+// When a item is selected and i try to dissmiss clicking in any place of screen is not hiding
+
+import * as React from "react";
+import { useStyletron } from "baseui";
+import { StyledLink } from "baseui/link";
+import { Button } from "baseui/button";
+import { Layer } from "baseui/layer";
+import { Avatar } from "baseui/avatar";
+import { StatefulTooltip } from "baseui/tooltip";
+import {
+  ChevronDown,
+  Delete,
+  Overflow as UserIcon,
+  Upload as Icon,
+} from "baseui/icon";
+import { Unstable_AppNavBar as AppNavBar, POSITION } from "baseui/app-nav-bar";
+function renderItem(item) {
+  return item.label;
+}
+const MAIN_NAV = [
+  {
+    icon: Icon,
+    item: { label: "Administrativo" },
+    mapItemToNode: renderItem,
+    mapItemToString: renderItem,
+    nav: [
+      {
+        icon: Icon,
+        item: { label: "Funcionários" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+      {
+        icon: Icon,
+        item: { label: "Categorias" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+      {
+        icon: Icon,
+        item: { label: "Produtos" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+      {
+        icon: Icon,
+        item: { label: "Relatórios" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+    ],
+  },
+  {
+    icon: Icon,
+    item: { label: "Feminino" },
+    mapItemToNode: renderItem,
+    mapItemToString: renderItem,
+  },
+  {
+    icon: ChevronDown,
+    item: { label: "Masculino" },
+    mapItemToNode: renderItem,
+    mapItemToString: renderItem,
+    navExitIcon: Delete,
+    navPosition: { desktop: POSITION.horizontal },
+    nav: [
+      {
+        icon: Icon,
+        item: { label: "Secondary menu1" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+      {
+        icon: Icon,
+        item: { label: "Secondary menu2" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+      {
+        icon: Icon,
+        item: { label: "Secondary menu3" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+      {
+        icon: Icon,
+        item: { label: "Secondary menu4" },
+        mapItemToNode: renderItem,
+        mapItemToString: renderItem,
+      },
+    ],
+  },
+];
+const USER_NAV = [
+  {
+    icon: UserIcon,
+    item: { label: "Histórico de compras" },
+    mapItemToNode: renderItem,
+    mapItemToString: renderItem,
+  },
+  {
+    icon: UserIcon,
+    item: { label: "Carrinho" },
+    mapItemToNode: renderItem,
+    mapItemToString: renderItem,
+  },
+  {
+    icon: UserIcon,
+    item: { label: "Sair" },
+    mapItemToNode: renderItem,
+    mapItemToString: renderItem,
+  },
+];
+function isActive(arr, item, activeItem) {
+  let active = false;
+  for (let i = 0; i < arr.length; i++) {
+    const elm = arr[i];
+    if (elm === item) {
+      if (item === activeItem) return true;
+      return isActive((item && item.nav) || [], activeItem, activeItem);
+    } else if (elm.nav) {
+      active = isActive(elm.nav || [], item, activeItem);
+    }
+  }
+  return active;
+}
+export default () => {
+  const [css] = useStyletron();
+  const [isNavBarVisible, setIsNavBarVisible] = React.useState(true);
+  const [activeNavItem, setActiveNavItem] = React.useState();
+  const containerStyles = css({
+    boxSizing: "border-box",
+    width: "100vw",
+    position: "fixed",
+    top: "0",
+    left: "0",
+  });
+  const appDisplayName = (
+    <StyledLink
+      $style={{
+        textDecoration: "none",
+        color: "inherit",
+        ":hover": { color: "inherit" },
+        ":visited": { color: "inherit" },
+      }}
+      href={"#"}
+    >
+      Miranda Ecommerce
+    </StyledLink>
+  );
+  return (
+    <React.Fragment>
+      {isNavBarVisible ? (
+        <Layer>
+          <div className={containerStyles}>
+            <AppNavBar
+              appDisplayName={appDisplayName}
+              mainNav={MAIN_NAV}
+              isNavItemActive={({ item }) => {
+                return (
+                  item === activeNavItem ||
+                  isActive(MAIN_NAV, item, activeNavItem)
+                );
+              }}
+              onNavItemSelect={({ item }) => {
+                if (item === activeNavItem) return;
+
+                setActiveNavItem(item);
+              }}
+              userNav={USER_NAV}
+              username="Anderson Miranda"
+              usernameSubtitle="Bem vindo, ao Miranda Ecommerce. Site vitrine de funcionalidades"
+              userImgUrl=""
+            />
+          </div>
+        </Layer>
+      ) : null}
+    </React.Fragment>
+  );
+};
