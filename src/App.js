@@ -1,7 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Home } from "./pages";
-import { render } from "@testing-library/react";
 
 function App() {
   function render() {
