@@ -1,4 +1,5 @@
-import ProductNew from "./Products/JustArrived";
+import { JustArrived, Details } from "./Products";
+
 import { Home } from "./Home/Home";
 
-export { Home, ProductNew };
+export { Home, JustArrived, Details };

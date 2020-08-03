@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { Tabs, Tab } from "baseui/tabs";
 
 import { linkProps, StyledIcon } from "./index";
-import { ProductNew } from "../index";
+import { ProductNew, JustArrived } from "../index";
 
 const options = {
   options: [
@@ -87,7 +87,7 @@ function Home() {
         activeKey={activeKey}
       >
         <Tab title="NOVIDADES">
-          <ProductNew />
+          <JustArrived />
         </Tab>
         <Tab title="MASCULINO">
           <div>Anderson</div>

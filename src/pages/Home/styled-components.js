@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled, { css as scss } from "styled-components";
 
 /*  Props */
 
@@ -9,17 +9,24 @@ export const linkProps = {
   },
 };
 
+export const priceButtonStyles = {
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+};
+
 /*  Styles */
 
 export const StyledIcon = styled.div`
-  ${(props) => css`
+  ${(props) => scss`
     color: ${props.theme.colors.primary};
     fontsize: ${props.theme.sizing.scale800};
   `}
 `;
 
 export const StyledButtonIcon = styled(StyledIcon)`
-  ${(props) => css`
+  ${(props) => scss`
     color: ${props.theme.colors.primaryB};
     fontsize: ${props.theme.sizing.scale800};
   `}
@@ -62,4 +69,8 @@ export const DATA = [
   {
     id: 8,
   },
+];
+
+export const CARD_TYPES = [
+  { small: "SMALL", medium: "MEDIUM", large: "LARGE" },
 ];

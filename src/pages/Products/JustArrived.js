@@ -1,6 +1,6 @@
 // https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
 // https://translate.googleusercontent.com/translate_c?depth=1&hl=pt-BR&prev=search&pto=aue&rurl=translate.google.com&sl=en&sp=nmt4&u=https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react&usg=ALkJrhgmaHvg4pWb56lWDlQaL14Ba0SPOA
-import React, { Fragment, useLayoutEffect, useState } from "react";
+import React from "react";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import {
   Card,
@@ -9,94 +9,64 @@ import {
   StyledThumbnail,
   StyledHeaderImage,
 } from "baseui/card";
-import { Button } from "baseui/button";
 import { useStyletron } from "baseui";
-import { AspectRatioBox, AspectRatioBoxBody } from "baseui/aspect-ratio-box";
 import { Link } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { Paragraph4, Paragraph3 } from "baseui/typography";
 
-import { StyledIcon, StyledButtonIcon, DATA } from "../Home";
+import { StyledIcon, StyledButtonIcon, DATA, CARD_TYPES } from "../Home";
 import { PHOTO_AHMED, PHOTO_HILL } from "../../assets/imgs";
-import { ASPECT_RATIO } from "../../assets/util";
 
 function ProductNew() {
   const [css, theme] = useStyletron();
   const { breakpoints } = theme;
 
-  const [size, setSize] = useState([0, 0]);
-  const [isScreenSmall, setIsScreenSmall] = useState(false);
-  const [isScreenMedium, setIsScreenMedium] = useState(false);
-  const [isScreenBig, setIsScreenBig] = useState(false);
-
-  useLayoutEffect(() => {
-    function updateSize() {
-      setSize([window.innerWidth, window.innerHeight]);
-    }
-    window.addEventListener("resize", updateSize);
-    updateSize();
-  }, []);
-
-  // const isBigScreen = useMediaQuery({ query: '(min-device-width: 1824px)' })
-  // const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' })
-  // const isTabletOrMobileDevice = useMediaQuery({
-  //   query: '(max-device-width: 1224px)'
-  // })
   const priceButtonStyles = css({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   });
-  const renderGrid = DATA.map((item, index) => {
-    return (
-      <FlexGridItem key={item.id}>
-        <AspectRatioBox aspectRatio={ASPECT_RATIO}>
-          <AspectRatioBoxBody>
-            <div>{renderCard()}</div>
-          </AspectRatioBoxBody>
-        </AspectRatioBox>
-      </FlexGridItem>
-    );
-  });
 
-  function renderCard() {
+  const card_config = {
+    small: { height: "auto", width: "40vw" },
+    medium: { height: "auto", width: "25vw" },
+    large: { height: "auto", width: "20vw" },
+  };
+
+  function renderGrid(cardSize, style) {
+    return DATA.map((item, index) => {
+      return (
+        <FlexGridItem key={item.id}>{renderCard(cardSize, style)}</FlexGridItem>
+      );
+    });
+  }
+
+  function renderCard(cardSize, style) {
     return (
       <Card
-        headerImage={PHOTO_AHMED}
+        // headerImage={}
         overrides={{
-          Root: { style: { maxWidth: "15vw", height: "auto" } },
-          HeaderImage: { style: { maxWidth: "100%", height: "auto" } },
+          // maxWidth: "15vw"
+          Root: { style },
+          // HeaderImage: {
+          //   style: { maxWidth: "100%", height: "auto" },
+          // },
         }}
-        title=""
       >
-        {/* <Link to="/items/10">
-          <StyledHeaderImage
-            height="200vh"
-            src={PHOTO_AHMED}
-          ></StyledHeaderImage>
-        </Link> */}
-        {/* <div>
-          <img src={PHOTO_AHMED} width="100%" />
-        </div> */}
+        <Link to="/products/10">
+          <StyledHeaderImage src={PHOTO_AHMED}></StyledHeaderImage>
+        </Link>
         <StyledBody>
-          PIJAMA MANGA CURTA ESTAMPA URSO COM TAPA OLHO CALÇA XADREZ EM
-          VISCOLYCRA
+          <Paragraph4>
+            We ignite opportunity by setting the world in motion
+          </Paragraph4>
           <div className={priceButtonStyles}>
-            R$ 19,99
-            <Button
-              startEnhancer={() => (
-                <i className="material-icons">
-                  <StyledButtonIcon theme={theme}>loyalty</StyledButtonIcon>
-                </i>
-              )}
-            />
-            <Button
-              startEnhancer={() => (
-                <i className="material-icons">
-                  <StyledButtonIcon theme={theme}>visibility</StyledButtonIcon>
-                </i>
-              )}
-            />
+            <Paragraph4>
+              <b>R$19,99</b>
+            </Paragraph4>
+            <i className="material-icons">loyalty</i>
+            <i className="material-icons">visibility</i>
           </div>
         </StyledBody>
       </Card>
@@ -107,17 +77,41 @@ function ProductNew() {
     <div>
       {useMediaQuery({
         query: `(max-width: ${breakpoints.small}px)`,
-      }) && <p>Small Screen</p>}
+      }) && (
+        <FlexGrid
+          flexGridColumnCount={2}
+          flexGridColumnGap="scale100"
+          flexGridRowGap="scale100"
+        >
+          {renderGrid(CARD_TYPES.small, card_config.small)}
+        </FlexGrid>
+      )}
 
       {useMediaQuery({
-        query: `(max-width: ${breakpoints.large - 1}px) and (min-width: ${
-          breakpoints.small + 1
-        }px)`,
-      }) && <p>Medium</p>}
+        query: `(min-width: ${breakpoints.small + 1}px) and (max-width: ${
+          breakpoints.large - 1
+        }px) `,
+      }) && (
+        <FlexGrid
+          flexGridColumnCount={3}
+          flexGridColumnGap="scale200"
+          flexGridRowGap="scale200"
+        >
+          {renderGrid(CARD_TYPES.medium, card_config.medium)}
+        </FlexGrid>
+      )}
 
       {useMediaQuery({
         query: `(min-width: ${breakpoints.large}px)`,
-      }) && <p>Large Screen</p>}
+      }) && (
+        <FlexGrid
+          flexGridColumnCount={4}
+          flexGridColumnGap="scale300"
+          flexGridRowGap="scale300"
+        >
+          {renderGrid(CARD_TYPES.large, card_config.large)}
+        </FlexGrid>
+      )}
     </div>
   );
 }
