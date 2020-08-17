@@ -1,4 +1,4 @@
 import Details from "./Details";
-import JustArrived from "./JustArrived";
-
-export { Details, JustArrived };
+import Products from "./Products";
+import CreateUpdate from "./CreateUpdate";
+export { Details, Products, CreateUpdate };

@@ -12,3 +12,7 @@ Todo:
 ☐ Validate cart description size.
 ☐ Test on thays smartphone grid layout
 ☐ Remember: revise responsivity. And if some one if a computer minimize the size of small smartphone, it is good?
+☐ Reminder why do not use react-caousel-responsive: the css is overitten
+☐ [QUERYES] history cart relationship. Ex. Querie for unpaid itens and itens purchased by date
+☐ Deixando segurança para o final. Lembrar de usar o directory @auth
+☐ Reservation: User also need to know when his markations  where done, and if needed confirmed.

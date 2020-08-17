@@ -1,0 +1,39 @@
+type Product @model 
+@key(name: "byCategory", fields: ["category", "id"])
+{
+  id: ID!
+  title: String!
+  description: String!
+  price: Price
+  avaliation: Float
+  category: String
+  amount: Int!
+  photos: [S3Object]
+}
+
+type S3Object {
+  bucket: String!
+  region: String!
+  key: String!
+}
+
+type Price {
+  cents: Int
+  specie: Int!
+}
+
+type Cart @model{
+  id: ID!
+  products: [Product]
+  status: String!
+  price: Price
+  createAt: String
+  paidAt: String
+}
+
+type History @model{
+  id: ID!
+  user: String!
+  carts: [Cart] @connection
+
+}
