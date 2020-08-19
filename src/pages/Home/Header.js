@@ -138,9 +138,28 @@ function Header() {
           activeKey={activeKey}
           // fill={FILL.fixed}
         >
-          {console.log()}
-          {console.log("***")}
-          {console.log(admin)}
+          <Tab title="PRODUTOS">
+            <div onClick={() => setModal(true)}>
+              <Link to="/products/10">
+                <p>Novo produto</p>
+              </Link>
+            </div>
+          </Tab>
+          <Tab title="AGENDAMENTOS">
+            <p>Agendamentos</p>
+          </Tab>
+          <Tab title="COMPRAS">
+            <p>Compras</p>
+          </Tab>
+        </Tabs>
+      ) : (
+        <Tabs
+          onChange={({ activeKey }) => {
+            setActiveKey(activeKey);
+          }}
+          activeKey={activeKey}
+          // fill={FILL.fixed}
+        >
           <Tab title="HOME">
             <Products />
           </Tab>
@@ -155,27 +174,6 @@ function Header() {
           </Tab>
           <Tab title="PROMOÇÕES">
             <Products />
-          </Tab>
-        </Tabs>
-      ) : (
-        <Tabs
-          onChange={({ activeKey }) => {
-            setActiveKey(activeKey);
-          }}
-          activeKey={activeKey}
-          // fill={FILL.fixed}
-        >
-          <Tab title="PRODUTOS">
-            <div onClick={() => setModal(true)}>
-              <p>Novo produto</p>
-              <CreateUpdate modal={modal}></CreateUpdate>
-            </div>
-          </Tab>
-          <Tab title="AGENDAMENTOS">
-            <p>Agendamentos</p>
-          </Tab>
-          <Tab title="COMPRAS">
-            <p>Compras</p>
           </Tab>
         </Tabs>
       )}

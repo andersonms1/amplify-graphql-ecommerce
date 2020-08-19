@@ -45,18 +45,6 @@ function Products() {
     });
   }
 
-  const addRemoveCart = () => (
-    <StatefulPopover
-      content={<Paragraph3 padding="scale500">hello world</Paragraph3>}
-      accessibilityType={"tooltip"}
-      triggerType={"click"}
-      returnFocus
-      autoFocus
-    >
-      <i className="material-icons">loyalty</i>
-    </StatefulPopover>
-  );
-
   function Wrapper(props) {
     const [css, theme] = useStyletron();
     const { offset, color, children, forwardedRef } = props;
