@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Breadcrumbs } from "baseui/breadcrumbs";
-import { StatefulList } from "baseui/dnd-list";
 // import {StyledLink as Link} from 'baseui/link';
 import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
@@ -22,6 +21,9 @@ import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
 import { Combobox } from "baseui/combobox";
 import { FileUploader } from "baseui/file-uploader";
+import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
+import { v4 as uuidv4 } from "uuid";
+import _ from "lodash";
 
 import { PHOTO_AHMED, PHOTO_HILL } from "../../assets/imgs";
 
@@ -30,7 +32,8 @@ function Details() {
   const [css, theme] = useStyletron();
   const [value, setValue] = React.useState("");
   const [fileLoad, setFileLoad] = React.useState(false);
-  const [file, setFile] = React.useState([]);
+  const [items, setItems] = React.useState([]);
+  const [files, setFiles] = React.useState([]);
 
   const container = css({
     display: "flex",
@@ -40,23 +43,6 @@ function Details() {
     marginRight: "20vw",
     marginLeft: "20vw",
   });
-
-  // if (!id) {
-  //   container = css({
-  //     ...container,
-  //     borderRightStyle: "dashed",
-  //     borderBottomStyle: "dashed",
-  //     borderLeftStyle: "dashed",
-  //     borderTopStyle: "dashed",
-  //   });
-  // }
-
-  // const border = css({
-  //   borderRightStyle: "dashed",
-  //   borderBottomStyle: "dashed",
-  //   borderLeftStyle: "dashed",
-  //   borderTopStyle: "dashed",
-  // });
 
   const details = css({
     display: "flex",
@@ -91,6 +77,10 @@ function Details() {
     // transitionTime: number('transitionTime', 150, {}, valuesGroupId),
     // swipeScrollTolerance: number('swipeScrollTolerance', 5, {}, valuesGroupId),
   });
+
+  const compareFiles = (string) => {
+    // file.map()
+  };
   return (
     <div style={{}}>
       <Breadcrumbs>
@@ -121,48 +111,85 @@ function Details() {
           </Carousel>
         )) || (
           <div style={{ width: "25vw" }}>
-            <StatefulList
-              removable
-              removableByMove
-              initialState={{
-                items: file,
-              }}
-              overrides={{
-                Root: {
-                  style: {
-                    maxWidth: "25vw",
-                  },
-                },
-              }}
-              // onChange={({ oldIndex, newIndex }) =>
-              //   setItems(
-              //     newIndex === -1
-              //       ? arrayRemove(items, oldIndex)
-              //       : arrayMove(items, oldIndex, newIndex)
-              //   )
-              // }
-              // items={["a", "c", "v"]}
-            />
-
-            {/* <Button className={button} endEnhancer={() => <Upload size={24} />}>
-              Adicionar fotos
-            </Button> */}
-
+            <FormControl label="Fotos">
+              <List
+                items={items}
+                removable
+                removableByMove
+                onChange={({ oldIndex, newIndex }) =>
+                  setItems(
+                    newIndex === -1
+                      ? arrayRemove(items, oldIndex)
+                      : arrayMove(items, oldIndex, newIndex)
+                  )
+                }
+              />
+            </FormControl>
             <FileUploader
               onCancel={null}
+              aria-describedby="Testee?"
+              name="Name"
               onDrop={(acceptedFiles, rejectedFiles) => {
                 // handle file upload...
                 // Make req
                 try {
-                  console.log();
-                  console.log("***");
                   setFileLoad(true);
+                  const arr = acceptedFiles.map((i) => i.name);
                   console.log(acceptedFiles);
+                  // console.log();
+                  // console.log(
+                  //   "%c ",
+                  //   "background: blue; background-color: yellow; width: 100%"
+                  // );
+                  // console.log(
+                  //   `%c arr: ${arr}`,
+                  //   "color: black; font-weight: bold; height: 2rem;"
+                  // );
+                  // const filter = file.filter(
+                  //   (f) =>
+                  //     f != arr.map((a) => a) ||
+                  //     (alert("Arquivos nomes diferentes") && false)
+                  // );
+                  // console.log(
+                  //   `%c filtro: ${filter}`,
+                  //   "color: green; font-weight: bold; heigh: 2rem;"
+                  // );
+                  // console.log(
+                  //   `%c file: ${file}`,
+                  //   "color: purple; font-weight: bold; height: 2rem;"
+                  // );
+                  // if (file.length) {
+                  //   console.log(
+                  //     `%c condicional ${true}. file: ${[...file]}. filter: ${[
+                  //       ...filter,
+                  //     ]}`,
+                  //     "color: blue; font-weight: bold; height: 2rem;"
+                  //   );
+                  //   setFile([...file, ...filter]);
+                  // } else {
+                  //   console.log(
+                  //     `%c condicional ${false}. file: ${[...file]}. filter: ${[
+                  //       ...filter,
+                  //     ]}`,
+                  //     "color: red; font-weight: bold; height: 2rem;"
+                  //   );
+
+                  //   setFile([...arr]);
+                  // }
+                  // _.difference([2, 1], [2, 3]);
+
+                  if (items.length) {
+                    setItems(_.union(arr, items));
+                    // setFiles(files.filter(f => f.name === ))
+                  } else {
+                    setItems(arr);
+                    setFiles({ acceptedFiles });
+                  }
                 } catch (e) {
                   console.log(e);
                 }
+
                 setFileLoad(false);
-                setFile(["1", "2"]);
               }}
               progressMessage={fileLoad ? `Uploading... hang tight.` : ""}
             />

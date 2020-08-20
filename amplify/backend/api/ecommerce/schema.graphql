@@ -15,6 +15,7 @@ type S3Object {
   bucket: String!
   region: String!
   key: String!
+  position: String!
 }
 
 type Price {
