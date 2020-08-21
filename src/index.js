@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
+import Amplify from "@aws-amplify/core";
+import amplify from "./aws-exports";
 // import AppNav from "./AppNav";
 
 import { BaseProvider, LightTheme } from "baseui";
@@ -8,6 +10,7 @@ import { Provider as StyletronProvider } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
 
 const engine = new Styletron();
+Amplify.configure(amplify);
 
 ReactDOM.render(
   <StyletronProvider value={engine}>

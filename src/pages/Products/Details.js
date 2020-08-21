@@ -2,16 +2,10 @@ import React from "react";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link,
-  useParams,
-} from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Breadcrumbs } from "baseui/breadcrumbs";
-// import {StyledLink as Link} from 'baseui/link';
+import { StyledLink } from "baseui/link";
 import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
@@ -24,16 +18,19 @@ import { FileUploader } from "baseui/file-uploader";
 import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
+import config from "../../aws-exports";
 
 import { PHOTO_AHMED, PHOTO_HILL } from "../../assets/imgs";
+const {
+  aws_user_files_s3_bucket_region: region,
+  aws_user_files_s3_bucket: bucket,
+} = config;
 
 function Details() {
   let { id } = useParams();
   const [css, theme] = useStyletron();
   const [value, setValue] = React.useState("");
-  const [fileLoad, setFileLoad] = React.useState(false);
   const [items, setItems] = React.useState([]);
-  const [files, setFiles] = React.useState([]);
 
   const container = css({
     display: "flex",
@@ -51,12 +48,7 @@ function Details() {
   });
 
   const button = css({
-    // // display: "flex",
-    // flexDirection: "row",
-    // alignItems: "center",
-    // justifyContent: "space-between",
     width: "25vw",
-    // marginBottom: `${theme.sizing.scale500}`,
   });
 
   const getConfigurableProps = () => ({
@@ -78,9 +70,18 @@ function Details() {
     // swipeScrollTolerance: number('swipeScrollTolerance', 5, {}, valuesGroupId),
   });
 
-  const compareFiles = (string) => {
-    // file.map()
+  const save = async () => {
+    items.map((file) => {
+      try {
+        const extension = file.name.split(".")[1];
+        const name = file.name.split(".")[0];
+        const key = `images/${uuidv4()}${name}.${extension}`;
+        const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
+        console.log(url);
+      } catch (e) {}
+    });
   };
+
   return (
     <div style={{}}>
       <Breadcrumbs>
@@ -113,7 +114,7 @@ function Details() {
           <div style={{ width: "25vw" }}>
             <FormControl label="Fotos">
               <List
-                items={items}
+                items={items.map((i) => i.name)}
                 removable
                 removableByMove
                 onChange={({ oldIndex, newIndex }) =>
@@ -130,68 +131,19 @@ function Details() {
               aria-describedby="Testee?"
               name="Name"
               onDrop={(acceptedFiles, rejectedFiles) => {
-                // handle file upload...
-                // Make req
                 try {
-                  setFileLoad(true);
-                  const arr = acceptedFiles.map((i) => i.name);
-                  console.log(acceptedFiles);
-                  // console.log();
-                  // console.log(
-                  //   "%c ",
-                  //   "background: blue; background-color: yellow; width: 100%"
-                  // );
-                  // console.log(
-                  //   `%c arr: ${arr}`,
-                  //   "color: black; font-weight: bold; height: 2rem;"
-                  // );
-                  // const filter = file.filter(
-                  //   (f) =>
-                  //     f != arr.map((a) => a) ||
-                  //     (alert("Arquivos nomes diferentes") && false)
-                  // );
-                  // console.log(
-                  //   `%c filtro: ${filter}`,
-                  //   "color: green; font-weight: bold; heigh: 2rem;"
-                  // );
-                  // console.log(
-                  //   `%c file: ${file}`,
-                  //   "color: purple; font-weight: bold; height: 2rem;"
-                  // );
-                  // if (file.length) {
-                  //   console.log(
-                  //     `%c condicional ${true}. file: ${[...file]}. filter: ${[
-                  //       ...filter,
-                  //     ]}`,
-                  //     "color: blue; font-weight: bold; height: 2rem;"
-                  //   );
-                  //   setFile([...file, ...filter]);
-                  // } else {
-                  //   console.log(
-                  //     `%c condicional ${false}. file: ${[...file]}. filter: ${[
-                  //       ...filter,
-                  //     ]}`,
-                  //     "color: red; font-weight: bold; height: 2rem;"
-                  //   );
-
-                  //   setFile([...arr]);
-                  // }
-                  // _.difference([2, 1], [2, 3]);
+                  const arr = acceptedFiles.map((i) => i);
 
                   if (items.length) {
-                    setItems(_.union(arr, items));
-                    // setFiles(files.filter(f => f.name === ))
+                    setItems(_.union(items, arr));
                   } else {
                     setItems(arr);
-                    setFiles({ acceptedFiles });
                   }
                 } catch (e) {
                   console.log(e);
                 }
-
-                setFileLoad(false);
               }}
-              progressMessage={fileLoad ? `Uploading... hang tight.` : ""}
+              progressMessage={false ? `Uploading... hang tight.` : ""}
             />
           </div>
         )}
@@ -271,6 +223,7 @@ function Details() {
                   <Button
                     className={button}
                     endEnhancer={() => <Upload size={24} />}
+                    onClick={save}
                   >
                     Publicar produto
                   </Button>
