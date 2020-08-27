@@ -21,6 +21,7 @@ export const createProduct = /* GraphQL */ `
         bucket
         region
         key
+        position
       }
       createdAt
       updatedAt
@@ -47,6 +48,7 @@ export const updateProduct = /* GraphQL */ `
         bucket
         region
         key
+        position
       }
       createdAt
       updatedAt
@@ -73,6 +75,7 @@ export const deleteProduct = /* GraphQL */ `
         bucket
         region
         key
+        position
       }
       createdAt
       updatedAt
@@ -101,6 +104,7 @@ export const createCart = /* GraphQL */ `
           bucket
           region
           key
+          position
         }
         createdAt
         updatedAt
@@ -139,6 +143,7 @@ export const updateCart = /* GraphQL */ `
           bucket
           region
           key
+          position
         }
         createdAt
         updatedAt
@@ -177,6 +182,7 @@ export const deleteCart = /* GraphQL */ `
           bucket
           region
           key
+          position
         }
         createdAt
         updatedAt

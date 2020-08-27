@@ -182,6 +182,9 @@ amplify console
 
 ### Configure a permissão do S3
 
+* https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-2
+
+
 ![](docs/20200821221045.png)
 ![](docs/20200821221123.png)
 ![](docs/20200821221138.png)

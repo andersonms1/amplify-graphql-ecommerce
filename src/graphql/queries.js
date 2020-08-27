@@ -18,6 +18,7 @@ export const getProduct = /* GraphQL */ `
         bucket
         region
         key
+        position
       }
       createdAt
       updatedAt
@@ -46,6 +47,7 @@ export const listProducts = /* GraphQL */ `
           bucket
           region
           key
+          position
         }
         createdAt
         updatedAt
@@ -73,6 +75,7 @@ export const getCart = /* GraphQL */ `
           bucket
           region
           key
+          position
         }
         createdAt
         updatedAt

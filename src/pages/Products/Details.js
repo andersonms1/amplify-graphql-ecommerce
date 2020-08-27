@@ -5,22 +5,26 @@ import { Block } from "baseui/block";
 import { Link, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import { Breadcrumbs } from "baseui/breadcrumbs";
-import { StyledLink } from "baseui/link";
 import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import { Upload, Delete } from "baseui/icon";
+import { Combobox } from "baseui/combobox";
 import { Input } from "baseui/input";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
-import { Combobox } from "baseui/combobox";
 import { FileUploader } from "baseui/file-uploader";
 import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
 import { v4 as uuidv4 } from "uuid";
 import _ from "lodash";
 import config from "../../aws-exports";
+import Auth from "@aws-amplify/auth";
+import Storage from "@aws-amplify/storage";
+import API, { graphqlOperation } from "@aws-amplify/api";
+import { createProduct } from "../../graphql/mutations";
 
 import { PHOTO_AHMED, PHOTO_HILL } from "../../assets/imgs";
+
 const {
   aws_user_files_s3_bucket_region: region,
   aws_user_files_s3_bucket: bucket,
@@ -29,8 +33,10 @@ const {
 function Details() {
   let { id } = useParams();
   const [css, theme] = useStyletron();
-  const [value, setValue] = React.useState("");
   const [items, setItems] = React.useState([]);
+  const [title, setTitle] = React.useState("");
+  const [description, setDescription] = React.useState("");
+  const [category, setCategory] = React.useState("");
 
   const container = css({
     display: "flex",
@@ -70,16 +76,53 @@ function Details() {
     // swipeScrollTolerance: number('swipeScrollTolerance', 5, {}, valuesGroupId),
   });
 
-  const save = async () => {
-    items.map((file) => {
-      try {
-        const extension = file.name.split(".")[1];
-        const name = file.name.split(".")[0];
-        const key = `images/${uuidv4()}${name}.${extension}`;
-        const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
-        console.log(url);
-      } catch (e) {}
-    });
+  const save = async (files) => {
+    console.log(
+      `title: ${title}, description: ${description}, section: ${category}, `
+    );
+
+    try {
+      const res = await API.graphql(
+        graphqlOperation(createProduct, {
+          input: { title, description, category, amount: 10 },
+        })
+      );
+
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+
+    // files.map(async (file) => {
+    //   try {
+    //     const extension = file.name.split(".")[1];
+    //     const name = file.name.split(".")[0];
+    //     const key = `images/${uuidv4()}${name}.${extension}`;
+    //     const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
+
+    //     console.log(`%c ${file}`, "color: red; font-weight: bold");
+    //     console.table(file);
+
+    //     await Storage.put(
+    //       key,
+    //       file,
+    //       {
+    //         level: "public",
+    //         contentType: file.type,
+    //       },
+    //       {
+    //         progressCallback(progress) {
+    //           console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
+    //         },
+    //       }
+    //     );
+
+    //     const image = await Storage.get(key, { level: "public" });
+    //     console.log(`%c ${image}`, "color: brown; font-weight: bold");
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // });
   };
 
   return (
@@ -117,13 +160,13 @@ function Details() {
                 items={items.map((i) => i.name)}
                 removable
                 removableByMove
-                onChange={({ oldIndex, newIndex }) =>
+                onChange={({ oldIndex, newIndex }) => {
                   setItems(
                     newIndex === -1
                       ? arrayRemove(items, oldIndex)
                       : arrayMove(items, oldIndex, newIndex)
-                  )
-                }
+                  );
+                }}
               />
             </FormControl>
             <FileUploader
@@ -132,8 +175,14 @@ function Details() {
               name="Name"
               onDrop={(acceptedFiles, rejectedFiles) => {
                 try {
-                  const arr = acceptedFiles.map((i) => i);
-
+                  const arr = acceptedFiles.map((f, index) => {
+                    // console.log(index);
+                    // f.position = index;
+                    //not need to set position
+                    // by some witchcraft is set automatic
+                    return f;
+                  });
+                  console.log(arr);
                   if (items.length) {
                     setItems(_.union(items, arr));
                   } else {
@@ -154,7 +203,7 @@ function Details() {
               <Paragraph1 width="25vw" marginBottom="scale500">
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                enim ad minim veniam, quis nostrud exercitation ullamco laborisi
                 nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
                 in reprehenderit in voluptate velit esse cillum dolore eu fugiat
                 nulla pariatur. Excepteur sint occaecat cupidatat non proident,
@@ -189,8 +238,8 @@ function Details() {
               <FormControl label="Título">
                 <Input
                   id="input"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
                   placeholder=""
                   clearOnEscape
                 />
@@ -198,14 +247,16 @@ function Details() {
               <FormControl label="Descrição" caption="Textarea caption">
                 <Textarea
                   id="textarea-id"
-                  value={value}
-                  onChange={(event) => setValue(event.currentTarget.value)}
+                  value={description}
+                  onChange={(event) =>
+                    setDescription(event.currentTarget.value)
+                  }
                 />
               </FormControl>
-              <FormControl label="Sessão" caption="No caption">
+              <FormControl label="Sesção" caption="No caption">
                 <Combobox
-                  value={value}
-                  onChange={(nextValue) => setValue(nextValue)}
+                  value={category}
+                  onChange={(nextValue) => setCategory(nextValue)}
                   options={[
                     { label: "AliceBlue", id: "#F0F8FF" },
                     { label: "AntiqueWhite", id: "#FAEBD7" },
@@ -223,7 +274,7 @@ function Details() {
                   <Button
                     className={button}
                     endEnhancer={() => <Upload size={24} />}
-                    onClick={save}
+                    onClick={() => save(items)}
                   >
                     Publicar produto
                   </Button>
@@ -241,7 +292,6 @@ function Details() {
           )}
         </div>
       </div>
-      {/* <p>Anderson</p> */}
     </div>
   );
 }
