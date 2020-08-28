@@ -41,6 +41,11 @@ function Details() {
   const [description, setDescription] = React.useState("");
   const [category, setCategory] = React.useState("");
 
+  const [itemsCaption, setItemsCaption] = React.useState("");
+  const [titleCaption, setTitleCaption] = React.useState("");
+  const [descriptionCaption, setDescriptionCaption] = React.useState("");
+  const [categoryCaption, setCategoryCaption] = React.useState("");
+
   const container = css({
     display: "flex",
     flexDirection: "row",
@@ -79,33 +84,29 @@ function Details() {
     // swipeScrollTolerance: number('swipeScrollTolerance', 5, {}, valuesGroupId),
   });
 
+  const data = {
+    title,
+    description,
+    category,
+    amount: 10,
+    price: { specie: 10, cents: 10 },
+    photos: [
+      {
+        bucket: "asdfad",
+        region: "dafdfa",
+        key: "asdfasdf",
+        position: "adfadf",
+      },
+    ],
+  };
   const save = async (files) => {
     console.log(
       `title: ${title}, description: ${description}, section: ${category}, `
     );
 
-    const data = { title };
-
-    const { error } = schema.validate(
-      {
-        title,
-        description,
-        category,
-        amount: 10,
-        price: { specie: "111111111", cents: 9999999999999 },
-        photos: [
-          {
-            bucket: "asdfad",
-            region: "dafdfa",
-            key: "asdfasdf",
-            position: "adfadf",
-          },
-        ],
-      },
-      {
-        abortEarly: false,
-      }
-    );
+    const { error } = schema.validate(data, {
+      abortEarly: false,
+    });
 
     console.log(error);
 
@@ -153,6 +154,32 @@ function Details() {
     // });
   };
 
+  const handleInputs = (e, field) => {
+    setTitle(e.target.value);
+    const { error, value } = schema.validate(
+      { title, ..._.omit(data, "title") },
+      {
+        abortEarly: false,
+      }
+    );
+    console.log(schema.validate(_.omit(data, "title")));
+    console.log(error);
+    console.log(value);
+
+    var caption;
+    if (error) {
+      caption = error;
+    } else {
+      caption = null;
+    }
+
+    console.log(caption);
+
+    switch (field) {
+      case "title":
+        setTitleCaption(`${error.message}`);
+    }
+  };
   return (
     <div style={{}}>
       <Breadcrumbs>
@@ -263,11 +290,11 @@ function Details() {
             </>
           )) || (
             <div style={{ width: "25vw" }}>
-              <FormControl label="Título">
+              <FormControl label="Título" caption={`${titleCaption}`}>
                 <Input
                   id="input"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={(e) => handleInputs(e, "title")}
                   placeholder=""
                   clearOnEscape
                 />

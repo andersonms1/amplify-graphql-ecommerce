@@ -13,20 +13,20 @@ const schema = Joi.object({
     "string.empty": `"Descrição" não pode ficar vazio.`,
     "string.min": `Deve possuir ao menos {#limit} caracteres`,
     "string.max": `Deve ter no máximo {#limit} caracteres`,
-    "any.required": `É um campo obrigatório`,
+    // "any.required": `É um campo obrigatório`,
   }),
   category: Joi.string().alphanum().min(3).max(46).required().messages({
     "string.base": `Deve conter detalhes do produto a ser cadastrado.'`,
     "string.empty": `"Não pode ficar vazio.`,
     "string.min": `Deve possuir ao menos {#limit} caracteres`,
     "string.max": `Deve ter no máximo {#limit} caracteres`,
-    "any.required": `É um campo obrigatório`,
+    // "any.required": `É um campo obrigatório`,
   }),
+  amount: Joi.number().positive().required(),
   price: Joi.object().keys({
     specie: Joi.number().positive(),
     cents: Joi.number().positive().max(99),
   }),
-  amount: Joi.number().positive().required(),
   photos: Joi.array().items({
     bucket: Joi.string().alphanum().required(),
     region: Joi.string().alphanum().required(),
