@@ -22,9 +22,12 @@ import Auth from "@aws-amplify/auth";
 import Storage from "@aws-amplify/storage";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { createProduct } from "../../graphql/mutations";
+// import Joi from "joi";
 
 import { PHOTO_AHMED, PHOTO_HILL } from "../../assets/imgs";
+import { schema } from "./validations";
 
+const Joi = require("joi");
 const {
   aws_user_files_s3_bucket_region: region,
   aws_user_files_s3_bucket: bucket,
@@ -81,17 +84,42 @@ function Details() {
       `title: ${title}, description: ${description}, section: ${category}, `
     );
 
-    try {
-      const res = await API.graphql(
-        graphqlOperation(createProduct, {
-          input: { title, description, category, amount: 10 },
-        })
-      );
+    const data = { title };
 
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
+    const { error } = schema.validate(
+      {
+        title,
+        description,
+        category,
+        amount: 10,
+        price: { specie: "111111111", cents: 9999999999999 },
+        photos: [
+          {
+            bucket: "asdfad",
+            region: "dafdfa",
+            key: "asdfasdf",
+            position: "adfadf",
+          },
+        ],
+      },
+      {
+        abortEarly: false,
+      }
+    );
+
+    console.log(error);
+
+    // try {
+    //   const res = await API.graphql(
+    //     graphqlOperation(createProduct, {
+    //       input: { title, description, category, amount: 10 },
+    //     })
+    //   );
+
+    //   console.log(res);
+    // } catch (e) {
+    //   console.log(e);
+    // }
 
     // files.map(async (file) => {
     //   try {
