@@ -25,9 +25,16 @@ import { createProduct } from "../../graphql/mutations";
 // import Joi from "joi";
 
 import { PHOTO_AHMED, PHOTO_HILL } from "../../assets/imgs";
-import { schema } from "./validations";
+import {
+  schema as SCHEMA,
+  title as TITLE,
+  description as DESCRIPTION,
+  category as CATEGORY,
+  amount as AMOUNT,
+  photos as PHOTOS,
+  price as PRICE,
+} from "./validations";
 
-const Joi = require("joi");
 const {
   aws_user_files_s3_bucket_region: region,
   aws_user_files_s3_bucket: bucket,
@@ -40,6 +47,7 @@ function Details() {
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [category, setCategory] = React.useState("");
+  const [photos, setPhotos] = React.useState([]);
 
   const [itemsCaption, setItemsCaption] = React.useState("");
   const [titleCaption, setTitleCaption] = React.useState("");
@@ -90,96 +98,88 @@ function Details() {
     category,
     amount: 10,
     price: { specie: 10, cents: 10 },
-    photos: [
-      {
-        bucket: "asdfad",
-        region: "dafdfa",
-        key: "asdfasdf",
-        position: "adfadf",
-      },
-    ],
+    // photos: [
+    //   {
+    //     bucket: "asdfad",
+    //     region: "dafdfa",
+    //     key: "asdfasdf",
+    //     position: "adfadf",
+    //   },
+    // ],
   };
+
+  React.useEffect(() => {
+    async function getUser() {
+      try {
+        let user = await Auth.currentAuthenticatedUser();
+        console.log(user);
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    }
+    getUser();
+  }, []);
+
   const save = async (files) => {
     console.log(
       `title: ${title}, description: ${description}, section: ${category}, `
     );
 
-    const { error } = schema.validate(data, {
+    const { error } = SCHEMA.validate(data, {
       abortEarly: false,
     });
 
-    console.log(error);
+    files.map(async (file) => {
+      try {
+        const extension = file.name.split(".")[1];
+        const name = file.name.split(".")[0];
+        const key = `images/${uuidv4()}${name}.${extension}`;
+        const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
+        let position = 0;
 
-    // try {
-    //   const res = await API.graphql(
-    //     graphqlOperation(createProduct, {
-    //       input: { title, description, category, amount: 10 },
-    //     })
-    //   );
+        console.log(`%c ${file}`, "color: red; font-weight: bold");
+        console.table(file);
 
-    //   console.log(res);
-    // } catch (e) {
-    //   console.log(e);
-    // }
+        await Storage.put(
+          key,
+          file,
+          {
+            level: "public",
+            contentType: file.type,
+          },
+          {
+            progressCallback(progress) {
+              console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
+            },
+          }
+        );
 
-    // files.map(async (file) => {
-    //   try {
-    //     const extension = file.name.split(".")[1];
-    //     const name = file.name.split(".")[0];
-    //     const key = `images/${uuidv4()}${name}.${extension}`;
-    //     const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
-
-    //     console.log(`%c ${file}`, "color: red; font-weight: bold");
-    //     console.table(file);
-
-    //     await Storage.put(
-    //       key,
-    //       file,
-    //       {
-    //         level: "public",
-    //         contentType: file.type,
-    //       },
-    //       {
-    //         progressCallback(progress) {
-    //           console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
-    //         },
-    //       }
-    //     );
-
-    //     const image = await Storage.get(key, { level: "public" });
-    //     console.log(`%c ${image}`, "color: brown; font-weight: bold");
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // });
-  };
-
-  const handleInputs = (e, field) => {
-    setTitle(e.target.value);
-    const { error, value } = schema.validate(
-      { title, ..._.omit(data, "title") },
-      {
-        abortEarly: false,
+        setPhotos(photos.push({ bucket, region, key, position }));
+        position++;
+        const image = await Storage.get(key, { level: "public" });
+        console.log(photos);
+        console.log(`%c ${image}`, "color: brown; font-weight: bold");
+      } catch (e) {
+        console.log(e);
       }
-    );
-    console.log(schema.validate(_.omit(data, "title")));
-    console.log(error);
-    console.log(value);
+    });
 
-    var caption;
-    if (error) {
-      caption = error;
-    } else {
-      caption = null;
-    }
-
-    console.log(caption);
-
-    switch (field) {
-      case "title":
-        setTitleCaption(`${error.message}`);
+    // console.log(photos);
+    // data.photos = photos;
+    // console.log(data);
+    try {
+      console.log(data);
+      const res = await API.graphql(
+        graphqlOperation(createProduct, {
+          input: { ...data, photos },
+        })
+      );
+      console.log(res);
+    } catch (e) {
+      console.log(e);
     }
   };
+
   return (
     <div style={{}}>
       <Breadcrumbs>
@@ -294,31 +294,73 @@ function Details() {
                 <Input
                   id="input"
                   value={title}
-                  onChange={(e) => handleInputs(e, "title")}
+                  onChange={(e) => {
+                    const { error } = TITLE.validate(
+                      { title },
+                      { abortEarly: false }
+                    );
+                    let caption;
+                    // for (var key of TITLE._ids._byKey.keys()) {
+                    //   console.log(key);
+                    //   type = key;
+                    // }
+
+                    // for (var value of TITLE._ids._byKey.values()) {
+                    //   console.log(value.id);
+                    // }
+                    setTitle(e.target.value);
+                    if (error) {
+                      caption = `${error.message}`;
+                    } else {
+                      caption = "";
+                    }
+                    setTitleCaption(caption);
+                  }}
                   placeholder=""
                   clearOnEscape
                 />
               </FormControl>
-              <FormControl label="Descrição" caption="Textarea caption">
+              <FormControl label="Descrição" caption={`${descriptionCaption}`}>
                 <Textarea
                   id="textarea-id"
                   value={description}
-                  onChange={(event) =>
-                    setDescription(event.currentTarget.value)
-                  }
+                  onChange={(e) => {
+                    const { error } = DESCRIPTION.validate(
+                      { description },
+                      { abortEarly: false }
+                    );
+                    let caption;
+                    setDescription(e.target.value);
+                    if (error) {
+                      caption = `${error.message}`;
+                    } else {
+                      caption = "";
+                    }
+                    setDescriptionCaption(caption);
+                  }}
                 />
               </FormControl>
-              <FormControl label="Sesção" caption="No caption">
+              <FormControl label="Categoria" caption={`${categoryCaption}`}>
                 <Combobox
                   value={category}
-                  onChange={(nextValue) => setCategory(nextValue)}
+                  onChange={(nextValue) => {
+                    const { error } = CATEGORY.validate(
+                      { category },
+                      { abortEarly: false }
+                    );
+                    let caption;
+                    setCategory(nextValue);
+                    if (error) {
+                      caption = `${error.message}`;
+                    } else {
+                      caption = "";
+                    }
+                    // setCategoryCaption(caption);
+                  }}
                   options={[
-                    { label: "AliceBlue", id: "#F0F8FF" },
-                    { label: "AntiqueWhite", id: "#FAEBD7" },
-                    { label: "Aqua", id: "#00FFFF" },
-                    { label: "Aquamarine", id: "#7FFFD4" },
-                    { label: "Azure", id: "#F0FFFF" },
-                    { label: "Beige", id: "#F5F5DC" },
+                    { label: "Masculino", id: "#F0F8FF" },
+                    { label: "Feminino", id: "#FAEBD7" },
+                    { label: "Infantil", id: "#00FFFF" },
                   ]}
                   mapOptionToString={(option) => option.label}
                 />
