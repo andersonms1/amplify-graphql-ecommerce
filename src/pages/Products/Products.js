@@ -16,14 +16,17 @@ import { useMediaQuery } from "react-responsive";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
 import { Button } from "baseui/button";
-
-import { StyledIcon, StyledButtonIcon, DATA, CARD_TYPES } from "../Home";
+import API, { graphqlOperation } from "@aws-amplify/api";
+import { listProducts } from "../../graphql/queries";
+import { ProductContext } from "../../context/products";
+import { StyledIcon, StyledButtonIcon, CARD_TYPES, DATA } from "../Home";
 import { PHOTO_AHMED, PHOTO_HILL } from "../../assets/imgs";
 
 function Products() {
   const [css, theme] = useStyletron();
   const { breakpoints } = theme;
-
+  const [data, setData] = React.useState();
+  const { products } = React.useContext(ProductContext);
   const priceButtonStyles = css({
     display: "flex",
     flexDirection: "row",
@@ -37,12 +40,22 @@ function Products() {
     large: { height: "auto", width: "20vw" },
   };
 
-  function renderGrid(cardSize, style) {
-    return DATA.map((item, index) => {
-      return (
-        <FlexGridItem key={item.id}>{renderCard(cardSize, style)}</FlexGridItem>
-      );
-    });
+  React.useEffect(() => {
+    console.log(products);
+  }, [products]);
+
+  async function renderGrid() {
+    return (
+      <>
+        {
+          await products.map(async (item, index) => {
+            return (
+              <FlexGridItem key={item.id}>{renderCard(item)}</FlexGridItem>
+            );
+          })
+        }{" "}
+      </>
+    );
   }
 
   function Wrapper(props) {
@@ -69,7 +82,7 @@ function Products() {
     );
   }
 
-  function renderCard(cardSize, style) {
+  function renderCard(item) {
     return (
       <div>
         <Wrapper>
@@ -110,9 +123,10 @@ function Products() {
           }}
         >
           <Link to="/products/10">
+            {console.log(item.photos[0].key)}
             <StyledHeaderImage
               className={css({ borderStyle: "none" })}
-              src={PHOTO_AHMED}
+              src={item.photos.key}
             ></StyledHeaderImage>
           </Link>
           <StyledBody>
@@ -141,7 +155,7 @@ function Products() {
             flexGridColumnGap="scale100"
             flexGridRowGap="scale100"
           >
-            {renderGrid(CARD_TYPES.small, card_config.small)}
+            {renderGrid()}
           </FlexGrid>
         )}
 
@@ -155,7 +169,7 @@ function Products() {
             flexGridColumnGap="scale200"
             flexGridRowGap="scale200"
           >
-            {renderGrid(CARD_TYPES.medium, card_config.medium)}
+            {renderGrid()}
           </FlexGrid>
         )}
 
@@ -167,7 +181,7 @@ function Products() {
             flexGridColumnGap="scale300"
             flexGridRowGap="scale300"
           >
-            {renderGrid(CARD_TYPES.large, card_config.large)}
+            {renderGrid()}
           </FlexGrid>
         )}
       </Layer>

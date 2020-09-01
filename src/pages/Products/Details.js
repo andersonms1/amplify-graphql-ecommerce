@@ -120,54 +120,8 @@ function Details() {
     getUser();
   }, []);
 
-  const upLoadFiles = (files) => {
-    files.map(async (file, index) => {
-      try {
-        const extension = file.name.split(".")[1];
-        const name = file.name.split(".")[0];
-        const key = `images/${uuidv4()}${name}.${extension}`;
-        const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
-
-        console.log(`%c ${file}`, "color: red; font-weight: bold");
-        console.table(file);
-
-        await Storage.put(
-          key,
-          file,
-          {
-            level: "public",
-            contentType: file.type,
-          },
-          {
-            progressCallback(progress) {
-              console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
-            },
-          }
-        );
-        console.log("Executed?");
-        console.log(
-          `{Bucket: ${bucket}, Region: ${region}, Key: ${key}, Position: ${index} }`
-        );
-
-        let photosAux = [];
-
-        photosAux = photos;
-        photosAux.push({ bucket, region, key, index });
-
-        setPhotos(photos);
-
-        const image = await Storage.get(key, { level: "public" });
-        console.log(photos);
-        console.log(`%c ${image}`, "color: brown; font-weight: bold");
-      } catch (e) {
-        console.log(e);
-        console.log(new Error(e));
-      }
-    });
-  };
-
   const post = async (files) => {
-    await files.map(async (file, index) => {
+    const promises = await files.map(async (file, index) => {
       const extension = file.name.split(".")[1];
       const name = file.name.split(".")[0];
       const key = `images/${uuidv4()}${name}.${extension}`;
@@ -197,7 +151,7 @@ function Details() {
       let photosAux = [];
 
       photosAux = photos;
-      photosAux.push({ bucket, region, key, index });
+      photosAux.push({ bucket, region, key, position: index });
 
       setPhotos(photos);
 
@@ -211,7 +165,7 @@ function Details() {
       `%c ${photos}`,
       "font-weight: bold; color: red; font-size: 15px"
     );
-
+    await Promise.all(promises);
     const res = await API.graphql(
       graphqlOperation(createProduct, {
         input: { ...data, photos },
@@ -230,42 +184,6 @@ function Details() {
     });
 
     await post(items);
-
-    // upLoadFiles.then(async (res) => {
-    // try {
-    //   console.log(data);
-    //   console.log(
-    //     `%c ${photos}`,
-    //     "font-weight: bold; color: red; font-size: 15px"
-    //   );
-    //   const res = await API.graphql(
-    //     graphqlOperation(createProduct, {
-    //       input: { ...data, photos },
-    //     })
-    //   );
-    //   console.log(res);
-    // } catch (e) {
-    //   console.log(e);
-    // }
-    // });
-
-    // Promise.all([upLoadFiles]).then(async (res) => {
-    //   try {
-    //     console.log(data);
-    //     console.log(
-    //       `%c ${photos}`,
-    //       "font-weight: bold; color: red; font-size: 15px"
-    //     );
-    //     const res = await API.graphql(
-    //       graphqlOperation(createProduct, {
-    //         input: { ...data, photos },
-    //       })
-    //     );
-    //     console.log(res);
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // });
   };
 
   return (
