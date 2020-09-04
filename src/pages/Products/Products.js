@@ -23,14 +23,12 @@ function Products() {
   const { breakpoints } = theme;
   const [photos, setPhotos] = React.useState();
   const { products, loading } = React.useContext(ProductContext);
+
   const priceButtonStyles = css({
     display: "flex",
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  });
-  const button = css({
-    width: "25vw",
   });
 
   React.useEffect(() => {
@@ -108,8 +106,13 @@ function Products() {
         >
           <Link to={`/products/${item.id}`}>
             <StyledHeaderImage
-              className={css({ borderStyle: "none" })}
+              className={css({
+                borderStyle: "none",
+                // maxWidth: "50px",
+                // height: "50px",
+              })}
               src={`${item.link}`}
+              alt="Imagem do produto"
             />
           </Link>
           <StyledBody>

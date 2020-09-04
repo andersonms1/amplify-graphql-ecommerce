@@ -16,3 +16,4 @@ Todo:
 ☐ [QUERYES] history cart relationship. Ex. Querie for unpaid itens and itens purchased by date
 ☐ Deixando segurança para o final. Lembrar de usar o directory @auth
 ☐ Reservation: User also need to know when his markations  where done, and if needed confirmed.
+☐ Load of pages, use lazy? and or place holder svg

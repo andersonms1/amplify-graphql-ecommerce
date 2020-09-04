@@ -4,22 +4,17 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Header, Details, CreateUpdate } from "./pages";
 
 import { withAuthenticator } from "@aws-amplify/ui-react";
-import { createBrowserHistory } from "history";
+// import { history } from "./history";
 // const { Header, Details, CreateUpdate } = lazy(() => import("./pages"));
-
+// const { Header } = lazy(import("./pages/Home/Header"));
+// const Details = lazy(import("./pages/Products/Details"));
 function App() {
-  const history = createBrowserHistory({
-    basename: "",
-    forceRefresh: false,
-  });
   return (
-    <Router history={history}>
+    <Router>
       <Switch>
-        <Suspense fallback={<h1>Rendering...</h1>}>
-          <Route exact path={"/"} component={Header} />
-          <Route exact path={"/products/:id"} component={Details} />
-          <Route exact path={"/products/"} component={Details} />
-        </Suspense>
+        <Route exact path={"/products/:id"} component={Details} />
+        <Route exact path={"/"} component={Header} />
+        {/* <Route exact path={"/products/"} component={() => Details} /> */}
       </Switch>
     </Router>
   );
