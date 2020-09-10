@@ -17,12 +17,18 @@ const ProductContext = React.createContext();
 const ProductProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [didImgLoad, setDidImgLoad] = useState(false);
   const [product, setProduct] = useState();
   const [photos, setPhotos] = React.useState([]);
 
   useEffect(() => {
     fetch();
   }, []);
+
+  useEffect(() => {
+    console.log(products);
+    setDidImgLoad(true);
+  }, [products]);
 
   const fetch = async () => {
     try {
@@ -35,6 +41,7 @@ const ProductProvider = ({ children }) => {
           const image = await Storage.get(i.photos[0].key, {
             level: "public",
           });
+          i.didImgLoad = false;
           return (i.link = image);
         })
       );
@@ -120,7 +127,7 @@ const ProductProvider = ({ children }) => {
 
   return (
     <ProductContext.Provider
-      value={{ products, loading, getById, product, post }}
+      value={{ products, loading, getById, product, post, didImgLoad }}
     >
       {children}
     </ProductContext.Provider>

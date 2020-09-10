@@ -1,6 +1,12 @@
 // https://www.pluralsight.com/guides/re-render-react-component-on-window-resize
 // https://translate.googleusercontent.com/translate_c?depth=1&hl=pt-BR&prev=search&pto=aue&rurl=translate.google.com&sl=en&sp=nmt4&u=https://stackoverflow.com/questions/19014250/rerender-view-on-browser-resize-with-react&usg=ALkJrhgmaHvg4pWb56lWDlQaL14Ba0SPOA
-import React from "react";
+// https://dev.to/andreiduca/practical-implementation-of-data-fetching-with-react-suspense-that-you-can-use-today-273m
+// https://medium.com/frontend-digest/progressively-loading-images-in-react-107cb075417a
+// https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
+// https://stackoverflow.com/questions/31366735/how-to-load-images-async-with-rxjs-and-perform-a-method-when-all-loaded
+// https://blog.logrocket.com/rxjs-with-react-hooks-for-state-management/
+// https://github.com/danilowoz/react-content-loader
+import React, { useState, useContext, useEffect } from "react";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import {
   Card,
@@ -12,17 +18,20 @@ import {
 import { Layer } from "baseui/layer";
 import { useStyletron } from "baseui";
 import { Link } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
 import { ProductContext } from "../../context/products";
-import { Spinner } from "../../components/Spinner";
+import { Small, Medium, Large } from "../../mediaQueries";
+import ContentLoader from "react-content-loader";
+import { PHOTO_HILL } from "../../assets/imgs/";
+
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
 function Products() {
   const [css, theme] = useStyletron();
-  const { breakpoints } = theme;
-  const [photos, setPhotos] = React.useState();
-  const { products, loading } = React.useContext(ProductContext);
+  const [content, setContent] = useState(0);
+  const [ready, setReady] = useState(false);
+  const { products, loading, didImgLoad } = useContext(ProductContext);
 
   const priceButtonStyles = css({
     display: "flex",
@@ -31,10 +40,14 @@ function Products() {
     alignItems: "center",
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log(products);
     // setPhotos(products)
   }, []);
+
+  useEffect(() => {
+    console.log(didImgLoad);
+  }, [didImgLoad]);
 
   function Wrapper(props) {
     const [css, theme] = useStyletron();
@@ -53,7 +66,6 @@ function Products() {
           backgroundColor: color,
           // textAlign: 'center',
         })}
-        ref={forwardedRef}
       >
         {children}
       </div>
@@ -105,15 +117,42 @@ function Products() {
           }}
         >
           <Link to={`/products/${item.id}`}>
-            <StyledHeaderImage
-              className={css({
-                borderStyle: "none",
-                // maxWidth: "50px",
-                // height: "50px",
-              })}
-              src={`${item.link}`}
-              alt="Imagem do produto"
-            />
+            <div>
+              {/* <StyledHeaderImage
+                className={css({
+                  borderStyle: "none",
+                  // display: "none",
+                  visibility: "hidden",
+                  // maxWidth: "50px",
+                  // height: "50px",
+                })}
+                src={PHOTO_HILL}
+                onLoad={() => {
+                  item.didImgLoad = true;
+                  display = "visible";
+                }}
+                alt="Imagem do produto"
+              /> */}
+              {/* <img
+                src={item.link}
+                style={{ maxWidth: "100%", height: "auto" }}
+                alt="sdf"
+              /> */}
+              <StyledHeaderImage
+                className={css({
+                  // borderStyle: "none",
+                  // display: "none",
+                  // visibility: "hidden",
+                  // maxWidth: "50px",
+                  // height: "50px",
+                })}
+                src={item.link}
+                onLoad={() => {
+                  setContent(content + 1);
+                }}
+                alt="Imagem do produto"
+              />
+            </div>
           </Link>
           <StyledBody>
             <Paragraph4>{item.title}</Paragraph4>
@@ -129,52 +168,107 @@ function Products() {
     );
   }
 
-  return (
-    <div>
-      <Layer>
-        {useMediaQuery({
-          query: `(max-width: ${breakpoints.small}px)`,
-        }) &&
-          loading === false && (
-            <FlexGrid
-              flexGridColumnCount={2}
-              flexGridColumnGap="scale100"
-              flexGridRowGap="scale100"
-            >
-              {renderGrid()}
-            </FlexGrid>
-          )}
+  const isAnyImageLoading = () => {
+    let unfinished = false;
+    products.map((i) => {
+      if (i.didImgLoad === false) {
+        unfinished = true;
+      }
+      return i;
+    });
+    return unfinished;
+  };
 
-        {useMediaQuery({
-          query: `(min-width: ${breakpoints.small + 1}px) and (max-width: ${
-            breakpoints.large - 1
-          }px) `,
-        }) &&
-          loading === false && (
-            <FlexGrid
-              flexGridColumnCount={3}
-              flexGridColumnGap="scale200"
-              flexGridRowGap="scale200"
-            >
-              {renderGrid()}
-            </FlexGrid>
-          )}
+  const renderContentLoader = () => {
+    let arr = [];
+    for (let aux = 0; aux < 10; aux++) {
+      arr.push(
+        <FlexGridItem key={aux}>
+          <ContentLoader
+            speed={2}
+            width="20vw"
+            height="auto"
+            // height={500}
+            viewBox="0 0 400 500"
+            backgroundColor="#f2f2f2"
+            foregroundColor="#d9d9d9"
+            style={{ maxWidth: "100%", height: "auto" }}
+            // {...props}
+          >
+            <rect x="-19" y="-69" rx="2" ry="2" width="400" height="400" />
+            <rect x="-5" y="377" rx="0" ry="0" width="386" height="16" />
+            <rect x="5" y="389" rx="0" ry="0" width="11" height="2" />
+            <rect x="164" y="406" rx="0" ry="0" width="62" height="18" />
+          </ContentLoader>
+        </FlexGridItem>
+      );
+    }
+    return <>{arr}</>;
+  };
 
-        {(useMediaQuery({
-          query: `(min-width: ${breakpoints.large}px)`,
-        }) &&
-          loading === false && (
-            <FlexGrid
-              flexGridColumnCount={4}
-              flexGridColumnGap="scale300"
-              flexGridRowGap="scale300"
-            >
-              {renderGrid()}
-            </FlexGrid>
-          )) || <Spinner />}
-      </Layer>
-    </div>
-  );
+  const isLoading = () => {
+    console.log(content);
+    console.log(products.length);
+
+    if (ready) {
+      return <Layer>{handleLoad(renderGrid())}</Layer>;
+    }
+
+    if (loading === false && content !== products.length) {
+      console.log("if");
+      return (
+        <>
+          <Layer>
+            <Wrapper>{handleLoad(renderContentLoader())}</Wrapper>
+          </Layer>
+          <Layer>{handleLoad(renderGrid())}</Layer>
+        </>
+      );
+    } else if (loading === false && content === products.length) {
+      console.log("else if");
+      setReady(true);
+      return <Layer>{handleLoad(renderGrid())}</Layer>;
+    } else {
+      console.log("else");
+      return <Layer>{handleLoad(renderContentLoader())}</Layer>;
+    }
+  };
+
+  const handleLoad = (item) => {
+    return (
+      <>
+        <Small>
+          <FlexGrid
+            flexGridColumnCount={2}
+            flexGridColumnGap="scale100"
+            flexGridRowGap="scale100"
+          >
+            {item}
+          </FlexGrid>
+        </Small>
+        <Medium>
+          <FlexGrid
+            flexGridColumnCount={3}
+            flexGridColumnGap="scale200"
+            flexGridRowGap="scale200"
+          >
+            {item}
+          </FlexGrid>
+        </Medium>
+        <Large>
+          <FlexGrid
+            flexGridColumnCount={4}
+            flexGridColumnGap="scale300"
+            flexGridRowGap="scale300"
+          >
+            {item}
+          </FlexGrid>
+        </Large>
+      </>
+    );
+  };
+
+  return <div>{isLoading()}</div>;
 }
 
 export default Products;

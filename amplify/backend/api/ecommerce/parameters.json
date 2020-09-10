@@ -7,5 +7,6 @@
             "authecommerce21967ec1",
             "Outputs.UserPoolId"
         ]
-    }
+    },
+    "CreateAPIKey": 1
 }

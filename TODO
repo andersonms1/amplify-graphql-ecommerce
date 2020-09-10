@@ -8,7 +8,10 @@ Todo:
   ✘ User icon fix @started(20-07-16 18:01) @cancelled(20-07-16 18:30) @wasted(29m39s)
   ✘ Make overides @started(20-07-16 18:30) @cancelled(20-07-16 20:02) @wasted(1h32m23s)
   ✘ Add Tooltip overide @cancelled(20-07-16 20:02)
-☐ Watch video https://www.youtube.com/watch?v=JgwI22y_eFA&list=WL&index=2&t=154s
+  ✔ Watch video https://www.youtube.com/watch?v=JgwI22y_eFA&list=WL&index=2&t=154s @done(20-09-04 00:44)
+✔ Study to implement: https://dev.to/andreiduca/practical-implementation-of-data-fetching-with-react-suspense-that-you-can-use-today-273m @started(20-09-04 20:29) @done(20-09-04 20:50) @lasted(21m37s)
+✔ Study to : https://hackernoon.com/magic-of-react-suspense-with-concurrent-react-and-react-lazy-api-e32dc5f30ed1 @done(20-09-04 21:02)
+☐ Load of pages, use lazy? and or place holder svg
 ☐ Validate cart description size.
 ☐ Test on thays smartphone grid layout
 ☐ Remember: revise responsivity. And if some one if a computer minimize the size of small smartphone, it is good?
@@ -16,4 +19,6 @@ Todo:
 ☐ [QUERYES] history cart relationship. Ex. Querie for unpaid itens and itens purchased by date
 ☐ Deixando segurança para o final. Lembrar de usar o directory @auth
 ☐ Reservation: User also need to know when his markations  where done, and if needed confirmed.
-☐ Load of pages, use lazy? and or place holder svg
+https://github.com/fabiospampinato/vscode-todo-plus
+https://developer.mozilla.org/en-US/docs/Web/API/ImageData
+https://www.javascriptstuff.com/detect-image-load/

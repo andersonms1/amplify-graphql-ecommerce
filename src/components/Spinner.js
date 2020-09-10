@@ -1,4 +1,4 @@
-import { Spinner as S } from "baseui/spinner";
+import { Spinner as S, StyledSpinnerNext } from "baseui/spinner";
 import { useStyletron } from "baseui";
 import React from "react";
 
@@ -15,7 +15,7 @@ function Spinner() {
 
   return (
     <div className={centralize}>
-      <S />
+      <StyledSpinnerNext />
     </div>
   );
 }
