@@ -4,6 +4,7 @@ import Storage from "@aws-amplify/storage";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { listProducts, getProduct } from "../graphql/queries";
 import { createProduct } from "../graphql/mutations";
+import { Link, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import config from "../aws-exports";
 
@@ -30,6 +31,18 @@ const ProductProvider = ({ children }) => {
     setDidImgLoad(true);
   }, [products]);
 
+  useEffect(() => {
+    async function getUser() {
+      try {
+        let user = await Auth.currentAuthenticatedUser();
+        console.log(user);
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    }
+    getUser();
+  }, []);
+
   const fetch = async () => {
     try {
       setLoading(true);
@@ -49,6 +62,7 @@ const ProductProvider = ({ children }) => {
       setProducts(data.listProducts.items);
       setLoading(false);
     } catch (e) {
+      console.log({ e });
       console.log(new Error(e));
     }
   };

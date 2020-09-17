@@ -40,9 +40,15 @@ function Products() {
     alignItems: "center",
   });
 
+  const centerRow = css({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+  });
+
   useEffect(() => {
     console.log(products);
-    // setPhotos(products)
+    // setPhotos(products);
   }, []);
 
   useEffect(() => {
@@ -81,22 +87,24 @@ function Products() {
   function renderCard(item) {
     return (
       <div>
-        <Wrapper>
-          <StatefulPopover
-            content={
-              <Paragraph3 padding="scale500">
-                Adicionado a lista de desejos!
-              </Paragraph3>
-            }
-            accessibilityType={"tooltip"}
-            triggerType={"click"}
-            placement={"rightBottom"}
-            returnFocus
-            autoFocus
-          >
-            <i className="material-icons">loyalty</i>
-          </StatefulPopover>
-        </Wrapper>
+        {ready ? (
+          <Wrapper>
+            <StatefulPopover
+              content={
+                <Paragraph3 padding="scale500">
+                  Adicionado a lista de desejos!
+                </Paragraph3>
+              }
+              accessibilityType={"tooltip"}
+              triggerType={"click"}
+              placement={"rightBottom"}
+              returnFocus
+              autoFocus
+            >
+              <i className="material-icons">loyalty</i>
+            </StatefulPopover>
+          </Wrapper>
+        ) : null}
         <Card
           // headerImage={}
           overrides={{
@@ -154,30 +162,22 @@ function Products() {
               />
             </div>
           </Link>
-          <StyledBody>
-            <Paragraph4>{item.title}</Paragraph4>
-            <div className={priceButtonStyles}>
-              <Paragraph4>
-                {/* <b>R$19,99</b> */}
-                <b>R${item.price.specie}</b>
+          {ready && (
+            <StyledBody>
+              <Paragraph4 margin="0" padding="0">
+                {item.title}
               </Paragraph4>
-            </div>
-          </StyledBody>
+              <div className={priceButtonStyles}>
+                <Paragraph4 margin="0" padding="0">
+                  <b>R${item.price.specie}</b>
+                </Paragraph4>
+              </div>
+            </StyledBody>
+          )}
         </Card>
       </div>
     );
   }
-
-  const isAnyImageLoading = () => {
-    let unfinished = false;
-    products.map((i) => {
-      if (i.didImgLoad === false) {
-        unfinished = true;
-      }
-      return i;
-    });
-    return unfinished;
-  };
 
   const renderContentLoader = () => {
     let arr = [];
@@ -186,14 +186,12 @@ function Products() {
         <FlexGridItem key={aux}>
           <ContentLoader
             speed={2}
-            width="20vw"
-            height="auto"
-            // height={500}
+            width="100%"
+            height="100%"
             viewBox="0 0 400 500"
             backgroundColor="#f2f2f2"
             foregroundColor="#d9d9d9"
             style={{ maxWidth: "100%", height: "auto" }}
-            // {...props}
           >
             <rect x="-19" y="-69" rx="2" ry="2" width="400" height="400" />
             <rect x="-5" y="377" rx="0" ry="0" width="386" height="16" />
@@ -206,12 +204,12 @@ function Products() {
     return <>{arr}</>;
   };
 
-  const isLoading = () => {
+  const handleLoading = () => {
     console.log(content);
     console.log(products.length);
 
     if (ready) {
-      return <Layer>{handleLoad(renderGrid())}</Layer>;
+      return handleGrid(renderGrid());
     }
 
     if (loading === false && content !== products.length) {
@@ -219,24 +217,34 @@ function Products() {
       return (
         <>
           <Layer>
-            <Wrapper>{handleLoad(renderContentLoader())}</Wrapper>
+            <Wrapper>
+              <div
+                className={css({
+                  backgroundColor: `${theme.colors.backgroundPrimary}`,
+                  width: "100%",
+                })}
+              >
+                {handleGrid(renderContentLoader())}
+              </div>
+            </Wrapper>
           </Layer>
-          <Layer>{handleLoad(renderGrid())}</Layer>
+          <Layer>{handleGrid(renderGrid())}</Layer>
         </>
       );
     } else if (loading === false && content === products.length) {
       console.log("else if");
       setReady(true);
-      return <Layer>{handleLoad(renderGrid())}</Layer>;
+      // return <Layer>{handleGrid(renderGrid())}</Layer>;
     } else {
       console.log("else");
-      return <Layer>{handleLoad(renderContentLoader())}</Layer>;
+      // return <Layer>{handleGrid(renderContentLoader())}</Layer>;
+      return handleGrid(renderContentLoader());
     }
   };
 
-  const handleLoad = (item) => {
+  const handleGrid = (item) => {
     return (
-      <>
+      <div className={centerRow}>
         <Small>
           <FlexGrid
             flexGridColumnCount={2}
@@ -264,11 +272,11 @@ function Products() {
             {item}
           </FlexGrid>
         </Large>
-      </>
+      </div>
     );
   };
 
-  return <div>{isLoading()}</div>;
+  return <div>{handleLoading()}</div>;
 }
 
 export default Products;

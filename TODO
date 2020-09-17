@@ -19,6 +19,7 @@ Todo:
 ☐ [QUERYES] history cart relationship. Ex. Querie for unpaid itens and itens purchased by date
 ☐ Deixando segurança para o final. Lembrar de usar o directory @auth
 ☐ Reservation: User also need to know when his markations  where done, and if needed confirmed.
+☐ Feature: Text editor features on product edit details.
 https://github.com/fabiospampinato/vscode-todo-plus
 https://developer.mozilla.org/en-US/docs/Web/API/ImageData
 https://www.javascriptstuff.com/detect-image-load/

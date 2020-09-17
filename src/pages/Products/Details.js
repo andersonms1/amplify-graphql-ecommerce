@@ -3,29 +3,58 @@ import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
 import { Link, useParams } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
 import { Breadcrumbs } from "baseui/breadcrumbs";
 import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
-import Auth from "@aws-amplify/auth";
 import { ProductContext } from "../../context/products";
-import { Spinner } from "../../components/Spinner";
+import ContentLoader from "react-content-loader";
+import { Small, Medium, Large } from "../../mediaQueries";
 
 function Details() {
-  let { id } = useParams();
   const [css, theme] = useStyletron();
-
+  const { breakpoints } = theme;
+  let { id } = useParams();
   const { getById, product } = useContext(ProductContext);
 
   const container = css({
+    "@media(min-width: `${breakpoints.large}px)`": {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "flex-start",
+      justifyContent: "space-evenly",
+      marginRight: "20vw",
+      marginLeft: "20vw",
+    },
+    "@media(min-width: `${breakpoints.small + 1}px)` and (max-width: `${breakpoints.large - 1}px)`": {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  });
+
+  const M = `@media min-width: ${breakpoints.small + 1}px and max-width: ${
+    breakpoints.large - 1
+  }px`;
+
+  const carousel = css({
+    "@media min-width: `${breakpoints.large}px`": {
+      width: "5px",
+    },
+    [M]: {
+      width: "15px",
+    },
+  });
+
+  const centralize = css({
     display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-evenly",
-    marginRight: "20vw",
-    marginLeft: "20vw",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    padding: 0,
+    margin: 0,
   });
 
   const details = css({
@@ -57,49 +86,38 @@ function Details() {
     // swipeScrollTolerance: number('swipeScrollTolerance', 5, {}, valuesGroupId),
   });
 
-  useEffect(() => {
-    async function getUser() {
-      try {
-        let user = await Auth.currentAuthenticatedUser();
-        console.log(user);
-      } catch (error) {
-        console.log("error: ", error);
-      }
-    }
-    getUser();
-  }, []);
-
-  useEffect(() => {
-    const get = async () => {
-      await getById(id);
-    };
-    get();
-    console.log(product);
-  }, []);
-
   const iterateImages = () => {
-    return product.photos.map((i) => {
+    return product.photos.map((i, index) => {
       return (
-        <div>
+        <div key={index}>
           <img src={i.link}></img>
         </div>
       );
     });
   };
 
+  const get = async () => {
+    await getById(id);
+  };
+  useEffect(() => {
+    get();
+    // console.log(product);
+  }, [id]);
+
   return (
-    <div style={{}}>
+    <div className={centralize}>
       {/* <Breadcrumbs>
         <Link to="/">Feminino</Link>
         <span>Calças</span>
       </Breadcrumbs> 
        <Block marginBottom="scale750" /> */}
       {/* id && product && */}
+
       {(id && product && (
         <div className={container}>
-          <Carousel width="25vw" {...getConfigurableProps()}>
-            {iterateImages()}
-          </Carousel>
+          <div className={carousel}>
+            <Carousel {...getConfigurableProps()}>{iterateImages()}</Carousel>
+          </div>
 
           <div className={details}>
             <>
@@ -133,7 +151,26 @@ function Details() {
             </>
           </div>
         </div>
-      )) || <Spinner />}
+      )) || (
+        <div className={centralize}>
+          <ContentLoader
+            speed={2}
+            width={1000}
+            height={460}
+            viewBox="0 0 1000 460"
+            backgroundColor="#f3f3f3"
+            foregroundColor="#ecebeb"
+            // {...props}
+          >
+            <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
+            <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
+            <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
+            <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
+            <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
+            <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
+          </ContentLoader>
+        </div>
+      )}
     </div>
   );
 }
