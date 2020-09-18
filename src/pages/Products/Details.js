@@ -10,7 +10,7 @@ import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
 import { ProductContext } from "../../context/products";
 import ContentLoader from "react-content-loader";
-import { Small, Medium, Large } from "../../mediaQueries";
+import { Small, Large } from "../../mediaQueries";
 
 function Details() {
   const [css, theme] = useStyletron();
@@ -18,53 +18,59 @@ function Details() {
   let { id } = useParams();
   const { getById, product } = useContext(ProductContext);
 
-  const container = css({
-    "@media(min-width: `${breakpoints.large}px)`": {
-      display: "flex",
-      flexDirection: "row",
-      alignItems: "flex-start",
-      justifyContent: "space-evenly",
-      marginRight: "20vw",
-      marginLeft: "20vw",
-    },
-    "@media(min-width: `${breakpoints.small + 1}px)` and (max-width: `${breakpoints.large - 1}px)`": {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-  });
-
-  const M = `@media min-width: ${breakpoints.small + 1}px and max-width: ${
-    breakpoints.large - 1
-  }px`;
-
-  const carousel = css({
-    "@media min-width: `${breakpoints.large}px`": {
-      width: "5px",
-    },
-    [M]: {
-      width: "15px",
-    },
-  });
-
   const centralize = css({
     display: "flex",
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "center",
-    height: "100%",
-    padding: 0,
-    margin: 0,
+  });
+
+  const ItemsOrietation = ({ children }) => {
+    return (
+      <>
+        <Small></Small>
+        <Large></Large>
+      </>
+    );
+  };
+
+  const container = css({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-evenly",
+    // marginRight: "20vw",
+    // marginLeft: "20vw",
+
+    // "@media(min-width: `${breakpoints.small + 1}px)` and (max-width: `${breakpoints.large - 1}px)`": {
+    //   display: "flex",
+    //   flexDirection: "column",
+    //   alignItems: "center",
+    //   justifyContent: "center",
+    // },
+  });
+
+  const Component = ({ children }) => {
+    return <b>{children}</b>;
+  };
+
+  const LARGE_WIDTH = "25vw";
+
+  const item_large = css({
+    width: "25vw",
+  });
+
+  const carousel = css({
+    width: "25vw",
+  });
+
+  const button = css({
+    width: "25vw",
   });
 
   const details = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "flex-start",
-  });
-
-  const button = css({
-    width: "25vw",
   });
 
   const getConfigurableProps = () => ({
@@ -96,9 +102,47 @@ function Details() {
     });
   };
 
+  const contentLoader = () => {
+    return (
+      <ContentLoader
+        speed={2}
+        width={1000}
+        height={460}
+        viewBox="0 0 1000 460"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#ecebeb"
+        // {...props}
+      >
+        <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
+        <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
+        <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
+        <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
+        <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
+        <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
+      </ContentLoader>
+    );
+  };
+
+  const renderButton = (icon, kind, text) => {
+    return (
+      <Button
+        endEnhancer={() => (
+          <i height="10px" className="material-icons">
+            {icon}
+          </i>
+        )}
+        kind={kind}
+        className={item_large}
+      >
+        {text}
+      </Button>
+    );
+  };
+
   const get = async () => {
     await getById(id);
   };
+
   useEffect(() => {
     get();
     // console.log(product);
@@ -122,55 +166,29 @@ function Details() {
           <div className={details}>
             <>
               <Display4 marginBottom="scale500">{product.title}</Display4>
+
               <Paragraph1 width="25vw" marginBottom="scale500">
                 {product.description}
               </Paragraph1>
-              <Button
-                endEnhancer={() => (
-                  <i height="10px" className="material-icons">
-                    shopping_cart
-                  </i>
-                )}
-                kind={KIND.primary}
-                className={button}
-              >
-                Adicionar ao carrinho
-              </Button>
+
+              {renderButton(
+                "shopping_cart",
+                KIND.primary,
+                "Adicionar ao carrinho"
+              )}
+
               <Block marginBottom="scale300" />
-              <Button
-                endEnhancer={() => (
-                  <i height="10px" className="material-icons">
-                    loyalty
-                  </i>
-                )}
-                kind={KIND.secondary}
-                className={button}
-              >
-                Adicionar a lista de desejos
-              </Button>
+
+              {renderButton(
+                "loyalty",
+                KIND.secondary,
+                "Adicionar a lista de desejos"
+              )}
             </>
           </div>
         </div>
-      )) || (
-        <div className={centralize}>
-          <ContentLoader
-            speed={2}
-            width={1000}
-            height={460}
-            viewBox="0 0 1000 460"
-            backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
-            // {...props}
-          >
-            <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
-            <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
-            <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
-            <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
-            <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
-            <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
-          </ContentLoader>
-        </div>
-      )}
+      )) ||
+        contentLoader()}
     </div>
   );
 }

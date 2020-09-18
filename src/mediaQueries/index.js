@@ -2,17 +2,6 @@ import React, { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useStyletron } from "baseui";
 
-const Mobile = ({ children }) => {
-  const [isHandHandled, SetIsHandHandled] = useState(false);
-  // SetIsHandHandled(
-  //   useMediaQuery({
-  //     query: `(handheld)`,
-  //   })
-  // );
-  return useMediaQuery({
-    query: `(handheld)`,
-  });
-};
 const Small = ({ children }) => {
   const [css, theme] = useStyletron();
   const { breakpoints } = theme;
@@ -34,31 +23,31 @@ const Small = ({ children }) => {
   return <div>{handleSmallHand()}</div>;
 };
 
-const Medium = ({ children }) => {
-  const [css, theme] = useStyletron();
-  const { breakpoints } = theme;
+// const Medium = ({ children }) => {
+//   const [css, theme] = useStyletron();
+//   const { breakpoints } = theme;
 
-  const medium = useMediaQuery({
-    query: `(min-width: ${breakpoints.small + 1}px) and (max-width: ${
-      breakpoints.large - 1
-    }px)`,
-  });
+//   const medium = useMediaQuery({
+//     query: `(min-width: ${breakpoints.small + 1}px) and (max-width: ${
+//       breakpoints.large - 1
+//     }px)`,
+//   });
 
-  const handheld = useMediaQuery({
-    query: `(min-width: 1px) and (max-width: ${breakpoints.large - 1}px) `,
-    type: `(handheld)`,
-  });
+//   const handheld = useMediaQuery({
+//     query: `(min-width: 1px) and (max-width: ${breakpoints.large - 1}px) `,
+//     type: `(handheld)`,
+//   });
 
-  const handleMedium = () => {
-    if (handheld) {
-      return;
-    } else if (medium) {
-      return children;
-    }
-  };
+//   const handleMedium = () => {
+//     if (handheld) {
+//       return;
+//     } else if (medium) {
+//       return children;
+//     }
+//   };
 
-  return <div>{handleMedium()}</div>;
-};
+//   return <div>{handleMedium()}</div>;
+// };
 
 const Large = ({ children }) => {
   const [css, theme] = useStyletron();
@@ -73,4 +62,4 @@ const Large = ({ children }) => {
   );
 };
 
-export { Small, Medium, Large };
+export { Small, Large };

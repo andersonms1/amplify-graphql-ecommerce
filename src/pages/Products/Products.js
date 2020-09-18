@@ -21,7 +21,7 @@ import { Link } from "react-router-dom";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
 import { ProductContext } from "../../context/products";
-import { Small, Medium, Large } from "../../mediaQueries";
+import { Small, Medium, Large } from "./MediaQueriesContainers";
 import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
 
@@ -46,10 +46,10 @@ function Products() {
     alignItems: "center",
   });
 
-  useEffect(() => {
-    console.log(products);
-    // setPhotos(products);
-  }, []);
+  const wrapperTypes = {
+    loyalty: "loyalty",
+    content: "content",
+  };
 
   useEffect(() => {
     console.log(didImgLoad);
@@ -57,25 +57,45 @@ function Products() {
 
   function Wrapper(props) {
     const [css, theme] = useStyletron();
-    const { offset, color, children, forwardedRef } = props;
-    return (
-      <div
-        className={css({
-          position: "absolute",
-          // top: offset || "46%",
-          // left: offset || "46%",
-          // width: '200px',
-          paddingTop: `${theme.sizing.scale500}`,
-          // paddingBottom: '2px',
-          paddingLeft: `${theme.sizing.scale750}`,
-          // paddingRight: "20px",
-          backgroundColor: color,
-          // textAlign: 'center',
-        })}
-      >
-        {children}
-      </div>
-    );
+    const { offset, color, children, forwardedRef, type } = props;
+
+    if (type === wrapperTypes.content) {
+      return (
+        <div
+          className={css({
+            position: "absolute",
+            // top: offset || "46%",
+            // left: offset || "46%",
+            // width: '200px',
+            // paddingBottom: '2px',
+            // paddingRight: "20px",
+            // textAlign: 'center',
+            backgroundColor: color,
+          })}
+        >
+          {children}
+        </div>
+      );
+    } else if (type === wrapperTypes.loyalty) {
+      return (
+        <div
+          className={css({
+            position: "absolute",
+            // top: offset || "46%",
+            // left: offset || "46%",
+            // width: '200px',
+            // paddingBottom: '2px',
+            // paddingRight: "20px",
+            // textAlign: 'center',
+            backgroundColor: color,
+            paddingTop: `${theme.sizing.scale500}`,
+            paddingLeft: `${theme.sizing.scale750}`,
+          })}
+        >
+          {children}
+        </div>
+      );
+    }
   }
 
   function renderGrid() {
@@ -88,7 +108,7 @@ function Products() {
     return (
       <div>
         {ready ? (
-          <Wrapper>
+          <Wrapper type={wrapperTypes.loyalty}>
             <StatefulPopover
               content={
                 <Paragraph3 padding="scale500">
@@ -162,18 +182,17 @@ function Products() {
               />
             </div>
           </Link>
-          {ready && (
-            <StyledBody>
+
+          <StyledBody>
+            <Paragraph4 margin="0" padding="0">
+              {item.title}
+            </Paragraph4>
+            <div className={priceButtonStyles}>
               <Paragraph4 margin="0" padding="0">
-                {item.title}
+                <b>R${item.price.specie}</b>
               </Paragraph4>
-              <div className={priceButtonStyles}>
-                <Paragraph4 margin="0" padding="0">
-                  <b>R${item.price.specie}</b>
-                </Paragraph4>
-              </div>
-            </StyledBody>
-          )}
+            </div>
+          </StyledBody>
         </Card>
       </div>
     );
@@ -205,19 +224,15 @@ function Products() {
   };
 
   const handleLoading = () => {
-    console.log(content);
-    console.log(products.length);
-
     if (ready) {
       return handleGrid(renderGrid());
     }
 
     if (loading === false && content !== products.length) {
-      console.log("if");
       return (
         <>
           <Layer>
-            <Wrapper>
+            <Wrapper type={wrapperTypes.content}>
               <div
                 className={css({
                   backgroundColor: `${theme.colors.backgroundPrimary}`,
@@ -227,17 +242,14 @@ function Products() {
                 {handleGrid(renderContentLoader())}
               </div>
             </Wrapper>
+            {handleGrid(renderGrid())}
           </Layer>
-          <Layer>{handleGrid(renderGrid())}</Layer>
         </>
       );
     } else if (loading === false && content === products.length) {
-      console.log("else if");
       setReady(true);
-      // return <Layer>{handleGrid(renderGrid())}</Layer>;
     } else {
       console.log("else");
-      // return <Layer>{handleGrid(renderContentLoader())}</Layer>;
       return handleGrid(renderContentLoader());
     }
   };
@@ -248,7 +260,7 @@ function Products() {
         <Small>
           <FlexGrid
             flexGridColumnCount={2}
-            flexGridColumnGap="scale100"
+            // flexGridColumnGap="scale100"
             flexGridRowGap="scale100"
           >
             {item}

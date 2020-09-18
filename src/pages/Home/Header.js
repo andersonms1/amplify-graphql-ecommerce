@@ -23,7 +23,7 @@ import { Accordion, Panel } from "baseui/accordion";
 import { linkProps, StyledIcon } from "./index";
 import { Products, CreateUpdate } from "../index";
 
-import { Small, Medium, Large } from "../../mediaQueries";
+import { Small, Large } from "../../mediaQueries";
 import { FlexGrid } from "baseui/flex-grid";
 import styled from "styled-components";
 
@@ -87,13 +87,6 @@ function Header() {
     alignSelf: "center",
   });
 
-  const redirect = (addr) => {
-    return (
-      <div>
-        <Redirect push to={`${addr}`} />
-      </div>
-    );
-  };
   const renderDrawerContent = () => {
     return (
       <div className={drawerStyles}>
@@ -140,11 +133,6 @@ function Header() {
   return (
     <div>
       <Small>
-        {/* <HeaderNavigation>
-          <NavigationList $align={ALIGN.center}>
-            
-          </NavigationList>
-        </HeaderNavigation> */}
         <HeaderNavigation>
           <NavigationList $align={ALIGN.left}>
             <NavigationItem>E-commerce</NavigationItem>
@@ -162,11 +150,6 @@ function Header() {
                 {renderDrawerContent()}
               </Drawer>
             )}
-
-            {/* <NavigationItem>
-            </NavigationItem>
-            <NavigationItem>
-            </NavigationItem> */}
           </NavigationList>
         </HeaderNavigation>
       </Small>
