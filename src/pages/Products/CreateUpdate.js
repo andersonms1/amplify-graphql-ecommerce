@@ -39,6 +39,7 @@ export default (props) => {
   const [descriptionCaption, setDescriptionCaption] = React.useState("");
   const [categoryCaption, setCategoryCaption] = React.useState("");
   const { post } = useContext(ProductContext);
+
   const data = {
     title,
     description,

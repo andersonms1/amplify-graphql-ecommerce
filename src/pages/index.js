@@ -1,5 +1,5 @@
 import { Products, Details, CreateUpdate } from "./Products";
 
-import { Header } from "./Home/Header";
+import { Home } from "./Home/Home";
 
-export { Header, Products, Details, CreateUpdate };
+export { Home, Products, Details, CreateUpdate };
