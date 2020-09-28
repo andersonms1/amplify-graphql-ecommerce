@@ -8,7 +8,7 @@ import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
-import { ProductContext } from "../../context/products";
+import { ProductContext } from "../../context/product";
 import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
 import { Small, Large } from "../../mediaQueries";
@@ -28,33 +28,6 @@ function Details() {
   const itemWidth = {
     width: "25vw",
   };
-
-  const centralize = css({
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-    // width: "100%",
-
-    // alignSelf: "center",
-  });
-
-  // LargeScreen
-  const container = css({
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-evenly",
-    // marginRight: "20vw",
-    // marginLeft: "20vw",
-
-    // "@media(min-width: `${breakpoints.small + 1}px)` and (max-width: `${breakpoints.large - 1}px)`": {
-    //   display: "flex",
-    //   flexDirection: "column",
-    //   alignItems: "center",
-    //   justifyContent: "center",
-    // },
-  });
 
   const getConfigurableProps = () => ({
     autoPlay: true,
@@ -87,6 +60,7 @@ function Details() {
               onClick={() => alert("Shopping Cart")}
               height="10px"
               className="material-icons"
+              style={{ paddingRight: "5px" }}
             >
               shopping_cart
             </i>
@@ -94,11 +68,11 @@ function Details() {
               onClick={() => alert("Loyalty")}
               height="10px"
               className="material-icons"
+              style={{ paddingLeft: "5px" }}
             >
               loyalty
             </i>
           </div>
-          {/* <div className="legend">Adicionar a lista de desejos</div> */}
         </div>
       );
     });
@@ -107,53 +81,68 @@ function Details() {
   const contentLoader = () => {
     return (
       <>
-        <Small>
-          <ContentLoader
-            speed={2}
-            width={150}
-            height={500}
-            viewBox="0 0 150 500"
-            backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
-          >
-            <rect x="0" y="131" rx="0" ry="0" width="139" height="26" />
-            <rect x="0" y="0" rx="0" ry="0" width="141" height="122" />
-            <rect x="0" y="165" rx="0" ry="0" width="139" height="77" />
-          </ContentLoader>
-        </Small>
-        <Large>
+        <div
+          className={css({
+            height: "100%",
+          })}
+        >
           <div
             className={css({
+              // display: "flex",
+              // flex: 1,
+              // paddingTop: "10%",
+              // paddingLeft: "25%",
+              // flexDirection: "row",
+              // justifyContent: "center",
+              // alignItems: "center",
+              display: "-webkit-box",
+              display: "-moz-box",
+              display: "-ms-flexbox",
+              display: "-webkit-flex",
+              height: "100%",
               display: "flex",
-              flex: 1,
-              // height: "100vw",
-              paddingTop: "10%",
-              paddingLeft: "25%",
-              flexDirection: "row",
-              justifyContent: "center",
               alignItems: "center",
-              // backgroundColor: "gray",
+              justifyContent: "center",
             })}
           >
-            <ContentLoader
-              speed={2}
-              width={1000}
-              height={460}
-              // width="100%"
-              // height="100%"
-              viewBox="0 0 1000 460"
-              backgroundColor="#f3f3f3"
-              foregroundColor="#ecebeb"
-              style={{ maxWidth: "100%", height: "auto", alignSelf: "center" }}
-            >
-              <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
-              <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
-              <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
-              <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
-              <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
-              <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
-            </ContentLoader>
-            {/* <div
+            <Small>
+              <ContentLoader
+                speed={2}
+                width="100%"
+                height="100%"
+                viewBox="0 0 150 500"
+                backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+              >
+                <rect x="0" y="131" rx="0" ry="0" width="139" height="26" />
+                <rect x="0" y="0" rx="0" ry="0" width="141" height="122" />
+                <rect x="0" y="165" rx="0" ry="0" width="139" height="77" />
+              </ContentLoader>
+            </Small>
+            <Large>
+              <ContentLoader
+                speed={2}
+                width="100%"
+                height="100%"
+                // width="100%"
+                // height="100%"
+                viewBox="0 0 1000 460"
+                backgroundColor="#f3f3f3"
+                foregroundColor="#ecebeb"
+                // style={{
+                //   maxWidth: "100%",
+                //   height: "auto",
+                //   alignSelf: "center",
+                // }}
+              >
+                <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
+                <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
+                <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
+                <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
+                <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
+                <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
+              </ContentLoader>
+              {/* <div
           className={css({
             width: "10px",
             height: "10px",
@@ -162,8 +151,9 @@ function Details() {
             alignSelf: "center",
           })}
         ></div> */}
+            </Large>
           </div>
-        </Large>
+        </div>
       </>
     );
   };
@@ -210,13 +200,14 @@ function Details() {
                   flexGrow: "3",
                   flexShrink: "3",
                   paddingLeft: "5px",
+                  ...itemWidth,
                 })
               : null
           }
           // style={{ flexGrow: "1" }}
         >
           <Display4 marginBottom="scale500">{product.title}</Display4>
-          <Accordion>
+          <Accordion className={css({ maxWidth: "100%" })}>
             <Panel
               title="Detalhes"
               overrides={{
