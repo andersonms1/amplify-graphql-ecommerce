@@ -11,7 +11,8 @@ import { BaseProvider, LightTheme } from "baseui";
 import { Provider as StyletronProvider } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
 
-import { ProductProvider } from "./context/products";
+import { ProductsProvider } from "./context/products";
+import { ProductProvider } from "./context/product";
 
 const engine = new Styletron();
 
@@ -29,9 +30,11 @@ Amplify.configure(amplify);
 ReactDOM.render(
   <StyletronProvider value={engine}>
     <BaseProvider theme={LightTheme}>
-      <ProductProvider>
-        <App />
-      </ProductProvider>
+      <ProductsProvider>
+        <ProductProvider>
+          <App />
+        </ProductProvider>
+      </ProductsProvider>
     </BaseProvider>
   </StyletronProvider>,
 

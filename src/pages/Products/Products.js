@@ -20,10 +20,11 @@ import { useStyletron } from "baseui";
 import { Link } from "react-router-dom";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
-import { ProductContext } from "../../context/products";
+import { ProductsContext } from "../../context/products";
 import { Small, Medium, Large } from "./MediaQueriesContainers";
 import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
+import { Wrapper, WrapperLoayalty } from "../../components/Wrapper";
 
 import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 
@@ -31,7 +32,7 @@ function Products() {
   const [css, theme] = useStyletron();
   const [content, setContent] = useState(0);
   const [ready, setReady] = useState(false);
-  const { products, loading, didImgLoad } = useContext(ProductContext);
+  const { products, loading } = useContext(ProductsContext);
 
   const priceButtonStyles = css({
     display: "flex",
@@ -46,58 +47,6 @@ function Products() {
     alignItems: "center",
   });
 
-  const wrapperTypes = {
-    loyalty: "loyalty",
-    content: "content",
-  };
-
-  useEffect(() => {
-    console.log(didImgLoad);
-  }, [didImgLoad]);
-
-  function Wrapper(props) {
-    const [css, theme] = useStyletron();
-    const { offset, color, children, forwardedRef, type } = props;
-
-    if (type === wrapperTypes.content) {
-      return (
-        <div
-          className={css({
-            position: "absolute",
-            // top: offset || "46%",
-            // left: offset || "46%",
-            // width: '200px',
-            // paddingBottom: '2px',
-            // paddingRight: "20px",
-            // textAlign: 'center',
-            backgroundColor: color,
-          })}
-        >
-          {children}
-        </div>
-      );
-    } else if (type === wrapperTypes.loyalty) {
-      return (
-        <div
-          className={css({
-            position: "absolute",
-            // top: offset || "46%",
-            // left: offset || "46%",
-            // width: '200px',
-            // paddingBottom: '2px',
-            // paddingRight: "20px",
-            // textAlign: 'center',
-            backgroundColor: color,
-            paddingTop: `${theme.sizing.scale500}`,
-            paddingLeft: `${theme.sizing.scale750}`,
-          })}
-        >
-          {children}
-        </div>
-      );
-    }
-  }
-
   function renderGrid() {
     return products.map((item, index) => {
       return <FlexGridItem key={item.id}>{renderCard(item)}</FlexGridItem>;
@@ -108,7 +57,7 @@ function Products() {
     return (
       <div>
         {ready ? (
-          <Wrapper type={wrapperTypes.loyalty}>
+          <WrapperLoayalty>
             <StatefulPopover
               content={
                 <Paragraph3 padding="scale500">
@@ -123,7 +72,7 @@ function Products() {
             >
               <i className="material-icons">loyalty</i>
             </StatefulPopover>
-          </Wrapper>
+          </WrapperLoayalty>
         ) : null}
         <Card
           // headerImage={}
@@ -232,7 +181,7 @@ function Products() {
       return (
         <>
           <Layer>
-            <Wrapper type={wrapperTypes.content}>
+            <Wrapper>
               <div
                 className={css({
                   backgroundColor: `${theme.colors.backgroundPrimary}`,

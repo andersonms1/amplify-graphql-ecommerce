@@ -13,7 +13,6 @@ Todo:
 ✔ Study to : https://hackernoon.com/magic-of-react-suspense-with-concurrent-react-and-react-lazy-api-e32dc5f30ed1 @done(20-09-04 21:02)
 ☐ Load of pages, use lazy? and or place holder svg
 ☐ Validate cart description size.
-☐ Test on thays smartphone grid layout
 ☐ Remember: revise responsivity. And if some one if a computer minimize the size of small smartphone, it is good?
 ☐ Reminder why do not use react-caousel-responsive: the css is overitten
 ☐ [QUERYES] history cart relationship. Ex. Querie for unpaid itens and itens purchased by date
@@ -23,3 +22,10 @@ Todo:
 https://github.com/fabiospampinato/vscode-todo-plus
 https://developer.mozilla.org/en-US/docs/Web/API/ImageData
 https://www.javascriptstuff.com/detect-image-load/
+☐ Separete product state
+☐ Create component/function to handleLoad
+...
+☐ Create the ecommerce
+☐ Create the UnbPaquera site
+☐ Create the subscription site for health workers
+☐ Create the site to analize reclamizations (Uber de advogado), com funções integradas a redes sociais.

@@ -20,7 +20,7 @@ const Small = ({ children }) => {
       return children;
     }
   };
-  return <div>{handleSmallHand()}</div>;
+  return <>{handleSmallHand()}</>;
 };
 
 // const Medium = ({ children }) => {
@@ -57,7 +57,7 @@ const Large = ({ children }) => {
     <>
       {useMediaQuery({
         query: `(min-width: ${breakpoints.large}px)`,
-      }) && <div>{children}</div>}
+      }) && <>{children}</>}
     </>
   );
 };

@@ -11,7 +11,7 @@ import { Textarea } from "baseui/textarea";
 import { FileUploader } from "baseui/file-uploader";
 import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
 import _ from "lodash";
-import { ProductContext } from "../../context/products";
+import { ProductsContext } from "../../context/products";
 
 // import Storage from "@aws-amplify/storage";
 // import API, { graphqlOperation } from "@aws-amplify/api";
@@ -38,7 +38,7 @@ export default (props) => {
   const [titleCaption, setTitleCaption] = React.useState("");
   const [descriptionCaption, setDescriptionCaption] = React.useState("");
   const [categoryCaption, setCategoryCaption] = React.useState("");
-  const { post } = useContext(ProductContext);
+  const { post } = useContext(ProductsContext);
 
   const data = {
     title,
