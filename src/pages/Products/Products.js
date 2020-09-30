@@ -26,12 +26,11 @@ import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
 import { Wrapper, WrapperLoayalty } from "../../components/Wrapper";
 
-import useIntersectionObserver from "../../hooks/useIntersectionObserver";
-
 function Products() {
   const [css, theme] = useStyletron();
-  const [content, setContent] = useState(0);
-  const [ready, setReady] = useState(false);
+  const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
+  const [imgsDidLoad, setImgsDidLoad] = useState(false);
+
   const { products, loading } = useContext(ProductsContext);
 
   const priceButtonStyles = css({
@@ -56,7 +55,7 @@ function Products() {
   function renderCard(item) {
     return (
       <div>
-        {ready ? (
+        {imgsDidLoad ? (
           <WrapperLoayalty>
             <StatefulPopover
               content={
@@ -125,7 +124,11 @@ function Products() {
                 })}
                 src={item.link}
                 onLoad={() => {
-                  setContent(content + 1);
+                  setImgsLoadCounter(imgsLoadCounter + 1);
+
+                  if (imgsLoadCounter === products.length - 1) {
+                    setImgsDidLoad(true);
+                  }
                 }}
                 alt="Imagem do produto"
               />
@@ -173,11 +176,11 @@ function Products() {
   };
 
   const handleLoading = () => {
-    if (ready) {
-      return handleGrid(renderGrid());
+    if (!products || loading) {
+      return handleGrid(renderContentLoader());
     }
 
-    if (loading === false && content !== products.length) {
+    if (!imgsDidLoad) {
       return (
         <>
           <Layer>
@@ -191,15 +194,13 @@ function Products() {
                 {handleGrid(renderContentLoader())}
               </div>
             </Wrapper>
+
             {handleGrid(renderGrid())}
           </Layer>
         </>
       );
-    } else if (loading === false && content === products.length) {
-      setReady(true);
     } else {
-      console.log("else");
-      return handleGrid(renderContentLoader());
+      return handleGrid(renderGrid());
     }
   };
 
