@@ -23,18 +23,19 @@ const ProductContext = createContext();
 const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState();
   const [photos, setPhotos] = useState();
+
   const getById = async (id) => {
     try {
       const { data } = await API.graphql(graphqlOperation(getProduct, { id }));
-      console.log(data);
+      // console.log(data);
       const res = await data.getProduct.photos.map(async (i) => {
-        console.log(i);
+        // console.log(i);
         const image = await Storage.get(i.key, { level: "public" });
         return (i.link = image);
       });
       await Promise.all(res);
 
-      console.log(data);
+      // console.log(data);
       setProduct(data.getProduct);
     } catch (e) {
       console.log(new Error(e));
@@ -94,6 +95,7 @@ const ProductProvider = ({ children }) => {
     );
     console.log(res);
   };
+
   return (
     <ProductContext.Provider value={{ product, getById, post }}>
       {children}

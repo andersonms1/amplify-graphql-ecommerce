@@ -5,17 +5,25 @@ import React from "react";
 function Spinner() {
   const [css, theme] = useStyletron();
   const centralize = css({
+    flexGrow: "1",
+    flexShrink: "1",
+    flexBasis: "100%",
+    background: "yellow",
+    width: "100vw",
+    height: "100vh",
     // height: "100%",
-    paddingTop: "40vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
+    // paddingTop: "40vh",
+    // display: "flex",
+    // flexDirection: "column",
+    // alignItems: "center",
+    // justifyContent: "center",
   });
 
   return (
-    <div className={centralize}>
-      <StyledSpinnerNext />
+    <div style={{ display: "flex" }}>
+      <div className={centralize}>
+        <StyledSpinnerNext />
+      </div>
     </div>
   );
 }

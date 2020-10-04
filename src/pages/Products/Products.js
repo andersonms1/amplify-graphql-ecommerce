@@ -24,8 +24,8 @@ import { ProductsContext } from "../../context/products";
 import { Small, Medium, Large } from "./MediaQueriesContainers";
 import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
-import { Wrapper, WrapperLoayalty } from "../../components/Wrapper";
-
+import { HandleLoad, Wrapper, WrapperLoayalty } from "../../components";
+import { handleLoad } from "../../utils";
 function Products() {
   const [css, theme] = useStyletron();
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
@@ -238,7 +238,25 @@ function Products() {
     );
   };
 
-  return <div>{handleLoading()}</div>;
+  return (
+    <div>
+      {handleLoad(
+        handleGrid(renderGrid()),
+        handleGrid(renderContentLoader()),
+        imgsDidLoad
+      )}
+    </div>
+  );
+  // return (
+  //   <div>
+  //     {HandleLoad(
+  //       handleGrid(renderGrid()),
+  //       handleGrid(renderContentLoader()),
+  //       imgsDidLoad
+  //     )}
+  //   </div>
+  // );
+  // return <div>{handleLoading()}</div>;
 }
 
 export default Products;

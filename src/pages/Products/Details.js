@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
@@ -13,6 +13,10 @@ import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
 import { Small, Large } from "../../mediaQueries";
 import { useMediaQuery } from "react-responsive";
+import { Layer } from "baseui/layer";
+import { Spinner } from "../../components/";
+import { HandleLoad } from "../../components";
+import { handleLoad } from "../../utils";
 import Header from "../Home/Header";
 
 function Details() {
@@ -20,6 +24,31 @@ function Details() {
   const { breakpoints } = theme;
   let { id } = useParams();
   const { getById, product } = useContext(ProductContext);
+  const [imgsDidLoad, setImgsDidLoad] = useState(false);
+  const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
+  const [indexes, setIndexes] = useState([]);
+  const [display, setDisplay] = useState("none");
+  const targetRef = useRef();
+
+  const get = async () => {
+    await getById(id);
+  };
+  // useEffect(() => {
+  //   setTimeout(function () {
+  //     alert("Hello");
+  //     // setImgsDidLoad(true);
+  //   }, 3000);
+  // }, []);
+
+  useEffect(() => {
+    get();
+    // console.log(product);
+  }, [id]);
+
+  // useEffect(() => {
+  //   console.log(document.readyState);
+  //   // targetRef.current.addEventListener("load", () => console.log("loaded"));
+  // }, [document.readyState]);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${breakpoints.large}px)`,
@@ -49,13 +78,29 @@ function Details() {
   });
 
   const iterateImages = () => {
-    return product.photos.map((i, index) => {
+    return product.photos.map((image, index) => {
+      // let display = "inline";
       return (
         <div key={index}>
-          <img src={i.link}></img>
+          <img
+            src={image.link}
+            alt="Foto do produto"
+            ref={targetRef}
+            /* The carousel and baseui don't "talk", very well. So the photos are appearing first.  */
+            style={
+              image.loaded && imgsDidLoad
+                ? { display: "inline" }
+                : { display: "none" }
+            }
+            onLoad={() => {
+              image.loaded = true;
+              setImgsLoadCounter(imgsLoadCounter + 1);
+              if (imgsLoadCounter === product.photos.length - 1) {
+                setImgsDidLoad(true);
+              }
+            }}
+          />
           <div className="legend">
-            {/* <>Adicionar ao carrinho</>
-            <p>Adicionar a lista de desejos</p> */}
             <i
               onClick={() => alert("Shopping Cart")}
               height="10px"
@@ -80,81 +125,46 @@ function Details() {
 
   const contentLoader = () => {
     return (
-      <>
-        <div
-          className={css({
-            height: "100%",
-          })}
-        >
-          <div
-            className={css({
-              // display: "flex",
-              // flex: 1,
-              // paddingTop: "10%",
-              // paddingLeft: "25%",
-              // flexDirection: "row",
-              // justifyContent: "center",
-              // alignItems: "center",
-              display: "-webkit-box",
-              display: "-moz-box",
-              display: "-ms-flexbox",
-              display: "-webkit-flex",
-              height: "100%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            })}
+      <div style={{ display: "flex" }}>
+        {!isLarge ? (
+          <ContentLoader
+            speed={2}
+            width="100vw"
+            height="100%"
+            viewBox="0 0 150 500"
+            backgroundColor="#f3f3f3"
+            foregroundColor="#ecebeb"
           >
-            <Small>
-              <ContentLoader
-                speed={2}
-                width="100%"
-                height="100%"
-                viewBox="0 0 150 500"
-                backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-              >
-                <rect x="0" y="131" rx="0" ry="0" width="139" height="26" />
-                <rect x="0" y="0" rx="0" ry="0" width="141" height="122" />
-                <rect x="0" y="165" rx="0" ry="0" width="139" height="77" />
-              </ContentLoader>
-            </Small>
-            <Large>
-              <ContentLoader
-                speed={2}
-                width="100%"
-                height="100%"
-                // width="100%"
-                // height="100%"
-                viewBox="0 0 1000 460"
-                backgroundColor="#f3f3f3"
-                foregroundColor="#ecebeb"
-                // style={{
-                //   maxWidth: "100%",
-                //   height: "auto",
-                //   alignSelf: "center",
-                // }}
-              >
-                <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
-                <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
-                <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
-                <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
-                <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
-                <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
-              </ContentLoader>
-              {/* <div
-          className={css({
-            width: "10px",
-            height: "10px",
-            background: "red",
-            // backgroundColor: "yellow",
-            alignSelf: "center",
-          })}
-        ></div> */}
-            </Large>
-          </div>
-        </div>
-      </>
+            <rect x="0" y="131" rx="0" ry="0" width="139" height="26" />
+            <rect x="0" y="0" rx="0" ry="0" width="141" height="122" />
+            <rect x="0" y="165" rx="0" ry="0" width="139" height="77" />
+          </ContentLoader>
+        ) : (
+          <ContentLoader
+            speed={2}
+            width="100vw"
+            height="100%"
+            viewBox="0 0 1000 460"
+            backgroundColor="#f3f3f3"
+            foregroundColor="#ecebeb"
+            style={{
+              width: "100vw",
+              maxWidth: "100%",
+              height: "auto",
+              flexGrow: "1",
+              flexShrink: "1",
+            }}
+            className={{ flexGrow: "1", flexShrink: "1" }}
+          >
+            <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
+            <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
+            <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
+            <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
+            <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
+            <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
+          </ContentLoader>
+        )}
+      </div>
     );
   };
 
@@ -175,129 +185,112 @@ function Details() {
   };
 
   const renderContent = () => {
-    return (
-      <>
-        <div
-          // style={{ flexGrow: "1" }}
-          className={
-            isLarge
-              ? css({
-                  flexGrow: "3",
-                  flexShrink: "3",
-                  paddingRight: "5px",
-                  ...itemWidth,
-                })
-              : null
-          }
-        >
-          <Carousel {...getConfigurableProps()}>{iterateImages()}</Carousel>
-        </div>
-
-        <div
-          className={
-            isLarge
-              ? css({
-                  flexGrow: "3",
-                  flexShrink: "3",
-                  paddingLeft: "5px",
-                  ...itemWidth,
-                })
-              : null
-          }
-          // style={{ flexGrow: "1" }}
-        >
-          <Display4 marginBottom="scale500">{product.title}</Display4>
-          <Accordion className={css({ maxWidth: "100%" })}>
-            <Panel
-              title="Detalhes"
-              overrides={{
-                Header: {
-                  style: { paddingLeft: "0px", paddingRight: "0px" },
-                },
-              }}
-            >
-              Preço: R${product.price.specie},{product.price.cents}
-              <p>Categoria: {product.category}, Tamanho: M</p>
-            </Panel>
-            <Panel
-              title="Descrição"
-              overrides={{
-                Root: {
-                  style: { maxWidth: "100%" },
-                },
-                Header: {
-                  style: { paddingLeft: "0px", paddingRight: "0px" },
-                },
-              }}
-            >
-              <Paragraph1
-                className={css({ maxWidth: "100%" })}
-                marginBottom="scale500"
-              >
-                {product.description}
-              </Paragraph1>
-            </Panel>
-          </Accordion>
-
-          {renderButton("shopping_cart", KIND.primary, "Adicionar ao carrinho")}
-
-          <Block marginBottom="scale300" />
-
-          {renderButton(
-            "loyalty",
-            KIND.secondary,
-            "Adicionar a lista de desejos"
-          )}
-        </div>
-      </>
-    );
-  };
-
-  const handleLoading = () => {
-    if (!id || !product) {
-      // if (true) {
-      return contentLoader();
+    if (!product) {
+      return null;
     } else {
       return (
         <>
-          <Small>{renderContent()}</Small>
-          <Large>
+          <div
+            className={
+              isLarge
+                ? css({
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "flex-start",
+                    justifyContent: "flex-end",
+                    alignContent: "flex-end",
+                    // maxWidth: "800px",
+                    // background: "gray",
+                    // width: "500px",
+                  })
+                : null
+            }
+          >
             <div
-              className={css({
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "flex-start",
-                justifyContent: "flex-end",
-                alignContent: "flex-end",
-                // maxWidth: "800px",
-                // background: "gray",
-                // width: "500px",
-              })}
+              className={
+                isLarge
+                  ? css({
+                      flexGrow: "3",
+                      flexShrink: "3",
+                      paddingRight: "5px",
+                      ...itemWidth,
+                    })
+                  : null
+              }
             >
-              {renderContent()}
+              <Carousel {...getConfigurableProps()}>{iterateImages()}</Carousel>
             </div>
-          </Large>
+
+            <div
+              className={
+                isLarge
+                  ? css({
+                      flexGrow: "3",
+                      flexShrink: "3",
+                      paddingLeft: "5px",
+                      ...itemWidth,
+                    })
+                  : null
+              }
+            >
+              <Display4 marginBottom="scale500">{product.title}</Display4>
+              <Accordion className={css({ maxWidth: "100%" })}>
+                <Panel
+                  title="Detalhes"
+                  overrides={{
+                    Header: {
+                      style: { paddingLeft: "0px", paddingRight: "0px" },
+                    },
+                  }}
+                >
+                  Preço: R${product.price.specie},{product.price.cents}
+                  <p>Categoria: {product.category}, Tamanho: M</p>
+                </Panel>
+                <Panel
+                  title="Descrição"
+                  overrides={{
+                    Root: {
+                      style: { maxWidth: "100%" },
+                    },
+                    Header: {
+                      style: { paddingLeft: "0px", paddingRight: "0px" },
+                    },
+                  }}
+                >
+                  <Paragraph1
+                    className={css({ maxWidth: "100%" })}
+                    marginBottom="scale500"
+                  >
+                    {product.description}
+                  </Paragraph1>
+                </Panel>
+              </Accordion>
+
+              {renderButton(
+                "shopping_cart",
+                KIND.primary,
+                "Adicionar ao carrinho"
+              )}
+
+              <Block marginBottom="scale300" />
+
+              {renderButton(
+                "loyalty",
+                KIND.secondary,
+                "Adicionar a lista de desejos"
+              )}
+            </div>
+          </div>
         </>
       );
     }
   };
 
-  const get = async () => {
-    await getById(id);
-  };
-
-  useEffect(() => {
-    get();
-    // console.log(product);
-  }, [id]);
-
   return (
     <>
-      <>
-        <Header />
-        <Block paddingBottom="10px" />
-      </>
-      {handleLoading()}
+      <Header />
+      <Block paddingBottom="10px" />
+      {handleLoad(renderContent(), contentLoader(), imgsDidLoad)}
     </>
   );
 }

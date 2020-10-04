@@ -1,9 +1,9 @@
 import React from "react";
 import { useStyletron } from "baseui";
 
-const Wrapper = ({ children }) => {
+const Wrapper = (props) => {
   const [css, theme] = useStyletron();
-  // const { offset, color, children, forwardedRef, type } = props;
+  const { offset, color, children, forwardedRef, type } = props;
 
   return (
     <div
@@ -15,8 +15,9 @@ const Wrapper = ({ children }) => {
         // paddingBottom: '2px',
         // paddingRight: "20px",
         // textAlign: 'center',
-        // backgroundColor: color,
+        backgroundColor: `${theme.colors.backgroundPrimary}`,
       })}
+      ref={forwardedRef}
     >
       {children}
     </div>
