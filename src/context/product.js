@@ -1,15 +1,9 @@
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  createProvider,
-} from "react";
-import Auth from "@aws-amplify/auth";
+import React, { useState, createContext } from "react";
+import Auth from "@aws-amplify/auth"; /* AWS needs this here */
 import Storage from "@aws-amplify/storage";
 import API, { graphqlOperation } from "@aws-amplify/api";
-import { listProducts, getProduct } from "../graphql/queries";
+import { getProduct } from "../graphql/queries";
 import { createProduct } from "../graphql/mutations";
-import { Link, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import config from "../aws-exports";
 
@@ -23,6 +17,11 @@ const ProductContext = createContext();
 const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState();
   const [photos, setPhotos] = useState();
+  const [current, setCurrent] = useState(0);
+
+  const setCurrentStep = (goTo) => {
+    setCurrent(goTo);
+  };
 
   const getById = async (id) => {
     try {
@@ -43,12 +42,14 @@ const ProductProvider = ({ children }) => {
   };
 
   const post = async (files, data) => {
+    console.log(files);
+    console.log(data);
     let photos = [];
+
     const promises = await files.map(async (file, index) => {
       const extension = file.name.split(".")[1];
       const name = file.name.split(".")[0];
       const key = `images/${uuidv4()}${name}.${extension}`;
-      const url = `https://${bucket}.s3.${region}.amazonaws.com/public/${key}`;
 
       console.log(`%c ${file}`, "color: red; font-weight: bold");
       console.table(file);
@@ -97,7 +98,9 @@ const ProductProvider = ({ children }) => {
   };
 
   return (
-    <ProductContext.Provider value={{ product, getById, post }}>
+    <ProductContext.Provider
+      value={{ product, getById, post, setCurrentStep, current }}
+    >
       {children}
     </ProductContext.Provider>
   );

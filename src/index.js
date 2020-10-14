@@ -3,9 +3,6 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import Amplify from "@aws-amplify/core";
 import amplify from "./aws-exports";
-// import AppNav from "./AppNav";
-import AWSAppSyncClient, { AUTH_TYPE } from "aws-appsync";
-import awsconfig from "./aws-exports";
 
 import { BaseProvider, LightTheme } from "baseui";
 import { Provider as StyletronProvider } from "styletron-react";
@@ -15,15 +12,6 @@ import { ProductsProvider } from "./context/products";
 import { ProductProvider } from "./context/product";
 
 const engine = new Styletron();
-
-const client = new AWSAppSyncClient({
-  url: awsconfig.aws_appsync_graphqlEndpoint,
-  region: awsconfig.aws_appsync_region,
-  auth: {
-    type: AUTH_TYPE.API_KEY,
-    apiKey: awsconfig.aws_appsync_apiKey,
-  },
-});
 
 Amplify.configure(amplify);
 

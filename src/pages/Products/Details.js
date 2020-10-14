@@ -2,8 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
-import { Link, useParams } from "react-router-dom";
-import { Breadcrumbs } from "baseui/breadcrumbs";
+import { useParams } from "react-router-dom";
 import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
@@ -11,11 +10,7 @@ import _ from "lodash";
 import { ProductContext } from "../../context/product";
 import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
-import { Small, Large } from "../../mediaQueries";
 import { useMediaQuery } from "react-responsive";
-import { Layer } from "baseui/layer";
-import { Spinner } from "../../components/";
-import { HandleLoad } from "../../components";
 import { handleLoad } from "../../utils";
 import Header from "../Home/Header";
 
@@ -26,29 +21,15 @@ function Details() {
   const { getById, product } = useContext(ProductContext);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
-  const [indexes, setIndexes] = useState([]);
-  const [display, setDisplay] = useState("none");
+
   const targetRef = useRef();
 
-  const get = async () => {
-    await getById(id);
-  };
-  // useEffect(() => {
-  //   setTimeout(function () {
-  //     alert("Hello");
-  //     // setImgsDidLoad(true);
-  //   }, 3000);
-  // }, []);
-
   useEffect(() => {
+    const get = async () => {
+      await getById(id);
+    };
     get();
-    // console.log(product);
   }, [id]);
-
-  // useEffect(() => {
-  //   console.log(document.readyState);
-  //   // targetRef.current.addEventListener("load", () => console.log("loaded"));
-  // }, [document.readyState]);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${breakpoints.large}px)`,
@@ -86,7 +67,8 @@ function Details() {
             src={image.link}
             alt="Foto do produto"
             ref={targetRef}
-            /* The carousel and baseui don't "talk", very well. So the photos are appearing first.  */
+            /* The carousel and baseui don't "talk", very well. 
+            So the photos are appearing first.  */
             style={
               image.loaded && imgsDidLoad
                 ? { display: "inline" }
@@ -96,6 +78,7 @@ function Details() {
               image.loaded = true;
               setImgsLoadCounter(imgsLoadCounter + 1);
               if (imgsLoadCounter === product.photos.length - 1) {
+                /*Due to rerender, this counter is not reliable */
                 setImgsDidLoad(true);
               }
             }}

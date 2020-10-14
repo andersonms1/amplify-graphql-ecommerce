@@ -3,7 +3,7 @@ import { useStyletron } from "baseui";
 
 const Wrapper = (props) => {
   const [css, theme] = useStyletron();
-  const { offset, color, children, forwardedRef, type } = props;
+  const { children, forwardedRef } = props;
 
   return (
     <div

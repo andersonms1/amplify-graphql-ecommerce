@@ -1,2 +1,3 @@
 import handleLoad from "./handleLoad";
-export { handleLoad };
+import productCreateButtons from "./productCreateButtons";
+export { handleLoad, productCreateButtons };

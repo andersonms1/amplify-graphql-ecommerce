@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { useMediaQuery } from "react-responsive";
 import { useStyletron } from "baseui";
 
 const OFFSET = 300;
 
 const Small = ({ children }) => {
-  const [css, theme] = useStyletron();
+  const [, theme] = useStyletron();
   const { breakpoints } = theme;
 
   return (
@@ -16,7 +16,7 @@ const Small = ({ children }) => {
 };
 
 const Medium = ({ children }) => {
-  const [css, theme] = useStyletron();
+  const [, theme] = useStyletron();
   const { breakpoints } = theme;
 
   return (
@@ -28,7 +28,7 @@ const Medium = ({ children }) => {
   );
 };
 const Large = ({ children }) => {
-  const [css, theme] = useStyletron();
+  const [, theme] = useStyletron();
   const { breakpoints } = theme;
 
   return (

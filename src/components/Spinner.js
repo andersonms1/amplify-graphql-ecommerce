@@ -1,9 +1,9 @@
-import { Spinner as S, StyledSpinnerNext } from "baseui/spinner";
+import { StyledSpinnerNext } from "baseui/spinner";
 import { useStyletron } from "baseui";
 import React from "react";
 
 function Spinner() {
-  const [css, theme] = useStyletron();
+  const [css] = useStyletron();
   const centralize = css({
     flexGrow: "1",
     flexShrink: "1",

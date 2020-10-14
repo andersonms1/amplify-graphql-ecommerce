@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useMediaQuery } from "react-responsive";
 import { useStyletron } from "baseui";
 
 const Small = ({ children }) => {
-  const [css, theme] = useStyletron();
+  const [, theme] = useStyletron();
   const { breakpoints } = theme;
   const small = useMediaQuery({
     query: `(max-width: ${breakpoints.small}px)`,
@@ -50,7 +50,7 @@ const Small = ({ children }) => {
 // };
 
 const Large = ({ children }) => {
-  const [css, theme] = useStyletron();
+  const [, theme] = useStyletron();
   const { breakpoints } = theme;
 
   return (
