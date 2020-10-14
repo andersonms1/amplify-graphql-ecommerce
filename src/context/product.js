@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, useEffect, createContext } from "react";
 import Auth from "@aws-amplify/auth"; /* AWS needs this here */
 import Storage from "@aws-amplify/storage";
 import API, { graphqlOperation } from "@aws-amplify/api";
@@ -16,8 +16,27 @@ const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
   const [product, setProduct] = useState();
+  const [items, setItems] = useState();
   const [photos, setPhotos] = useState();
   const [current, setCurrent] = useState(0);
+
+  useEffect(() => {
+    function updateItems(items) {
+      setItems(items);
+    }
+    updateItems();
+  });
+
+  useEffect(() => {}, [product, items]);
+
+  function updateItems(items) {
+    // const arr = ["a", "b", "c", "d", "e", "f"];
+    // const res = arr.map((a) => a);
+    // if (!res) {
+    //   return;
+    // }
+    setItems(items);
+  }
 
   const setCurrentStep = (goTo) => {
     setCurrent(goTo);
@@ -40,6 +59,8 @@ const ProductProvider = ({ children }) => {
       console.log(new Error(e));
     }
   };
+
+  const sendPhotos = async (id, files) => {};
 
   const post = async (files, data) => {
     console.log(files);
@@ -99,7 +120,15 @@ const ProductProvider = ({ children }) => {
 
   return (
     <ProductContext.Provider
-      value={{ product, getById, post, setCurrentStep, current }}
+      value={{
+        product,
+        getById,
+        post,
+        setCurrentStep,
+        current,
+        items,
+        updateItems,
+      }}
     >
       {children}
     </ProductContext.Provider>

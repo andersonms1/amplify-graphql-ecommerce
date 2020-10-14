@@ -10,6 +10,7 @@ import { Client as Styletron } from "styletron-engine-atomic";
 
 import { ProductsProvider } from "./context/products";
 import { ProductProvider } from "./context/product";
+import AppProvider from "./context/AppProvider";
 
 const engine = new Styletron();
 
@@ -20,7 +21,9 @@ ReactDOM.render(
     <BaseProvider theme={LightTheme}>
       <ProductsProvider>
         <ProductProvider>
-          <App />
+          <AppProvider>
+            <App />
+          </AppProvider>
         </ProductProvider>
       </ProductsProvider>
     </BaseProvider>

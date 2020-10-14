@@ -1,3 +1,8 @@
-import { createContext } from "react";
+import React, { createContext } from "react";
 
-const AppContext = createContext({});
+const AppContext = createContext({
+  items: [],
+  updateItems: () => {},
+});
+
+export default AppContext;

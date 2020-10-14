@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FileUploader } from "baseui/file-uploader";
 import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
 import { FormControl } from "baseui/form-control";
@@ -15,11 +15,19 @@ import {
 } from "baseui/modal";
 import { KIND } from "baseui/button";
 
+import { ProductContext } from "../../../context/product";
+import AppContext from "../../../context/AppContext";
+
 function FileUpload({ children }) {
-  const [items, setItems] = React.useState([]);
+  // const [items, f] = useState([]);
   const [position, setPosition] = useState(0);
   const [erroPhotos, setErroPhotos] = useState("");
   const [modalPhotos, setModalPhotos] = useState(false);
+
+  // const context = useContext(ProductContext);
+  const { items, updateItems } = useContext(AppContext);
+  // const { items } = useContext(ProductContext);
+  // const [items, updateItems] = useState([]);
 
   const funcAsArgs = () => {
     console.log("debug!");
@@ -37,7 +45,8 @@ function FileUpload({ children }) {
             onChange={({ oldIndex, newIndex }) => {
               setPosition(position + 1);
               console.log(newIndex);
-              setItems(
+
+              updateItems(
                 newIndex === -1
                   ? arrayRemove(items, oldIndex)
                   : arrayMove(items, oldIndex, newIndex)
@@ -65,36 +74,36 @@ function FileUpload({ children }) {
         name={null}
         accept="image/*"
         onDrop={(acceptedFiles, rejectedFiles) => {
-          try {
-            const aFiles = acceptedFiles.filter(
-              /* f.position = index;
-              not need to set position
-              by some witchcraft is set automatic */
-              (f) => f.name.length < 30
+          const aFiles = acceptedFiles.filter(
+            /* f.position = index;
+            not need to set position
+            by some witchcraft is set automatic */
+            (f) => f.name.length < 30
+          );
+
+          if (aFiles.length !== acceptedFiles.length) {
+            console.log(aFiles);
+            setErroPhotos(
+              `O nome do arquivo não pode ser maior que 30 caracteres: ${_.difference(
+                acceptedFiles,
+                aFiles
+              )}`
             );
+            setModalPhotos(true);
+          }
 
-            if (aFiles.length !== acceptedFiles.length) {
-              console.log(aFiles);
-              setErroPhotos(
-                `O nome do arquivo não pode ser maior que 30 caracteres: ${_.difference(
-                  acceptedFiles,
-                  aFiles
-                )}`
-              );
-              setModalPhotos(true);
-            }
+          if (rejectedFiles.length) {
+            console.log(rejectedFiles);
+            setErroPhotos(`Você não enviou uma foto? ${rejectedFiles}`);
+            setModalPhotos(true);
+          }
 
-            if (rejectedFiles.length) {
-              console.log(rejectedFiles);
-              setErroPhotos(`Você não enviou uma foto? ${rejectedFiles}`);
-              setModalPhotos(true);
-            }
-
-            if (items.length) {
-              setItems(_.union(items, aFiles));
-            } else {
-              setItems(aFiles);
-            }
+          if (items.length) {
+            updateItems(_.union(items, aFiles));
+          } else {
+            updateItems(aFiles);
+          }
+          try {
           } catch (e) {
             console.log(e);
           }
