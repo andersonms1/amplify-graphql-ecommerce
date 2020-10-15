@@ -7,7 +7,7 @@ import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
-import { ProductContext } from "../../context/product";
+import AppContext from "../../context/AppContext";
 import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
@@ -18,7 +18,7 @@ function Details() {
   const [css, theme] = useStyletron();
   const { breakpoints } = theme;
   let { id } = useParams();
-  const { getById, product } = useContext(ProductContext);
+  const { getById, product } = useContext(AppContext);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
 
@@ -59,51 +59,55 @@ function Details() {
   });
 
   const iterateImages = () => {
-    return product.photos.map((image, index) => {
-      // let display = "inline";
-      return (
-        <div key={index}>
-          <img
-            src={image.link}
-            alt="Foto do produto"
-            ref={targetRef}
-            /* The carousel and baseui don't "talk", very well. 
-            So the photos are appearing first.  */
-            style={
-              image.loaded && imgsDidLoad
-                ? { display: "inline" }
-                : { display: "none" }
-            }
-            onLoad={() => {
-              image.loaded = true;
-              setImgsLoadCounter(imgsLoadCounter + 1);
-              if (imgsLoadCounter === product.photos.length - 1) {
-                /*Due to rerender, this counter is not reliable */
-                setImgsDidLoad(true);
+    if (product) {
+      return product.photos.map((image, index) => {
+        // let display = "inline";
+        return (
+          <div key={index}>
+            <img
+              src={image.link}
+              alt="Foto do produto"
+              ref={targetRef}
+              /* The carousel and baseui don't "talk", very well. 
+              So the photos are appearing first.  */
+              style={
+                image.loaded && imgsDidLoad
+                  ? { display: "inline" }
+                  : { display: "none" }
               }
-            }}
-          />
-          <div className="legend">
-            <i
-              onClick={() => alert("Shopping Cart")}
-              height="10px"
-              className="material-icons"
-              style={{ paddingRight: "5px" }}
-            >
-              shopping_cart
-            </i>
-            <i
-              onClick={() => alert("Loyalty")}
-              height="10px"
-              className="material-icons"
-              style={{ paddingLeft: "5px" }}
-            >
-              loyalty
-            </i>
+              onLoad={() => {
+                image.loaded = true;
+                setImgsLoadCounter(imgsLoadCounter + 1);
+                if (imgsLoadCounter === product.photos.length - 1) {
+                  /*Due to rerender, this counter is not reliable */
+                  setImgsDidLoad(true);
+                }
+              }}
+            />
+            <div className="legend">
+              <i
+                onClick={() => alert("Shopping Cart")}
+                height="10px"
+                className="material-icons"
+                style={{ paddingRight: "5px" }}
+              >
+                shopping_cart
+              </i>
+              <i
+                onClick={() => alert("Loyalty")}
+                height="10px"
+                className="material-icons"
+                style={{ paddingLeft: "5px" }}
+              >
+                loyalty
+              </i>
+            </div>
           </div>
-        </div>
-      );
-    });
+        );
+      });
+    } else {
+      return null;
+    }
   };
 
   const contentLoader = () => {

@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
 import { ProductsContext } from "../../context/products";
+import AppContext from "../../context/AppContext";
 import { Small, Medium, Large } from "./MediaQueriesContainers";
 import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
@@ -31,7 +32,7 @@ function Products() {
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
 
-  const { products, loading } = useContext(ProductsContext);
+  const { products, loading } = useContext(AppContext);
 
   const priceButtonStyles = css({
     display: "flex",

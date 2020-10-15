@@ -11,14 +11,15 @@ import {
 } from "baseui/modal";
 import { KIND } from "baseui/button";
 
-const productErrorModal = (title, error) => {
-  var isOpen = true;
-
+const ProductErrorModal = (isOpen, title, error) => {
+  const [status, setStatus] = useState(isOpen);
+  console.log("modal");
+  console.log(isOpen);
   return (
     <Modal
-      onClose={() => (isOpen = false)}
+      onClose={() => setStatus(false)}
       closeable
-      isOpen={isOpen}
+      isOpen={status}
       animate
       autoFocus
       size={SIZE.default}
@@ -28,7 +29,7 @@ const productErrorModal = (title, error) => {
       <ModalHeader>{title}</ModalHeader>
       <ModalBody>{error}</ModalBody>
       <ModalFooter>
-        <ModalButton onClick={() => (isOpen = false)} kind={KIND.tertiary}>
+        <ModalButton onClick={() => setStatus(false)} kind={KIND.tertiary}>
           Entendi
         </ModalButton>
       </ModalFooter>
@@ -36,4 +37,4 @@ const productErrorModal = (title, error) => {
   );
 };
 
-export default productErrorModal;
+export default ProductErrorModal;

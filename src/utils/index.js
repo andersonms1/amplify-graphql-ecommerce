@@ -1,3 +1,4 @@
 import handleLoad from "./handleLoad";
 import productCreateButtons from "./productCreateButtons";
-export { handleLoad, productCreateButtons };
+import productErrorModal from "./productErrorModal";
+export { handleLoad, productCreateButtons, productErrorModal };

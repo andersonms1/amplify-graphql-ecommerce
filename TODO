@@ -22,8 +22,11 @@ Todo:
 https://github.com/fabiospampinato/vscode-todo-plus
 https://developer.mozilla.org/en-US/docs/Web/API/ImageData
 https://www.javascriptstuff.com/detect-image-load/
-☐ Separete product state
-☐ Create component/function to handleLoad
+✔ Separete product state @done(20-10-13 22:05)
+✔ Create component/function to handleLoad @done(20-10-13 22:05)
+☐ Prevent user lost id when creating product
+☐ Hint: On mutation create there is a lot of obrigatory fields. A better aproach is use a temp obj, and only exec create mutation when really necessarily
+☐ Hint error setState on unmount comp: 1_try use arrows to invoke like on click, or bind it. 2_ Create another function/component. 3.0_ Conditional: Only set whem component is mounted. 3_ createMyHook 
 ...
 ☐ Create the ecommerce
 ☐ Create the UnbPaquera site

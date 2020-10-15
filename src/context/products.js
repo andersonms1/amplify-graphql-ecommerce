@@ -3,6 +3,15 @@ import Auth from "@aws-amplify/auth";
 import Storage from "@aws-amplify/storage";
 import API, { graphqlOperation } from "@aws-amplify/api";
 import { listProducts } from "../graphql/queries";
+
+// import React, { useState, useEffect, createContext } from "react";
+// import Auth from "@aws-amplify/auth"; /* AWS needs this here */
+// import Storage from "@aws-amplify/storage";
+// import API, { graphqlOperation } from "@aws-amplify/api";
+// import { getProduct } from "../graphql/queries";
+// import { createProduct } from "../graphql/mutations";
+// import { v4 as uuidv4 } from "uuid";
+// import config from "../aws-exports";
 // import config from "../aws-exports";
 
 const ProductsContext = React.createContext();

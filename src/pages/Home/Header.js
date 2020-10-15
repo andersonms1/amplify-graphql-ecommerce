@@ -63,11 +63,11 @@ function Header() {
       <div className={drawerStyles}>
         <div className={drawerIconStyles}>
           Olá, Anderson
-          <Avatar
-            name="Jane Doe"
+          {/* <Avatar
+            name="Anderson Silva"
             size="scale1200"
             src="https://api.adorable.io/avatars/285/10@adorable.io.png"
-          />
+          /> */}
         </div>
         {/* This link removes one weird bug, let this here for the love of god! */}
         <a href="www.google.com" />
@@ -140,11 +140,11 @@ function Header() {
               <div>
                 <Link {...linkProps} to="/user">
                   Olá, Anderson
-                  <Avatar
-                    name="Jane Doe"
+                  {/* <Avatar
+                    name="Anderson Silva"
                     size="scale1200"
                     src="https://api.adorable.io/avatars/285/10@adorable.io.png"
-                  />
+                  /> */}
                 </Link>
               </div>
             </NavigationList>
