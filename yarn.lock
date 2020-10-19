@@ -3629,10 +3629,10 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-baseui@^9.99.0:
-  version "9.99.0"
-  resolved "https://registry.yarnpkg.com/baseui/-/baseui-9.99.0.tgz#e4c4d4213c01740cecf696487a554e0934665af9"
-  integrity sha512-NUVlJTciBatVONztPsK3Lz2EKvx8dv3lDOA8ojhKR6mg52PHSqTdYIPoh98QAbpScmIi7oOt5FzYRqcJsih8qQ==
+baseui@^9.102.0:
+  version "9.102.0"
+  resolved "https://registry.yarnpkg.com/baseui/-/baseui-9.102.0.tgz#e272dc1c4acdf2193fe0e81a88ef8317b7625502"
+  integrity sha512-j5zQHqQWHcxOq1xT/omicRwbmdmUxfQ6uN61IoO/4kpqhFH79DMvUzhpmhapeXWxEDZcTvW3R31vcWQ2Yn3POg==
   dependencies:
     "@date-io/date-fns" "^2.6.2"
     card-validator "^6.2.0"
@@ -3649,7 +3649,7 @@ baseui@^9.99.0:
     react-is "^16.8.6"
     react-movable "^2.4.0"
     react-multi-ref "^1.0.0"
-    react-range "^1.6.3"
+    react-range "^1.7.0"
     react-uid "^2.3.0"
     react-virtualized "^9.21.1"
     react-virtualized-auto-sizer "^1.0.2"
@@ -10412,10 +10412,10 @@ react-native-get-random-values@^1.4.0:
   dependencies:
     fast-base64-decode "^1.0.0"
 
-react-range@^1.6.3:
-  version "1.6.7"
-  resolved "https://registry.yarnpkg.com/react-range/-/react-range-1.6.7.tgz#c3ac608a07899c2f8d420bb985b7fab2690d5168"
-  integrity sha512-CYoykEQMjY00saVEk0qxRpA/SjUyHJbAm8JMq86wjXwuL5l+taz5VXXNax1iVkquOjHnqoGVW2Vge0eK420cBw==
+react-range@^1.7.0:
+  version "1.8.2"
+  resolved "https://registry.yarnpkg.com/react-range/-/react-range-1.8.2.tgz#0d22961d65917777ef7f66228147d6752aeccef9"
+  integrity sha512-zegXW7xgWn/4HQ9EqFsxrFamx1rN/CDcG0a7v0dDYb975IG1l7yycQE02CXfWtclM0pUzSZa0iop3zHLPWyyMw==
 
 react-responsive-carousel@^3.2.9:
   version "3.2.9"
@@ -11783,7 +11783,7 @@ style-loader@0.23.1:
     loader-utils "^1.1.0"
     schema-utils "^1.0.0"
 
-styled-components@^5.2.0:
+styled-components@^5.1.1:
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-5.2.0.tgz#6dcb5aa8a629c84b8d5ab34b7167e3e0c6f7ed74"
   integrity sha512-9qE8Vgp8C5cpGAIdFaQVAl89Zgx1TDM4Yf4tlHbO9cPijtpSXTMLHy9lmP0lb+yImhgPFb1AmZ1qMUubmg3HLg==

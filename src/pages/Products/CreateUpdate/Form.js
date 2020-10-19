@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useStyletron } from "baseui";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
 import { Combobox } from "baseui/combobox";
 import { Input } from "baseui/input";
-import { useStyletron } from "baseui";
 
+import { Button, KIND } from "baseui/button";
+import { Block } from "baseui/block";
 import {
   schema as SCHEMA,
   title as TITLE,
@@ -15,16 +17,18 @@ import {
   price as PRICE,
 } from "./validations";
 
+import AppContext from "../../../context/AppContext";
+
 function Form({ children }) {
+  const { setCurrentStep } = useContext(AppContext);
+  const [css, theme] = useStyletron();
+
   const [titleCaption, setTitleCaption] = React.useState("");
   const [descriptionCaption, setDescriptionCaption] = React.useState("");
   const [categoryCaption, setCategoryCaption] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [category, setCategory] = React.useState("");
-  const [items, setItems] = React.useState([]);
-
-  const [css, theme] = useStyletron();
 
   const data = {
     title,
@@ -134,6 +138,22 @@ function Form({ children }) {
         </FormControl>
       </div>
       {/* {items ? children : null} */}
+      <Block paddingTop="50px" />
+      <Button
+        kind={KIND.secondary}
+        size="compact"
+        onClick={() => setCurrentStep(0)}
+      >
+        Anterior
+      </Button>
+
+      <Button
+        kind={KIND.primary}
+        size="compact"
+        onClick={() => setCurrentStep(2)}
+      >
+        Próximo
+      </Button>
     </div>
   );
 }

@@ -1,70 +1,56 @@
 import React, { useState, useContext } from "react";
+import { useStyletron } from "baseui";
 import { FileUploader } from "baseui/file-uploader";
 import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
 import { FormControl } from "baseui/form-control";
-import { productCreateButtons } from "../../../utils";
+import { Paragraph1, Paragraph2 } from "baseui/typography";
+import { Button, KIND } from "baseui/button";
+import { Block } from "baseui/block";
 import _ from "lodash";
 
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-  SIZE,
-  ROLE,
-} from "baseui/modal";
-import { KIND } from "baseui/button";
+import { productCreateButtons } from "../../../utils";
 
 import AppContext from "../../../context/AppContext";
-import { productErrorModal } from "../../../utils";
-import ProductErrorModal from "../../../components/ProductErrorModal";
-
-import { useStyletron } from "baseui";
-import Check from "baseui/icon/check";
-import Delete from "baseui/icon/delete";
-import DeleteAlt from "baseui/icon/delete-alt";
-// import { SnackbarElement } from "baseui/snackbar";
-// import { SnackbarProvider, useSnackbar, PLACEMENT } from "baseui/snackbar";
 
 function FileUpload({ children }) {
+  const [css, theme] = useStyletron();
   const [position, setPosition] = useState(0);
-  const [error, setError] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
 
-  const { items, updateItems } = useContext(AppContext);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [errorDescription, setErrorDescription] = useState("");
+  const [error, setError] = useState(false);
+
+  const { items, updateItems, setCurrentStep } = useContext(AppContext);
 
   const funcAsArgs = () => {
     console.log("debug!");
   };
 
-  const handleErrors = (acFiles, rjFiles, items) => {};
-
-  const handleModal = (title, error) => {
-    return (
-      <Modal
-        onClose={() => setIsOpen(false)}
-        closeable
-        isOpen={isOpen}
-        animate
-        autoFocus
-        size={SIZE.default}
-        role={ROLE.dialog}
-        unstable_ModalBackdropScroll
-      >
-        <ModalHeader>{title}</ModalHeader>
-        <ModalBody>{error}</ModalBody>
-        <ModalFooter>
-          <ModalButton onClick={() => setIsOpen(false)} kind={KIND.tertiary}>
-            Entendi
-          </ModalButton>
-        </ModalFooter>
-      </Modal>
-    );
+  const handleErrors = () => {
+    if (error) {
+      return (
+        <FormControl label="Erros">
+          <div
+            className={css({
+              paddingRight: "1em",
+              paddingLeft: "1em",
+              paddingBottom: "1em",
+              paddingTop: "1em",
+              backgroundColor: theme.colors.negative200,
+            })}
+          >
+            <Paragraph1>{errorDescription}</Paragraph1>
+            <Paragraph2>{errorMsg}</Paragraph2>
+          </div>
+        </FormControl>
+      );
+    }
+    return null;
   };
 
   return (
-    <div>
+    <>
+      {handleErrors()}
       <FormControl label="Fotos">
         {items && (
           <List
@@ -105,53 +91,29 @@ function FileUpload({ children }) {
         name={null}
         accept="image/*"
         onDrop={(acceptedFiles, rejectedFiles) => {
-          const errorImg = [];
-          setIsOpen(false);
           const aFiles = acceptedFiles.filter(
             /* f.position = index;
             not need to set position
             by some witchcraft is set automatic */
             (f) => {
               if (f.name.length < 30) {
+                setError(false);
                 return true;
               } else {
-                setError(error + " " + f.name);
-                errorImg.push(f.name);
-                productErrorModal("Error na validação do arquivo", f.name);
-
-                // setError(`${error} ${f.name}`);
+                setErrorMsg(`${f.name.slice(0, 19)}...`);
+                setErrorDescription(
+                  "Arquivo com nome muito grande. Máximo aceito é de 30 caracteres"
+                );
+                setError(true);
                 return false;
               }
             }
           );
-          console.log(error);
-          if (error) {
-            setIsOpen(true);
-          }
-
-          // if (isError.length) {
-          //   // setError(isError);
-          //   setError(`${isError.map((e) => e)} `);
-          //   setIsOpen(true);
-          //   setError(true);
-          // }
-          // if (aFiles.length !== acceptedFiles.length) {
-          //   const e = _.difference(acceptedFiles, aFiles);
-
-          //   setError(
-          //     `O nome do arquivo não pode ser maior que 30 caracteres: ${_.difference(
-          //       acceptedFiles,
-          //       aFiles
-          //     )}`
-          //   );
-          //   setIsOpen(true);
-          // }
 
           if (rejectedFiles.length) {
-            console.log(rejectedFiles);
-            productErrorModal("RF", "RF");
-            setError(`Você não enviou uma foto? ${rejectedFiles}`);
-            setIsOpen(true);
+            setErrorDescription("Apenas fotos são aceitas.");
+            setErrorMsg(`${rejectedFiles[0]["path"].slice(0, 19)}...`);
+            setError(true);
           }
 
           if (items.length) {
@@ -165,9 +127,18 @@ function FileUpload({ children }) {
           }
         }}
       />
-      {/* {ProductErrorModal(isOpen, "Error na validação do arquivo", `${error}`)} */}
-      {productCreateButtons(0, true, funcAsArgs)}
-    </div>
+      {items.length ? (
+        <Block paddingTop="50px">
+          <Button
+            kind={KIND.primary}
+            size="compact"
+            onClick={() => setCurrentStep(1)}
+          >
+            Próximo
+          </Button>
+        </Block>
+      ) : null}
+    </>
   );
 }
 

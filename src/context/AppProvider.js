@@ -175,7 +175,7 @@ const AppProvider = ({ children }) => {
     products: [],
     product: null,
     loading: false,
-    current: 0,
+    current: 1,
     updateItems,
     getById,
     post,

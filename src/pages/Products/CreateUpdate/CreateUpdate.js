@@ -18,7 +18,8 @@ import {
   ROLE,
 } from "baseui/modal";
 
-import { ProductContext } from "../../../context/product";
+// import { ProductContext } from "../../../context/product";
+import AppContext from "../../../context/AppContext";
 
 import FileUpload from "./FileUpload";
 import Form from "./Form";
@@ -32,7 +33,7 @@ const CreateUpdate = (props) => {
 
   const [modalConfirm, setModalConfirm] = useState(false);
 
-  const context = useContext(ProductContext);
+  const context = useContext(AppContext);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${theme.breakpoints.large}px)`,
@@ -41,35 +42,6 @@ const CreateUpdate = (props) => {
   const button = css({
     width: "100%",
   });
-
-  const renderNextPrevButtons = (isValid) => {
-    return (
-      <>
-        {isValid && (
-          <>
-            <Block paddingTop="50px" />
-
-            {context.current === 0 ? null : (
-              <Button
-                kind={KIND.secondary}
-                size="compact"
-                onClick={() => context.setCurrentStep(context.current - 1)}
-              >
-                Anterior
-              </Button>
-            )}
-            <Button
-              kind={KIND.primary}
-              size="compact"
-              onClick={() => context.setCurrentStep(context.current + 1)}
-            >
-              Próximo
-            </Button>
-          </>
-        )}
-      </>
-    );
-  };
 
   return (
     <>
@@ -83,7 +55,7 @@ const CreateUpdate = (props) => {
       >
         <ProgressSteps current={context.current}>
           <NumberedStep title="Enviar fotos">
-            <FileUpload></FileUpload>
+            <FileUpload />
           </NumberedStep>
           <NumberedStep title="Descrição">
             <Form></Form>
@@ -91,35 +63,6 @@ const CreateUpdate = (props) => {
           <NumberedStep title="Confirmação">
             <FormControl label="Finalizar">
               <>
-                <Modal
-                  onClose={() => setModalConfirm(false)}
-                  closeable
-                  isOpen={modalConfirm}
-                  animate
-                  autoFocus
-                  size={SIZE.default}
-                  role={ROLE.dialog}
-                  unstable_ModalBackdropScroll
-                >
-                  <ModalHeader>Confirmação de publicação</ModalHeader>
-                  <ModalBody>Deseja publicar o producto?</ModalBody>
-                  <ModalFooter>
-                    <ModalButton
-                      onClick={() => setModalConfirm(false)}
-                      kind={KIND.tertiary}
-                    >
-                      Não
-                    </ModalButton>
-                    <ModalButton
-                      onClick={() => {
-                        console.log("sim");
-                      }}
-                    >
-                      Sim
-                    </ModalButton>
-                  </ModalFooter>
-                </Modal>
-
                 <Button
                   className={button}
                   endEnhancer={() => <Upload size={24} />}
