@@ -3,12 +3,11 @@ import { useStyletron } from "baseui";
 import { FileUploader } from "baseui/file-uploader";
 import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
 import { FormControl } from "baseui/form-control";
-import { Paragraph1, Paragraph2 } from "baseui/typography";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
 import _ from "lodash";
 
-import { productCreateButtons } from "../../../utils";
+import { HandleErrors } from "../../../components";
 
 import AppContext from "../../../context/AppContext";
 
@@ -22,35 +21,9 @@ function FileUpload({ children }) {
 
   const { items, updateItems, setCurrentStep } = useContext(AppContext);
 
-  const funcAsArgs = () => {
-    console.log("debug!");
-  };
-
-  const handleErrors = () => {
-    if (error) {
-      return (
-        <FormControl label="Erros">
-          <div
-            className={css({
-              paddingRight: "1em",
-              paddingLeft: "1em",
-              paddingBottom: "1em",
-              paddingTop: "1em",
-              backgroundColor: theme.colors.negative200,
-            })}
-          >
-            <Paragraph1>{errorDescription}</Paragraph1>
-            <Paragraph2>{errorMsg}</Paragraph2>
-          </div>
-        </FormControl>
-      );
-    }
-    return null;
-  };
-
   return (
     <>
-      {handleErrors()}
+      {HandleErrors(error, errorDescription, errorMsg)}
       <FormControl label="Fotos">
         {items && (
           <List

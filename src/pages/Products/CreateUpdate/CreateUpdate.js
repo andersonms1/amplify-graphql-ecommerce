@@ -58,29 +58,7 @@ const CreateUpdate = (props) => {
             <FileUpload />
           </NumberedStep>
           <NumberedStep title="Descrição">
-            <Form></Form>
-          </NumberedStep>
-          <NumberedStep title="Confirmação">
-            <FormControl label="Finalizar">
-              <>
-                <Button
-                  className={button}
-                  endEnhancer={() => <Upload size={24} />}
-                  onClick={() => setModalConfirm(true)}
-                >
-                  Publicar produto
-                </Button>
-                <Block marginBottom="scale300" />
-                <Button
-                  className={button}
-                  kind={KIND.secondary}
-                  onClick={() => context.setCurrentStep(context.current - 1)}
-                  endEnhancer={() => <Delete size={24} />}
-                >
-                  Voltar
-                </Button>
-              </>
-            </FormControl>
+            <Form />
           </NumberedStep>
         </ProgressSteps>
       </div>

@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { useStyletron } from "baseui";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
 import { Combobox } from "baseui/combobox";
-import { Input } from "baseui/input";
+import { Input, MaskedInput } from "baseui/input";
 
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
@@ -13,23 +13,32 @@ import {
   description as DESCRIPTION,
   category as CATEGORY,
   amount as AMOUNT,
-  photos as PHOTOS,
+  // photos as PHOTOS,
   price as PRICE,
 } from "./validations";
 
+import { HandleErrors } from "../../../components";
+import maskedToUnmasked from "../../../utils/maskedToUnmasked";
+import { Grid, Cell } from "baseui/layout-grid";
 import AppContext from "../../../context/AppContext";
 
 function Form({ children }) {
   const { setCurrentStep } = useContext(AppContext);
   const [css, theme] = useStyletron();
 
-  const [titleCaption, setTitleCaption] = React.useState("");
-  const [descriptionCaption, setDescriptionCaption] = React.useState("");
-  const [categoryCaption, setCategoryCaption] = React.useState("");
-  const [title, setTitle] = React.useState("");
-  const [description, setDescription] = React.useState("");
-  const [category, setCategory] = React.useState("");
-
+  const [error, setError] = useState(false);
+  const [errorDescription, setErrorDescription] = useState("");
+  const [errorMsg, setErrorMsg] = useState([]);
+  const [titleCaption, setTitleCaption] = useState("");
+  const [descriptionCaption, setDescriptionCaption] = useState("");
+  const [categoryCaption, setCategoryCaption] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [category, setCategory] = useState("");
+  const [price, setPrice] = useState("");
+  const [priceCaption, setPriceCaption] = useState(
+    "Digite todos os digitos. Ex: 010,25"
+  );
   const data = {
     title,
     description,
@@ -51,16 +60,43 @@ function Form({ children }) {
   //     `title: ${title}, description: ${description}, section: ${category}, `
   //   );
 
-  //   const { error } = SCHEMA.validate(data, {
-  //     abortEarly: false,
-  //   });
+  // const { error } = SCHEMA.validate(data, {
+  //   abortEarly: false,
+  // });
 
   //   await context.post(items, data);
   // };
 
+  const validateNext = () => {
+    const validator = SCHEMA.validate(
+      { title, description, category },
+      {
+        abortEarly: false,
+      }
+    );
+
+    if (validator.error) {
+      setErrorDescription("Algum(s) campos não está(ão) válidos");
+      setErrorMsg(validator.error.details);
+      setError(true);
+    } else {
+      setError(false);
+      // setCurrentStep(2);
+      alert("Publicado");
+    }
+    // if (error) {
+    //   setError(true);
+    // } else {
+    //   setError(false);
+    // setCurrentStep(2);
+    // }
+  };
+
   return (
     <div>
+      <Grid></Grid>
       <div className={css({ flexGrow: 1, flexShrink: 1 })}>
+        {HandleErrors(error, errorDescription, errorMsg)}
         <FormControl label="Título" caption={`${titleCaption}`}>
           <Input
             id="input"
@@ -136,6 +172,19 @@ function Form({ children }) {
             mapOptionToString={(option) => option.label}
           />
         </FormControl>
+
+        <FormControl label="Preço" caption={`${priceCaption}`}>
+          <MaskedInput
+            value={price}
+            startEnhancer="R$"
+            placeholder="Valor"
+            mask="999,99"
+            onChange={(e) => {
+              // setPriceCaption(caption);
+              setPrice(e.target.value);
+            }}
+          />
+        </FormControl>
       </div>
       {/* {items ? children : null} */}
       <Block paddingTop="50px" />
@@ -147,12 +196,8 @@ function Form({ children }) {
         Anterior
       </Button>
 
-      <Button
-        kind={KIND.primary}
-        size="compact"
-        onClick={() => setCurrentStep(2)}
-      >
-        Próximo
+      <Button kind={KIND.primary} size="compact" onClick={() => validateNext()}>
+        Publicar
       </Button>
     </div>
   );
