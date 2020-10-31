@@ -27,7 +27,7 @@ const category = Joi.object({
     // "any.required": `É um campo obrigatório`,
   }),
 });
-const amount = Joi.object({ amount: Joi.number().positive().required() });
+const quantity = Joi.object({ quantity: Joi.number().positive().required() });
 
 const price = Joi.object({
   price: Joi.object().keys({
@@ -72,7 +72,7 @@ schema = schema.concat(category);
 //     "string.max": `Deve ter no máximo {#limit} caracteres`,
 //     // "any.required": `É um campo obrigatório`,
 //   }),
-//   amount: Joi.number().positive().required(),
+//   quantity: Joi.number().positive().required(),
 //   price: Joi.object().keys({
 //     specie: Joi.number().positive(),
 //     cents: Joi.number().positive().max(99),
@@ -85,4 +85,4 @@ schema = schema.concat(category);
 //   }),
 // });
 
-export { schema, title, description, category, amount, price };
+export { schema, title, description, category, quantity, price };

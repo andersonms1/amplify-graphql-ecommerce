@@ -2,23 +2,12 @@ import React, { useState, useContext } from "react";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
-import { Upload, Delete } from "baseui/icon";
 
-import { FormControl } from "baseui/form-control";
 import { ProgressSteps, NumberedStep } from "baseui/progress-steps";
+import { Grid, Cell } from "baseui/layout-grid";
 import { useMediaQuery } from "react-responsive";
 import Header from "../../Home/Header";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-  SIZE,
-  ROLE,
-} from "baseui/modal";
 
-// import { ProductContext } from "../../../context/product";
 import AppContext from "../../../context/AppContext";
 
 import FileUpload from "./FileUpload";
@@ -44,15 +33,15 @@ const CreateUpdate = (props) => {
   });
 
   return (
-    <>
-      <Header />
-      <div
+    <Grid>
+      <Cell span={[6, 8, 12]}>
+        <Header />
+        {/* <div
         className={css({
           display: "flex",
           flexDirection: isLarge ? "row" : "column",
-          // width: isLarge ? "25vw" : "100%",
         })}
-      >
+      > */}
         <ProgressSteps current={context.current}>
           <NumberedStep title="Enviar fotos">
             <FileUpload />
@@ -60,9 +49,13 @@ const CreateUpdate = (props) => {
           <NumberedStep title="Descrição">
             <Form />
           </NumberedStep>
+          <NumberedStep title="Produtos">
+            <p>Anderson</p>
+          </NumberedStep>
         </ProgressSteps>
-      </div>
-    </>
+        {/* </div> */}
+      </Cell>
+    </Grid>
   );
 };
 export default CreateUpdate;

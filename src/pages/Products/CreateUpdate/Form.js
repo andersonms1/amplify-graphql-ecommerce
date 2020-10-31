@@ -12,14 +12,13 @@ import {
   title as TITLE,
   description as DESCRIPTION,
   category as CATEGORY,
-  amount as AMOUNT,
+  quantity as AMOUNT,
   // photos as PHOTOS,
   price as PRICE,
 } from "./validations";
 
 import { HandleErrors } from "../../../components";
-import maskedToUnmasked from "../../../utils/maskedToUnmasked";
-import { Grid, Cell } from "baseui/layout-grid";
+
 import AppContext from "../../../context/AppContext";
 
 function Form({ children }) {
@@ -39,6 +38,8 @@ function Form({ children }) {
   const [priceCaption, setPriceCaption] = useState(
     "Digite todos os digitos. Ex: 010,25"
   );
+  const [quantityCaption, setQuantityCaption] = useState("");
+  const [quantity, setQuantity] = useState("");
   const data = {
     title,
     description,
@@ -93,100 +94,122 @@ function Form({ children }) {
   };
 
   return (
-    <div>
-      <Grid></Grid>
-      <div className={css({ flexGrow: 1, flexShrink: 1 })}>
-        {HandleErrors(error, errorDescription, errorMsg)}
-        <FormControl label="Título" caption={`${titleCaption}`}>
-          <Input
-            id="input"
-            value={title}
-            onChange={(e) => {
-              const { error } = TITLE.validate(
-                { title },
-                { abortEarly: false }
-              );
-              let caption;
-              // for (var key of TITLE._ids._byKey.keys()) {
-              //   console.log(key);
-              //   type = key;
-              // }
+    <>
+      {HandleErrors(error, errorDescription, errorMsg)}
+      <FormControl label="Título" caption={`${titleCaption}`}>
+        <Input
+          id="input"
+          value={title}
+          onChange={(e) => {
+            const { error } = TITLE.validate({ title }, { abortEarly: false });
+            let caption;
+            // for (var key of TITLE._ids._byKey.keys()) {
+            //   console.log(key);
+            //   type = key;
+            // }
 
-              // for (var value of TITLE._ids._byKey.values()) {
-              //   console.log(value.id);
-              // }
-              setTitle(e.target.value);
-              if (error) {
-                caption = `${error.message}`;
-              } else {
-                caption = "";
-              }
-              setTitleCaption(caption);
-            }}
-            placeholder=""
-            clearOnEscape
-          />
-        </FormControl>
-        <FormControl label="Descrição" caption={`${descriptionCaption}`}>
-          <Textarea
-            id="textarea-id"
-            value={description}
-            onChange={(e) => {
-              const { error } = DESCRIPTION.validate(
-                { description },
-                { abortEarly: false }
-              );
-              let caption;
-              setDescription(e.target.value);
-              if (error) {
-                caption = `${error.message}`;
-              } else {
-                caption = "";
-              }
-              setDescriptionCaption(caption);
-            }}
-          />
-        </FormControl>
-        <FormControl label="Categoria" caption={`${categoryCaption}`}>
-          <Combobox
-            value={category}
-            onChange={(nextValue) => {
-              const { error } = CATEGORY.validate(
-                { category },
-                { abortEarly: false }
-              );
-              let caption;
-              setCategory(nextValue);
-              if (error) {
-                caption = `${error.message}`;
-              } else {
-                caption = "";
-              }
-              // setCategoryCaption(caption);
-            }}
-            options={[
-              { label: "Masculino", id: "#F0F8FF" },
-              { label: "Feminino", id: "#FAEBD7" },
-              { label: "Infantil", id: "#00FFFF" },
-            ]}
-            mapOptionToString={(option) => option.label}
-          />
-        </FormControl>
+            // for (var value of TITLE._ids._byKey.values()) {
+            //   console.log(value.id);
+            // }
+            setTitle(e.target.value);
+            if (error) {
+              caption = `${error.message}`;
+            } else {
+              caption = "";
+            }
+            setTitleCaption(caption);
+          }}
+          placeholder=""
+          clearOnEscape
+        />
+      </FormControl>
+      <FormControl label="Descrição" caption={`${descriptionCaption}`}>
+        <Textarea
+          id="textarea-id"
+          value={description}
+          onChange={(e) => {
+            const { error } = DESCRIPTION.validate(
+              { description },
+              { abortEarly: false }
+            );
+            let caption;
+            setDescription(e.target.value);
+            if (error) {
+              caption = `${error.message}`;
+            } else {
+              caption = "";
+            }
+            setDescriptionCaption(caption);
+          }}
+        />
+      </FormControl>
+      <FormControl label="Categoria" caption={`${categoryCaption}`}>
+        <Combobox
+          value={category}
+          onChange={(nextValue) => {
+            const { error } = CATEGORY.validate(
+              { category },
+              { abortEarly: false }
+            );
+            let caption;
+            setCategory(nextValue);
+            if (error) {
+              caption = `${error.message}`;
+            } else {
+              caption = "";
+            }
+            // setCategoryCaption(caption);
+          }}
+          options={[
+            { label: "Masculino", id: "#F0F8FF" },
+            { label: "Feminino", id: "#FAEBD7" },
+            { label: "Infantil", id: "#00FFFF" },
+          ]}
+          mapOptionToString={(option) => option.label}
+        />
+      </FormControl>
 
-        <FormControl label="Preço" caption={`${priceCaption}`}>
-          <MaskedInput
-            value={price}
-            startEnhancer="R$"
-            placeholder="Valor"
-            mask="999,99"
-            onChange={(e) => {
-              // setPriceCaption(caption);
-              setPrice(e.target.value);
-            }}
-          />
-        </FormControl>
-      </div>
-      {/* {items ? children : null} */}
+      <FormControl label="Preço" caption={`${priceCaption}`}>
+        <MaskedInput
+          value={price}
+          startEnhancer="R$"
+          placeholder="Valor"
+          mask="999,99"
+          onChange={(e) => {
+            // setPriceCaption(caption);
+            setPrice(e.target.value);
+          }}
+        />
+      </FormControl>
+      <FormControl label="Estoque" caption={`${quantityCaption}`}>
+        <Input
+          value={quantity}
+          onChange={(e) => {
+            const { error } = AMOUNT.validate(
+              { quantity },
+              { abortEarly: false }
+            );
+            let caption;
+            // for (var key of TITLE._ids._byKey.keys()) {
+            //   console.log(key);
+            //   type = key;
+            // }
+
+            // for (var value of TITLE._ids._byKey.values()) {
+            //   console.log(value.id);
+            // }
+            setQuantity(e.target.value);
+            if (error) {
+              caption = `${error.message}`;
+            } else {
+              caption = "";
+            }
+            setQuantityCaption(caption);
+          }}
+          placeholder=""
+          clearOnEscape
+        />
+      </FormControl>
       <Block paddingTop="50px" />
       <Button
         kind={KIND.secondary}
@@ -199,7 +222,10 @@ function Form({ children }) {
       <Button kind={KIND.primary} size="compact" onClick={() => validateNext()}>
         Publicar
       </Button>
-    </div>
+
+      {/* </div> */}
+      {/* {items ? children : null} */}
+    </>
   );
 }
 
