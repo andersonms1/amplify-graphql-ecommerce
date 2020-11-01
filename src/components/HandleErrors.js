@@ -11,7 +11,7 @@ function HandleErrors(error, errorDescription, errorMsg) {
     return arr.map((e, index) => {
       return (
         <Paragraph2 key={index}>
-          {index + 1}_ {e.message}
+          {index + 1}_ {e.message ? e.message : e}
         </Paragraph2>
       );
     });

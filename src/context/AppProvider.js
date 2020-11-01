@@ -171,11 +171,11 @@ const AppProvider = ({ children }) => {
   // };
 
   const appState = {
-    items: [],
+    items: {},
     products: [],
     product: null,
     loading: false,
-    current: 1,
+    current: 2,
     updateItems,
     getById,
     post,

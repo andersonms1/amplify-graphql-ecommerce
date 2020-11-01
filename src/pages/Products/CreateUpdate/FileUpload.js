@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useStyletron } from "baseui";
 import { FileUploader } from "baseui/file-uploader";
 import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
@@ -18,16 +18,21 @@ function FileUpload({ children }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [errorDescription, setErrorDescription] = useState("");
   const [error, setError] = useState(false);
+  const [files, setFiles] = useState([]);
 
   const { items, updateItems, setCurrentStep } = useContext(AppContext);
+
+  useEffect(() => {
+    items.files && setFiles(items.files);
+  }, []);
 
   return (
     <>
       {HandleErrors(error, errorDescription, errorMsg)}
       <FormControl label="Fotos">
-        {items && (
+        {files && (
           <List
-            items={items.map((item, index) => {
+            items={files.map((item, index) => {
               return item.name;
             })}
             removable
@@ -36,10 +41,10 @@ function FileUpload({ children }) {
               setPosition(position + 1);
               console.log(newIndex);
 
-              updateItems(
+              setFiles(
                 newIndex === -1
-                  ? arrayRemove(items, oldIndex)
-                  : arrayMove(items, oldIndex, newIndex)
+                  ? arrayRemove(files, oldIndex)
+                  : arrayMove(files, oldIndex, newIndex)
               );
             }}
             overrides={{
@@ -89,10 +94,10 @@ function FileUpload({ children }) {
             setError(true);
           }
 
-          if (items.length) {
-            updateItems(_.union(items, aFiles));
+          if (files.length) {
+            setFiles(_.union(files, aFiles));
           } else {
-            updateItems(aFiles);
+            setFiles(aFiles);
           }
           try {
           } catch (e) {
@@ -100,12 +105,15 @@ function FileUpload({ children }) {
           }
         }}
       />
-      {items.length ? (
+      {files.length ? (
         <Block paddingTop="50px">
           <Button
             kind={KIND.primary}
             size="compact"
-            onClick={() => setCurrentStep(1)}
+            onClick={() => {
+              updateItems({ files: files });
+              setCurrentStep(1);
+            }}
           >
             Próximo
           </Button>

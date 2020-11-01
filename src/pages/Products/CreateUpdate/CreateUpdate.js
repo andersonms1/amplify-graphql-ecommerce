@@ -12,6 +12,7 @@ import AppContext from "../../../context/AppContext";
 
 import FileUpload from "./FileUpload";
 import Form from "./Form";
+import FormPrice from "./FormPrice";
 
 // import Storage from "@aws-amplify/storage";
 // import API, { graphqlOperation } from "@aws-amplify/api";
@@ -49,8 +50,8 @@ const CreateUpdate = (props) => {
           <NumberedStep title="Descrição">
             <Form />
           </NumberedStep>
-          <NumberedStep title="Produtos">
-            <p>Anderson</p>
+          <NumberedStep title="Preços">
+            <FormPrice />
           </NumberedStep>
         </ProgressSteps>
         {/* </div> */}

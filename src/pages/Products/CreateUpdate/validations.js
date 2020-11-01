@@ -45,10 +45,10 @@ const price = Joi.object({
 //   }),
 // });
 
-let schema = Joi.object();
-schema = schema.concat(title);
-schema = schema.concat(description);
-schema = schema.concat(category);
+let formDescription = Joi.object();
+formDescription = formDescription.concat(title);
+formDescription = formDescription.concat(description);
+// schema = schema.concat(category);
 
 // const schema = Joi.object({
 //   title: Joi.string().alphanum().min(3).max(52).required().messages({
@@ -85,4 +85,4 @@ schema = schema.concat(category);
 //   }),
 // });
 
-export { schema, title, description, category, quantity, price };
+export { formDescription, title, description, category, quantity, price };
