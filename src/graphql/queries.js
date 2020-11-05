@@ -7,11 +7,7 @@ export const getProduct = /* GraphQL */ `
       id
       title
       description
-      price {
-        cents
-        specie
-      }
-      avaliation
+      price
       category
       amount
       photos {
@@ -20,6 +16,7 @@ export const getProduct = /* GraphQL */ `
         key
         position
       }
+      avaliation
       createdAt
       updatedAt
     }
@@ -36,11 +33,7 @@ export const listProducts = /* GraphQL */ `
         id
         title
         description
-        price {
-          cents
-          specie
-        }
-        avaliation
+        price
         category
         amount
         photos {
@@ -49,6 +42,7 @@ export const listProducts = /* GraphQL */ `
           key
           position
         }
+        avaliation
         createdAt
         updatedAt
       }
@@ -64,11 +58,7 @@ export const getCart = /* GraphQL */ `
         id
         title
         description
-        price {
-          cents
-          specie
-        }
-        avaliation
+        price
         category
         amount
         photos {
@@ -77,6 +67,7 @@ export const getCart = /* GraphQL */ `
           key
           position
         }
+        avaliation
         createdAt
         updatedAt
       }
@@ -105,9 +96,10 @@ export const listCarts = /* GraphQL */ `
           id
           title
           description
-          avaliation
+          price
           category
           amount
+          avaliation
           createdAt
           updatedAt
         }

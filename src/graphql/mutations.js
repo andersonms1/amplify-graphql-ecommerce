@@ -10,11 +10,7 @@ export const createProduct = /* GraphQL */ `
       id
       title
       description
-      price {
-        cents
-        specie
-      }
-      avaliation
+      price
       category
       amount
       photos {
@@ -23,6 +19,7 @@ export const createProduct = /* GraphQL */ `
         key
         position
       }
+      avaliation
       createdAt
       updatedAt
     }
@@ -37,11 +34,7 @@ export const updateProduct = /* GraphQL */ `
       id
       title
       description
-      price {
-        cents
-        specie
-      }
-      avaliation
+      price
       category
       amount
       photos {
@@ -50,6 +43,7 @@ export const updateProduct = /* GraphQL */ `
         key
         position
       }
+      avaliation
       createdAt
       updatedAt
     }
@@ -64,11 +58,7 @@ export const deleteProduct = /* GraphQL */ `
       id
       title
       description
-      price {
-        cents
-        specie
-      }
-      avaliation
+      price
       category
       amount
       photos {
@@ -77,6 +67,7 @@ export const deleteProduct = /* GraphQL */ `
         key
         position
       }
+      avaliation
       createdAt
       updatedAt
     }
@@ -93,11 +84,7 @@ export const createCart = /* GraphQL */ `
         id
         title
         description
-        price {
-          cents
-          specie
-        }
-        avaliation
+        price
         category
         amount
         photos {
@@ -106,6 +93,7 @@ export const createCart = /* GraphQL */ `
           key
           position
         }
+        avaliation
         createdAt
         updatedAt
       }
@@ -132,11 +120,7 @@ export const updateCart = /* GraphQL */ `
         id
         title
         description
-        price {
-          cents
-          specie
-        }
-        avaliation
+        price
         category
         amount
         photos {
@@ -145,6 +129,7 @@ export const updateCart = /* GraphQL */ `
           key
           position
         }
+        avaliation
         createdAt
         updatedAt
       }
@@ -171,11 +156,7 @@ export const deleteCart = /* GraphQL */ `
         id
         title
         description
-        price {
-          cents
-          specie
-        }
-        avaliation
+        price
         category
         amount
         photos {
@@ -184,6 +165,7 @@ export const deleteCart = /* GraphQL */ `
           key
           position
         }
+        avaliation
         createdAt
         updatedAt
       }

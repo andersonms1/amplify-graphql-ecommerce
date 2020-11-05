@@ -3,9 +3,22 @@ import { useStyletron } from "baseui";
 import { FormControl } from "baseui/form-control";
 import { Combobox } from "baseui/combobox";
 import { Input, MaskedInput } from "baseui/input";
-
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+  SIZE,
+  ROLE,
+} from "baseui/modal";
+import { KIND as ButtonKind } from "baseui/button";
+import { SnackbarElement } from "baseui/snackbar";
+import { StyledSpinnerNext } from "baseui/spinner";
+
+import AppContext from "../../../context/AppContext";
 import {
   formDescription as SCHEMA,
   category as CATEGORY,
@@ -13,8 +26,6 @@ import {
   // photos as PHOTOS,
   price as PRICE,
 } from "./validations";
-
-import AppContext from "../../../context/AppContext";
 import { HandleErrors } from "../../../components";
 import ALLCATEGORYS from "../../../utils/CATEGORY";
 import InputReplacement from "../../../components/InputReplacement";
@@ -24,6 +35,7 @@ function Form({ children }) {
     console.log(items);
   }, []);
 
+  const [css] = useStyletron();
   const { setCurrentStep, items, updateItems } = useContext(AppContext);
 
   const [error, setError] = useState(false);
@@ -43,6 +55,10 @@ function Form({ children }) {
     "Quantidade de produtos disponíveis"
   );
   const [quantity, setQuantity] = useState("");
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [spinner, setSpinner] = useState(false);
+
   const data = {
     category,
     amount: 10,
@@ -117,6 +133,8 @@ function Form({ children }) {
       }
     }
   };
+
+  const handlePost = () => {};
   return (
     <>
       {HandleErrors(error, errorDescription, errorMsg)}
@@ -182,9 +200,45 @@ function Form({ children }) {
         Anterior
       </Button>
 
-      <Button kind={KIND.primary} size="compact" onClick={() => validateNext()}>
+      <Button
+        kind={KIND.primary}
+        size="compact"
+        onClick={() => setIsOpen(true)}
+      >
         Publicar
       </Button>
+
+      <Modal
+        onClose={() => setIsOpen(false)}
+        closeable
+        isOpen={isOpen}
+        animate
+        autoFocus
+        size={SIZE.default}
+        role={ROLE.dialog}
+        unstable_ModalBackdropScrol
+      >
+        <ModalHeader>Confirmar publicação de produto</ModalHeader>
+        <ModalBody>
+          {spinner ? (
+            <StyledSpinnerNext />
+          ) : (
+            "Deseja finalizar a edição e enviar o produto?"
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <ModalButton
+            kind={ButtonKind.tertiary}
+            onClick={() => setIsOpen(false)}
+          >
+            Cancelar
+          </ModalButton>
+          <ModalButton onClick={() => setSpinner(true)}>Sim</ModalButton>
+        </ModalFooter>
+      </Modal>
+
+      {/* <div className={css({ paddingBottom: "24px" })}>
+      </div> */}
     </>
   );
 }

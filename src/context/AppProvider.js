@@ -55,16 +55,16 @@ const AppProvider = ({ children }) => {
       setLoading(true);
       const { data } = await API.graphql(graphqlOperation(listProducts));
 
-      await Promise.all(
-        await data.listProducts.items.map(async (i) => {
-          // console.log(i);
-          const image = await Storage.get(i.photos[0].key, {
-            level: "public",
-          });
-          i.didImgLoad = false;
-          return (i.link = image);
-        })
-      );
+      // await Promise.all(
+      //   await data.listProducts.items.map(async (i) => {
+
+      //     const image = await Storage.get(i.photos[0].key, {
+      //       level: "public",
+      //     });
+      //     i.didImgLoad = false;
+      //     return (i.link = image);
+      //   })
+      // );
 
       setAppContext((prevState) => {
         return {

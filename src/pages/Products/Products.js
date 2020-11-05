@@ -20,7 +20,6 @@ import { useStyletron } from "baseui";
 import { Link } from "react-router-dom";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
-import { ProductsContext } from "../../context/products";
 import AppContext from "../../context/AppContext";
 import { Small, Medium, Large } from "./MediaQueriesContainers";
 import ContentLoader from "react-content-loader";
@@ -142,7 +141,8 @@ function Products() {
             </Paragraph4>
             <div className={priceButtonStyles}>
               <Paragraph4 margin="0" padding="0">
-                <b>R${item.price.specie}</b>
+                {/* <b>R${item.price.specie}</b> */}
+                <b>100</b>
               </Paragraph4>
             </div>
           </StyledBody>
