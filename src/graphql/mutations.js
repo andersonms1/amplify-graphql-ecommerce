@@ -8,19 +8,36 @@ export const createProduct = /* GraphQL */ `
   ) {
     createProduct(input: $input, condition: $condition) {
       id
+      createdAt
       title
       description
       price
       category
-      amount
+      subCategory
+      sold
+      amount {
+        size
+        amount
+      }
+      brand
+      avaliation
       photos {
         bucket
         region
         key
         position
       }
-      avaliation
-      createdAt
+      comments {
+        items {
+          id
+          user
+          content
+          avaliation
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -32,19 +49,36 @@ export const updateProduct = /* GraphQL */ `
   ) {
     updateProduct(input: $input, condition: $condition) {
       id
+      createdAt
       title
       description
       price
       category
-      amount
+      subCategory
+      sold
+      amount {
+        size
+        amount
+      }
+      brand
+      avaliation
       photos {
         bucket
         region
         key
         position
       }
-      avaliation
-      createdAt
+      comments {
+        items {
+          id
+          user
+          content
+          avaliation
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
       updatedAt
     }
   }
@@ -56,18 +90,158 @@ export const deleteProduct = /* GraphQL */ `
   ) {
     deleteProduct(input: $input, condition: $condition) {
       id
+      createdAt
       title
       description
       price
       category
-      amount
+      subCategory
+      sold
+      amount {
+        size
+        amount
+      }
+      brand
+      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      comments {
+        items {
+          id
+          user
+          content
+          avaliation
+          createdAt
+          updatedAt
+        }
+        nextToken
+      }
+      updatedAt
+    }
+  }
+`;
+export const createComment = /* GraphQL */ `
+  mutation CreateComment(
+    $input: CreateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    createComment(input: $input, condition: $condition) {
+      id
+      user
+      content
       avaliation
+      product {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        avaliation
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        comments {
+          nextToken
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const updateComment = /* GraphQL */ `
+  mutation UpdateComment(
+    $input: UpdateCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    updateComment(input: $input, condition: $condition) {
+      id
+      user
+      content
+      avaliation
+      product {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        avaliation
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        comments {
+          nextToken
+        }
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+  }
+`;
+export const deleteComment = /* GraphQL */ `
+  mutation DeleteComment(
+    $input: DeleteCommentInput!
+    $condition: ModelCommentConditionInput
+  ) {
+    deleteComment(input: $input, condition: $condition) {
+      id
+      user
+      content
+      avaliation
+      product {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        avaliation
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        comments {
+          nextToken
+        }
+        updatedAt
+      }
       createdAt
       updatedAt
     }
@@ -82,27 +256,31 @@ export const createCart = /* GraphQL */ `
       id
       products {
         id
+        createdAt
         title
         description
         price
         category
-        amount
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        avaliation
         photos {
           bucket
           region
           key
           position
         }
-        avaliation
-        createdAt
+        comments {
+          nextToken
+        }
         updatedAt
       }
       status
-      price {
-        cents
-        specie
-      }
-      createAt
       paidAt
       createdAt
       updatedAt
@@ -118,27 +296,31 @@ export const updateCart = /* GraphQL */ `
       id
       products {
         id
+        createdAt
         title
         description
         price
         category
-        amount
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        avaliation
         photos {
           bucket
           region
           key
           position
         }
-        avaliation
-        createdAt
+        comments {
+          nextToken
+        }
         updatedAt
       }
       status
-      price {
-        cents
-        specie
-      }
-      createAt
       paidAt
       createdAt
       updatedAt
@@ -154,101 +336,126 @@ export const deleteCart = /* GraphQL */ `
       id
       products {
         id
+        createdAt
         title
         description
         price
         category
-        amount
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        avaliation
         photos {
           bucket
           region
           key
           position
         }
-        avaliation
-        createdAt
+        comments {
+          nextToken
+        }
         updatedAt
       }
       status
-      price {
-        cents
-        specie
-      }
-      createAt
       paidAt
       createdAt
       updatedAt
     }
   }
 `;
-export const createHistory = /* GraphQL */ `
-  mutation CreateHistory(
-    $input: CreateHistoryInput!
-    $condition: ModelHistoryConditionInput
+export const createOrder = /* GraphQL */ `
+  mutation CreateOrder(
+    $input: CreateOrderInput!
+    $condition: ModelOrderConditionInput
   ) {
-    createHistory(input: $input, condition: $condition) {
+    createOrder(input: $input, condition: $condition) {
       id
+      createdAt
+      price
       user
-      carts {
+      status
+      product {
         items {
           id
-          status
-          createAt
-          paidAt
           createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          brand
+          avaliation
           updatedAt
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
 `;
-export const updateHistory = /* GraphQL */ `
-  mutation UpdateHistory(
-    $input: UpdateHistoryInput!
-    $condition: ModelHistoryConditionInput
+export const updateOrder = /* GraphQL */ `
+  mutation UpdateOrder(
+    $input: UpdateOrderInput!
+    $condition: ModelOrderConditionInput
   ) {
-    updateHistory(input: $input, condition: $condition) {
+    updateOrder(input: $input, condition: $condition) {
       id
+      createdAt
+      price
       user
-      carts {
+      status
+      product {
         items {
           id
-          status
-          createAt
-          paidAt
           createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          brand
+          avaliation
           updatedAt
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }
 `;
-export const deleteHistory = /* GraphQL */ `
-  mutation DeleteHistory(
-    $input: DeleteHistoryInput!
-    $condition: ModelHistoryConditionInput
+export const deleteOrder = /* GraphQL */ `
+  mutation DeleteOrder(
+    $input: DeleteOrderInput!
+    $condition: ModelOrderConditionInput
   ) {
-    deleteHistory(input: $input, condition: $condition) {
+    deleteOrder(input: $input, condition: $condition) {
       id
+      createdAt
+      price
       user
-      carts {
+      status
+      product {
         items {
           id
-          status
-          createAt
-          paidAt
           createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          brand
+          avaliation
           updatedAt
         }
         nextToken
       }
-      createdAt
       updatedAt
     }
   }

@@ -16,18 +16,18 @@ const {
 } = config;
 
 const AppProvider = ({ children }) => {
-  useEffect(() => {
-    fetch();
-  }, []);
+  // useEffect(() => {
+  //   fetch();
+  // }, []);
 
-  const updateItems = (items) => {
-    setAppContext((prevState) => {
-      return {
-        ...prevState,
-        items,
-      };
-    });
-  };
+  // const updateItems = (items) => {
+  //   setAppContext((prevState) => {
+  //     return {
+  //       ...prevState,
+  //       items,
+  //     };
+  //   });
+  // };
 
   // useEffect(() => {
   //   async function getUser() {
@@ -41,75 +41,75 @@ const AppProvider = ({ children }) => {
   //   getUser();
   // }, []);
 
-  const setLoading = (status) => {
-    setAppContext((prevState) => {
-      return {
-        ...prevState,
-        loading: status,
-      };
-    });
-  };
+  // const setLoading = (status) => {
+  //   setAppContext((prevState) => {
+  //     return {
+  //       ...prevState,
+  //       loading: status,
+  //     };
+  //   });
+  // };
 
-  const fetch = async () => {
-    try {
-      setLoading(true);
-      const { data } = await API.graphql(graphqlOperation(listProducts));
+  // const fetch = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const { data } = await API.graphql(graphqlOperation(listProducts));
+  //     console.warn("Descoment");
+  //     // await Promise.all(
+  //     //   await data.listProducts.items.map(async (i) => {
 
-      // await Promise.all(
-      //   await data.listProducts.items.map(async (i) => {
+  //     //     const image = await Storage.get(i.photos[0].key, {
+  //     //       level: "public",
+  //     //     });
+  //     //     i.didImgLoad = false;
+  //     //     return (i.link = image);
+  //     //   })
+  //     // );
 
-      //     const image = await Storage.get(i.photos[0].key, {
-      //       level: "public",
-      //     });
-      //     i.didImgLoad = false;
-      //     return (i.link = image);
-      //   })
-      // );
+  //     setAppContext((prevState) => {
+  //       return {
+  //         ...prevState,
+  //         products: data.listProducts.items,
+  //         loading: false,
+  //       };
+  //     });
+  //   } catch (e) {
+  //     console.log({ e });
+  //     console.log(new Error(e));
+  //   }
+  // };
 
-      setAppContext((prevState) => {
-        return {
-          ...prevState,
-          products: data.listProducts.items,
-          loading: false,
-        };
-      });
-    } catch (e) {
-      console.log({ e });
-      console.log(new Error(e));
-    }
-  };
+  // const setCurrentStep = (goTo) => {
+  //   setAppContext((prevState) => {
+  //     return {
+  //       ...prevState,
+  //       current: goTo,
+  //     };
+  //   });
+  // };
 
-  const setCurrentStep = (goTo) => {
-    setAppContext((prevState) => {
-      return {
-        ...prevState,
-        current: goTo,
-      };
-    });
-  };
+  // const getById = async (id) => {
+  //   try {
+  //     const { data } = await API.graphql(graphqlOperation(getProduct, { id }));
+  //     // console.log(data);
+  //     const res = await data.getProduct.photos.map(async (i) => {
+  //       // console.log(i);
+  //       const image = await Storage.get(i.key, { level: "public" });
+  //       return (i.link = image);
+  //     });
+  //     await Promise.all(res);
 
-  const getById = async (id) => {
-    try {
-      const { data } = await API.graphql(graphqlOperation(getProduct, { id }));
-      // console.log(data);
-      const res = await data.getProduct.photos.map(async (i) => {
-        // console.log(i);
-        const image = await Storage.get(i.key, { level: "public" });
-        return (i.link = image);
-      });
-      await Promise.all(res);
-
-      // console.log(data);
-      setAppContext((prevState) => {
-        return {
-          ...prevState,
-          product: data.getProduct,
-        };
-      });
-    } catch (e) {
-      console.log(new Error(e));
-    }
-  };
+  //     // console.log(data);
+  //     setAppContext((prevState) => {
+  //       return {
+  //         ...prevState,
+  //         product: data.getProduct,
+  //       };
+  //     });
+  //   } catch (e) {
+  //     console.log(new Error(e));
+  //   }
+  // };
 
   const post = () => {
     return null;
@@ -170,16 +170,27 @@ const AppProvider = ({ children }) => {
   //   console.log(res);
   // };
 
+  // const appState = {
+  //   items: {},
+  //   products: [],
+  //   product: null,
+  //   loading: false,
+  //   current: 2,
+  //   updateItems,
+  //   getById,
+  //   post,
+  //   setCurrentStep,
+  // };
   const appState = {
     items: {},
     products: [],
     product: null,
     loading: false,
     current: 2,
-    updateItems,
-    getById,
-    post,
-    setCurrentStep,
+    updateItems: () => console.log("Only test"),
+    getById: () => console.log("Only test"),
+    post: () => console.log("Only test"),
+    setCurrentStep: () => console.log("Only test"),
   };
 
   const [appContext, setAppContext] = useState(appState);
