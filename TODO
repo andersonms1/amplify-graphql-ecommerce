@@ -1,5 +1,12 @@
 
 Todo:
+https://github.com/fabiospampinato/vscode-todo-plus
+'Cmd/Ctrl+Enter' // Triggers `Todo: Toggle Box`
+'Alt+Enter' // Triggers `Todo: Toggle Box`
+'Alt+D' // Triggers `Todo: Toggle Done`
+'Alt+C' // Triggers `Todo: Toggle Cancelled`
+'Alt+S' // Triggers `Todo: Toggle Start`
+'Cmd/Ctrl+Shift+A' // Triggers  `Todo: Archive`
   ✘ Check for "responsivity"  @critical @started(20-07-16 10:06) @done(20-07-16 12:30) @wasted(2h24m40s)
   ✘ Check overides for: Remove line mark in header->tab navigation @today @cancelled(20-07-16 12:30)
   ✘ Create header menu profile options @cancelled(20-07-16 12:30)
@@ -25,10 +32,14 @@ https://www.javascriptstuff.com/detect-image-load/
 ✔ Separete product state @done(20-10-13 22:05)
 ✔ Create component/function to handleLoad @done(20-10-13 22:05)
 ☐ Prevent user lost id when creating product
-☐ Hint: On mutation create there is a lot of obrigatory fields. A better aproach is use a temp obj, and only exec create mutation when really necessarily
-☐ Hint error setState on unmount comp: 1_try use arrows to invoke like on click, or bind it. 2_ Create another function/component. 3.0_ Conditional: Only set whem component is mounted. 3_ createMyHook 
+☐ Prevent user lost cart state on reload. Local storage? React service workers? https://docs.amplify.aws/lib/datastore/getting-started/q/platform/js#prerequisites
+☐ Add google loging? https://dev.to/aws/adding-google-sign-in-to-your-web-app-with-aws-amplify-41oo
+☐ Add FB login? https://dev.to/aws/adding-facebook-sign-in-for-web-applications-with-aws-amplify-2fc8
+✔ Hint: On mutation create there is a lot of obrigatory fields. A better aproach is use a temp obj, and only exec create mutation when really necessarily @done(20-11-05 21:20)
+✔ Hint error setState on unmount comp: 1_try use arrows to invoke like on click, or bind it. 2_ Create another function/component. 3.0_ Conditional: Only set whem component is mounted. 3_ createMyHook @done(20-11-05 21:20)
 ...
 ☐ Create the ecommerce
+☐ Create model ecommerce site? https://dev.to/aws/building-a-serverless-live-streaming-platform-with-react-aws-1jmk
 ☐ Create the UnbPaquera site
 ☐ Create the subscription site for health workers
 ☐ Create the site to analize reclamizations (Uber de advogado), com funções integradas a redes sociais.
