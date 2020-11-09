@@ -17,13 +17,13 @@ export const getProduct = /* GraphQL */ `
         amount
       }
       brand
-      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      avaliation
       comments {
         items {
           id
@@ -60,13 +60,13 @@ export const listProducts = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -97,13 +97,13 @@ export const getComment = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -139,74 +139,6 @@ export const listComments = /* GraphQL */ `
           avaliation
           updatedAt
         }
-        createdAt
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const getCart = /* GraphQL */ `
-  query GetCart($id: ID!) {
-    getCart(id: $id) {
-      id
-      products {
-        id
-        createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        avaliation
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        comments {
-          nextToken
-        }
-        updatedAt
-      }
-      status
-      paidAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const listCarts = /* GraphQL */ `
-  query ListCarts(
-    $filter: ModelCartFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listCarts(filter: $filter, limit: $limit, nextToken: $nextToken) {
-      items {
-        id
-        products {
-          id
-          createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
-          updatedAt
-        }
-        status
-        paidAt
         createdAt
         updatedAt
       }
@@ -295,13 +227,13 @@ export const productsByCategorySubCategory = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -342,13 +274,13 @@ export const productsByCategorySubCategoryCreatedAt = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -389,13 +321,13 @@ export const productsByCategorySubCategoryPrice = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -436,13 +368,13 @@ export const productsByCategorySubCategorySold = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -483,13 +415,13 @@ export const productsByCategorySubCategoryBrand = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -530,13 +462,13 @@ export const productsByCategorySubCategoryBrandCreatedAt = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }

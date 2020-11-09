@@ -1,0 +1,25 @@
+const CATEGORYS = ["FEMININO", "MASCULINO", "INFANTIL"];
+const SUBCATEGORYS = [
+  "BONE",
+  "BRINCO",
+  "CHAPEU",
+  "CORDAO",
+  "CAMISA",
+  "CAMISETA",
+  "JAQUETA",
+  "TERNO",
+  "SHORT",
+  "BERMUDA",
+  "CALCA",
+  "CUECA",
+  "CALCINHA",
+  "SUTIA",
+  "BODY",
+  "LOUNGERIE",
+  "MEIA",
+  "SAPATO",
+  "TENIS",
+  "SANDALHAS",
+];
+
+export { CATEGORYS, SUBCATEGORYS };

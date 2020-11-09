@@ -18,23 +18,9 @@ const description = Joi.object({
     // "any.required": `É um campo obrigatório`,
   }),
 });
-const category = Joi.object({
-  category: Joi.string().alphanum().min(3).max(46).required().messages({
-    "string.base": `"Categoria"Deve conter detalhes do produto a ser cadastrado.'`,
-    "string.empty": `"Categoria"Não pode ficar vazio.`,
-    "string.min": `"Categoria" Deve possuir ao menos {#limit} caracteres`,
-    "string.max": `"Categoria" Deve ter no máximo {#limit} caracteres`,
-    // "any.required": `É um campo obrigatório`,
-  }),
-});
+
 const quantity = Joi.object({ quantity: Joi.number().positive().required() });
 
-const price = Joi.object({
-  price: Joi.object().keys({
-    specie: Joi.number().positive(),
-    cents: Joi.number().positive().max(99),
-  }),
-});
 /* Leave here, it's a good example of a arr joi obj*/
 // const photos = Joi.object({
 //   photos: Joi.array().items({
@@ -85,4 +71,45 @@ formDescription = formDescription.concat(description);
 //   }),
 // });
 
-export { formDescription, title, description, category, quantity, price };
+//////////////////////////////// Price ////////////////////////////////////////
+const category = Joi.object({
+  category: Joi.string().alphanum().min(3).max(52).required().messages({
+    "string.base": `"Categoria" deve conter somente texto curto.'`,
+    "string.empty": `"Categoria" não pode ficar vazio.`,
+    "string.min": `"Categoria" Deve possuir ao menos {#limit} caracteres`,
+    "string.max": `"Categoria" deve ter no máximo {#limit} caracteres`,
+    "any.required": `"Categoria" É um campo obrigatório`,
+  }),
+});
+
+const subCategory = Joi.object({
+  subCategory: Joi.string().alphanum().min(3).max(52).required().messages({
+    "string.base": `"Subcategoria" deve conter somente texto curto.'`,
+    "string.empty": `"Subcategoria" não pode ficar vazio.`,
+    "string.min": `"Subcategoria" Deve possuir ao menos {#limit} caracteres`,
+    "string.max": `"Subcategoria" deve ter no máximo {#limit} caracteres`,
+    "any.required": `"Subcategoria" É um campo obrigatório`,
+  }),
+});
+
+const price = Joi.object({
+  price: Joi.number().required().messages({
+    "string.empty": `"Preço" não pode ficar vazio.`,
+    "any.required": `"Preço" É um campo obrigatório`,
+  }),
+});
+
+let formPrice = Joi.object();
+formPrice = formPrice.concat(category);
+formPrice = formPrice.concat(subCategory);
+formPrice = formPrice.concat(price);
+
+export {
+  formDescription,
+  title,
+  description,
+  category,
+  subCategory,
+  price,
+  formPrice,
+};

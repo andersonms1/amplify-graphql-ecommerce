@@ -17,13 +17,13 @@ export const onCreateProduct = /* GraphQL */ `
         amount
       }
       brand
-      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      avaliation
       comments {
         items {
           id
@@ -55,13 +55,13 @@ export const onUpdateProduct = /* GraphQL */ `
         amount
       }
       brand
-      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      avaliation
       comments {
         items {
           id
@@ -93,13 +93,13 @@ export const onDeleteProduct = /* GraphQL */ `
         amount
       }
       brand
-      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      avaliation
       comments {
         items {
           id
@@ -136,13 +136,13 @@ export const onCreateComment = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -174,13 +174,13 @@ export const onUpdateComment = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -212,129 +212,18 @@ export const onDeleteComment = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
-        comments {
-          nextToken
-        }
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onCreateCart = /* GraphQL */ `
-  subscription OnCreateCart {
-    onCreateCart {
-      id
-      products {
-        id
-        createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
         avaliation
-        photos {
-          bucket
-          region
-          key
-          position
-        }
         comments {
           nextToken
         }
         updatedAt
       }
-      status
-      paidAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onUpdateCart = /* GraphQL */ `
-  subscription OnUpdateCart {
-    onUpdateCart {
-      id
-      products {
-        id
-        createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        avaliation
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        comments {
-          nextToken
-        }
-        updatedAt
-      }
-      status
-      paidAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const onDeleteCart = /* GraphQL */ `
-  subscription OnDeleteCart {
-    onDeleteCart {
-      id
-      products {
-        id
-        createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        avaliation
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        comments {
-          nextToken
-        }
-        updatedAt
-      }
-      status
-      paidAt
       createdAt
       updatedAt
     }

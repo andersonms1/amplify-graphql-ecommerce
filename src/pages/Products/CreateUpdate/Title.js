@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useStyletron } from "baseui";
 import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
@@ -16,7 +16,7 @@ import { HandleErrors } from "../../../components";
 
 import AppContext from "../../../context/AppContext";
 
-function Form({ children }) {
+function Title({ children }) {
   const { setCurrentStep, items, updateItems } = useContext(AppContext);
 
   const [error, setError] = useState(false);
@@ -46,6 +46,11 @@ function Form({ children }) {
       setCurrentStep(2);
     }
   };
+
+  useEffect(() => {
+    console.log("title");
+    console.log(items);
+  }, []);
 
   return (
     <>
@@ -107,4 +112,4 @@ function Form({ children }) {
   );
 }
 
-export default Form;
+export default Title;

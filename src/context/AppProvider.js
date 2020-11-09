@@ -16,181 +16,162 @@ const {
 } = config;
 
 const AppProvider = ({ children }) => {
-  // useEffect(() => {
-  //   fetch();
-  // }, []);
+  useEffect(() => {
+    fetch();
+  }, []);
 
-  // const updateItems = (items) => {
-  //   setAppContext((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       items,
-  //     };
-  //   });
-  // };
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        console.log(user);
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    }
+    getUser();
+  }, []);
 
-  // useEffect(() => {
-  //   async function getUser() {
-  //     try {
-  //       const user = await Auth.currentAuthenticatedUser();
-  //       console.log(user);
-  //     } catch (error) {
-  //       console.log("error: ", error);
-  //     }
-  //   }
-  //   getUser();
-  // }, []);
-
-  // const setLoading = (status) => {
-  //   setAppContext((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       loading: status,
-  //     };
-  //   });
-  // };
-
-  // const fetch = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const { data } = await API.graphql(graphqlOperation(listProducts));
-  //     console.warn("Descoment");
-  //     // await Promise.all(
-  //     //   await data.listProducts.items.map(async (i) => {
-
-  //     //     const image = await Storage.get(i.photos[0].key, {
-  //     //       level: "public",
-  //     //     });
-  //     //     i.didImgLoad = false;
-  //     //     return (i.link = image);
-  //     //   })
-  //     // );
-
-  //     setAppContext((prevState) => {
-  //       return {
-  //         ...prevState,
-  //         products: data.listProducts.items,
-  //         loading: false,
-  //       };
-  //     });
-  //   } catch (e) {
-  //     console.log({ e });
-  //     console.log(new Error(e));
-  //   }
-  // };
-
-  // const setCurrentStep = (goTo) => {
-  //   setAppContext((prevState) => {
-  //     return {
-  //       ...prevState,
-  //       current: goTo,
-  //     };
-  //   });
-  // };
-
-  // const getById = async (id) => {
-  //   try {
-  //     const { data } = await API.graphql(graphqlOperation(getProduct, { id }));
-  //     // console.log(data);
-  //     const res = await data.getProduct.photos.map(async (i) => {
-  //       // console.log(i);
-  //       const image = await Storage.get(i.key, { level: "public" });
-  //       return (i.link = image);
-  //     });
-  //     await Promise.all(res);
-
-  //     // console.log(data);
-  //     setAppContext((prevState) => {
-  //       return {
-  //         ...prevState,
-  //         product: data.getProduct,
-  //       };
-  //     });
-  //   } catch (e) {
-  //     console.log(new Error(e));
-  //   }
-  // };
-
-  const post = () => {
-    return null;
+  const updateItems = (items) => {
+    setAppContext((prevState) => {
+      return {
+        ...prevState,
+        items,
+      };
+    });
   };
-  // const post = async (files, data) => {
-  //   console.log(files);
-  //   console.log(data);
-  //   let photos = [];
 
-  //   const promises = await files.map(async (file, index) => {
-  //     const extension = file.name.split(".")[1];
-  //     const name = file.name.split(".")[0];
-  //     const key = `images/${uuidv4()}${name}.${extension}`;
+  const setLoading = (status) => {
+    setAppContext((prevState) => {
+      return {
+        ...prevState,
+        loading: status,
+      };
+    });
+  };
 
-  //     console.log(`%c ${file}`, "color: red; font-weight: bold");
-  //     console.table(file);
+  const fetch = async () => {
+    try {
+      setLoading(true);
+      const { data } = await API.graphql(graphqlOperation(listProducts));
+      console.warn("Descoment");
+      await Promise.all(
+        await data.listProducts.items.map(async (i) => {
+          const image = await Storage.get(i.photos[0].key, {
+            level: "public",
+          });
+          i.didImgLoad = false;
+          return (i.link = image);
+        })
+      );
 
-  //     await Storage.put(
-  //       key,
-  //       file,
-  //       { level: "public", contentType: file.type },
-  //       {
-  //         progressCallback(progress) {
-  //           console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
-  //         },
-  //       }
-  //     );
-  //     console.log("Executed?");
-  //     console.log(
-  //       `{Bucket: ${bucket}, Region: ${region}, Key: ${key}, Position: ${index} }`
-  //     );
+      setAppContext((prevState) => {
+        return {
+          ...prevState,
+          products: data.listProducts.items,
+          loading: false,
+        };
+      });
+    } catch (e) {
+      console.log({ e });
+      console.log(new Error(e));
+    }
+  };
 
-  //     let photosAux = [];
+  const setCurrentStep = (goTo) => {
+    setAppContext((prevState) => {
+      return {
+        ...prevState,
+        current: goTo,
+      };
+    });
+  };
 
-  //     photosAux = photos;
-  //     photosAux.push({ bucket, region, key, position: index });
+  const getById = async (id) => {
+    try {
+      const { data } = await API.graphql(graphqlOperation(getProduct, { id }));
+      // console.log(data);
+      const res = await data.getProduct.photos.map(async (i) => {
+        // console.log(i);
+        const image = await Storage.get(i.key, { level: "public" });
+        return (i.link = image);
+      });
+      await Promise.all(res);
 
-  //     setPhotos(photos);
+      // console.log(data);
+      setAppContext((prevState) => {
+        return {
+          ...prevState,
+          product: data.getProduct,
+        };
+      });
+    } catch (e) {
+      console.log(new Error(e));
+    }
+  };
 
-  //     const image = await Storage.get(key, { level: "public" });
-  //     console.log(photos);
-  //     console.log(`%c ${image}`, "color: brown; font-weight: bold");
-  //   });
+  const post = async (items) => {
+    const { files } = items;
+    let photos = [];
+    if (files) {
+      const promises = await files.map(async (file, index) => {
+        const extension = file.name.split(".")[1];
+        const name = file.name.split(".")[0];
+        const key = `images/${uuidv4()}${name}.${extension}`;
 
-  //   console.log(data);
-  //   console.log(
-  //     `%c ${photos}`,
-  //     "font-weight: bold; color: red; font-size: 15px"
-  //   );
+        console.log(`%c ${file}`, "color: red; font-weight: bold");
+        console.table(file);
+        console.log(name);
+        console.log(key);
 
-  //   await Promise.all(promises);
+        await Storage.put(
+          key,
+          file,
+          { level: "public", contentType: file.type },
+          {
+            progressCallback(progress) {
+              console.log(`Uploaded: ${progress.loaded}/${progress.total}`);
+            },
+          }
+        );
 
-  //   const res = await API.graphql(
-  //     graphqlOperation(createProduct, {
-  //       input: { ...data, photos },
-  //     })
-  //   );
-  //   console.log(res);
-  // };
+        photos.push({ bucket, region, key, position: index });
+      });
 
-  // const appState = {
-  //   items: {},
-  //   products: [],
-  //   product: null,
-  //   loading: false,
-  //   current: 2,
-  //   updateItems,
-  //   getById,
-  //   post,
-  //   setCurrentStep,
-  // };
+      await Promise.all(promises);
+
+      const { title, description, price, category, subCategory } = items;
+
+      const res = await API.graphql(
+        graphqlOperation(createProduct, {
+          input: {
+            title,
+            description,
+            price,
+            category,
+            subCategory,
+            sold: 0,
+            amount: items.inventory,
+            brand: "",
+            avaliation: 5,
+            photos,
+          },
+        })
+      );
+      console.log(res);
+    }
+  };
+
   const appState = {
     items: {},
     products: [],
     product: null,
     loading: false,
-    current: 2,
-    updateItems: () => console.log("Only test"),
-    getById: () => console.log("Only test"),
-    post: () => console.log("Only test"),
-    setCurrentStep: () => console.log("Only test"),
+    current: 0,
+    updateItems,
+    getById,
+    post,
+    setCurrentStep,
   };
 
   const [appContext, setAppContext] = useState(appState);

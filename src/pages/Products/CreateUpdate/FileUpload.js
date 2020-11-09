@@ -20,11 +20,15 @@ function FileUpload({ children }) {
   const [error, setError] = useState(false);
   const [files, setFiles] = useState([]);
 
-  const { items, updateItems, setCurrentStep } = useContext(AppContext);
+  const { items, updateItems, setCurrentStep, post } = useContext(AppContext);
 
   useEffect(() => {
     items.files && setFiles(items.files);
   }, []);
+
+  // useEffect(() => {
+  //   post(items);
+  // }, [items]);
 
   return (
     <>
@@ -111,7 +115,7 @@ function FileUpload({ children }) {
             kind={KIND.primary}
             size="compact"
             onClick={() => {
-              updateItems({ files: files });
+              updateItems({ files });
               setCurrentStep(1);
             }}
           >

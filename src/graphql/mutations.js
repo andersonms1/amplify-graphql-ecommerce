@@ -20,13 +20,13 @@ export const createProduct = /* GraphQL */ `
         amount
       }
       brand
-      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      avaliation
       comments {
         items {
           id
@@ -61,13 +61,13 @@ export const updateProduct = /* GraphQL */ `
         amount
       }
       brand
-      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      avaliation
       comments {
         items {
           id
@@ -102,13 +102,13 @@ export const deleteProduct = /* GraphQL */ `
         amount
       }
       brand
-      avaliation
       photos {
         bucket
         region
         key
         position
       }
+      avaliation
       comments {
         items {
           id
@@ -148,13 +148,13 @@ export const createComment = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -189,13 +189,13 @@ export const updateComment = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
+        avaliation
         comments {
           nextToken
         }
@@ -230,138 +230,18 @@ export const deleteComment = /* GraphQL */ `
           amount
         }
         brand
-        avaliation
         photos {
           bucket
           region
           key
           position
         }
-        comments {
-          nextToken
-        }
-        updatedAt
-      }
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const createCart = /* GraphQL */ `
-  mutation CreateCart(
-    $input: CreateCartInput!
-    $condition: ModelCartConditionInput
-  ) {
-    createCart(input: $input, condition: $condition) {
-      id
-      products {
-        id
-        createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
         avaliation
-        photos {
-          bucket
-          region
-          key
-          position
-        }
         comments {
           nextToken
         }
         updatedAt
       }
-      status
-      paidAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const updateCart = /* GraphQL */ `
-  mutation UpdateCart(
-    $input: UpdateCartInput!
-    $condition: ModelCartConditionInput
-  ) {
-    updateCart(input: $input, condition: $condition) {
-      id
-      products {
-        id
-        createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        avaliation
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        comments {
-          nextToken
-        }
-        updatedAt
-      }
-      status
-      paidAt
-      createdAt
-      updatedAt
-    }
-  }
-`;
-export const deleteCart = /* GraphQL */ `
-  mutation DeleteCart(
-    $input: DeleteCartInput!
-    $condition: ModelCartConditionInput
-  ) {
-    deleteCart(input: $input, condition: $condition) {
-      id
-      products {
-        id
-        createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        avaliation
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        comments {
-          nextToken
-        }
-        updatedAt
-      }
-      status
-      paidAt
       createdAt
       updatedAt
     }

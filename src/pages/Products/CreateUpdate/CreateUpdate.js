@@ -11,8 +11,9 @@ import Header from "../../Home/Header";
 import AppContext from "../../../context/AppContext";
 
 import FileUpload from "./FileUpload";
-import Form from "./Form";
-import FormPrice from "./FormPrice";
+import Title from "./Title";
+import Price from "./Price";
+import Inventory from "./Inventory";
 
 // import Storage from "@aws-amplify/storage";
 // import API, { graphqlOperation } from "@aws-amplify/api";
@@ -48,10 +49,13 @@ const CreateUpdate = (props) => {
             <FileUpload />
           </NumberedStep>
           <NumberedStep title="Descrição">
-            <Form />
+            <Title />
+          </NumberedStep>
+          <NumberedStep title="Estoque">
+            <Inventory />
           </NumberedStep>
           <NumberedStep title="Preços">
-            <FormPrice />
+            <Price />
           </NumberedStep>
         </ProgressSteps>
         {/* </div> */}
