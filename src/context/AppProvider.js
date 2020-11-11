@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import Auth from "@aws-amplify/auth";
 import Storage from "@aws-amplify/storage";
-import API, { graphqlOperation } from "@aws-amplify/api";
-import { listProducts, getProduct } from "../graphql/queries";
+import API, { graphql, graphqlOperation } from "@aws-amplify/api";
+import {
+  listProducts,
+  getProduct,
+  productsByCategorySubCategory,
+} from "../graphql/queries";
 
 import { createProduct } from "../graphql/mutations";
 import { v4 as uuidv4 } from "uuid";
@@ -16,10 +20,6 @@ const {
 } = config;
 
 const AppProvider = ({ children }) => {
-  useEffect(() => {
-    fetch();
-  }, []);
-
   useEffect(() => {
     async function getUser() {
       try {
@@ -50,13 +50,42 @@ const AppProvider = ({ children }) => {
     });
   };
 
-  const fetch = async () => {
+  const stringToQuery = async (querie, values) => {
+    switch (querie) {
+      case "listProducts":
+        return await API.graphql(graphqlOperation(listProducts));
+        break;
+      case "productsByCategorySubCategory":
+        console.log("object");
+        // return await API.graphql(graphqlOperation(listProducts));
+        return await API.graphql(
+          graphqlOperation(productsByCategorySubCategory),
+          {
+            category: values.category,
+            subCategory: values.subCategory,
+          }
+        );
+
+      //   try {
+      //   return await API.graphql(graphqlOperation(listProducts));
+      // } catch (e) {
+      //   new Error(e);
+      // }
+
+      default:
+        return new Error("Querie não encontrada.");
+    }
+  };
+
+  const getProducts = async ({ props }) => {
+    const { querie, values } = props;
+    console.log(querie);
+    console.log(values);
     try {
-      setLoading(true);
-      const { data } = await API.graphql(graphqlOperation(listProducts));
-      console.warn("Descoment");
+      const { data } = await stringToQuery(querie, values);
+      const { items } = data[`${querie}`];
       await Promise.all(
-        await data.listProducts.items.map(async (i) => {
+        await items.map(async (i) => {
           const image = await Storage.get(i.photos[0].key, {
             level: "public",
           });
@@ -64,17 +93,16 @@ const AppProvider = ({ children }) => {
           return (i.link = image);
         })
       );
+      console.log(items);
 
       setAppContext((prevState) => {
         return {
           ...prevState,
-          products: data.listProducts.items,
-          loading: false,
+          products: items,
         };
       });
     } catch (e) {
-      console.log({ e });
-      console.log(new Error(e));
+      new Error(e);
     }
   };
 
@@ -83,6 +111,14 @@ const AppProvider = ({ children }) => {
       return {
         ...prevState,
         current: goTo,
+      };
+    });
+  };
+  const setPage = (goTo) => {
+    setAppContext((prevState) => {
+      return {
+        ...prevState,
+        page: goTo,
       };
     });
   };
@@ -164,14 +200,17 @@ const AppProvider = ({ children }) => {
 
   const appState = {
     items: {},
-    products: [],
+    products: [], //
     product: null,
     loading: false,
     current: 0,
+    page: 0,
     updateItems,
     getById,
+    getProducts, //
     post,
     setCurrentStep,
+    setPage,
   };
 
   const [appContext, setAppContext] = useState(appState);

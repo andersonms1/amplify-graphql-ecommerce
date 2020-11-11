@@ -1,19 +1,16 @@
-import React, { useState } from "react";
-
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
-
 import { Tabs, Tab } from "baseui/tabs-motion";
 
+import AppContext from "../../context/AppContext";
 import { Products } from "../index";
-
 import Header from "./Header";
 
 function Home() {
-  const [activeKey, setActiveKey] = React.useState("0");
-
+  const { page, setPage } = useContext(AppContext);
   const [admin, setAdmin] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     console.log("Teste");
     setAdmin(false);
     // console.log(theme);
@@ -32,9 +29,9 @@ function Home() {
       {admin ? (
         <Tabs
           onChange={({ activeKey }) => {
-            setActiveKey(activeKey);
+            setPage(activeKey);
           }}
-          activeKey={activeKey}
+          activeKey={page}
           // fill={FILL.fixed}
         >
           <Tab title="PRODUTOS">
@@ -54,16 +51,25 @@ function Home() {
       ) : (
         <Tabs
           onChange={({ activeKey }) => {
-            setActiveKey(activeKey);
+            setPage(activeKey);
           }}
-          activeKey={activeKey}
+          activeKey={page}
           // fill={FILL.fixed}
         >
           <Tab title="HOME">
-            <Products />
-            {/* <div> Working on Header responsitivity</div> */}
+            {/* <Products querie="listProducts" /> */}
+            <p>ok</p>
           </Tab>
-          <Tab title="MASCULINO">{/* <Products /> */}</Tab>
+          <Tab title="MASCULINO">
+            <Products
+              querie="productsByCategorySubCategory"
+              values={{
+                category: "MASCULINO",
+                subCategory: "BONE",
+                sort: "createdAt",
+              }}
+            />
+          </Tab>
           <Tab title="FEMININO">{/* <Products /> */}</Tab>
           <Tab title="INFANTIL">{/* <Products /> */}</Tab>
           <Tab title="PROMOÇÕES">{/* <Products /> */}</Tab>

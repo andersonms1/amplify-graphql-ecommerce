@@ -26,12 +26,13 @@ import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
 import { HandleLoad, Wrapper, WrapperLoayalty } from "../../components";
 import { handleLoad } from "../../utils";
-function Products() {
+
+function Products(props) {
   const [css, theme] = useStyletron();
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
 
-  const { products, loading } = useContext(AppContext);
+  const { products, loading, getProducts, page } = useContext(AppContext);
 
   const priceButtonStyles = css({
     display: "flex",
@@ -45,6 +46,10 @@ function Products() {
     flexDirection: "row",
     alignItems: "center",
   });
+
+  useEffect(() => {
+    getProducts({ props });
+  }, [page]);
 
   function renderGrid() {
     return products.map((item, index) => {
@@ -176,35 +181,6 @@ function Products() {
     return <>{arr}</>;
   };
 
-  const handleLoading = () => {
-    if (!products || loading) {
-      return handleGrid(renderContentLoader());
-    }
-
-    if (!imgsDidLoad) {
-      return (
-        <>
-          <Layer>
-            <Wrapper>
-              <div
-                className={css({
-                  backgroundColor: `${theme.colors.backgroundPrimary}`,
-                  width: "100%",
-                })}
-              >
-                {handleGrid(renderContentLoader())}
-              </div>
-            </Wrapper>
-
-            {handleGrid(renderGrid())}
-          </Layer>
-        </>
-      );
-    } else {
-      return handleGrid(renderGrid());
-    }
-  };
-
   const handleGrid = (item) => {
     return (
       <div className={centerRow}>
@@ -248,16 +224,6 @@ function Products() {
       )}
     </div>
   );
-  // return (
-  //   <div>
-  //     {HandleLoad(
-  //       handleGrid(renderGrid()),
-  //       handleGrid(renderContentLoader()),
-  //       imgsDidLoad
-  //     )}
-  //   </div>
-  // );
-  // return <div>{handleLoading()}</div>;
 }
 
 export default Products;

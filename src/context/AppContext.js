@@ -6,9 +6,12 @@ const AppContext = createContext({
   product: [],
   loading: false,
   current: 0,
+  page: 0,
   getById: (id) => {},
+  getProducts: () => {},
   post: (files, data) => {},
   setCurrentStep: () => {},
+  setPage: () => {},
   setLoading: () => {},
   updateItems: () => {},
 });
