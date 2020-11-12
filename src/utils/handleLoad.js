@@ -4,6 +4,8 @@ import { Layer } from "baseui/layer";
 
 function handleLoad(content, contentLoader, imgsDidLoad) {
   if (imgsDidLoad === false) {
+    // if (imgsDidLoad === false) {
+
     return (
       <>
         <Layer>

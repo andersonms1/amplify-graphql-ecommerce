@@ -1,6 +1,6 @@
 projects:
-  ecommerce:
-    schemaPath: amplify/backend/api/ecommerce/build/schema.graphql
+  ecommercegql:
+    schemaPath: amplify/backend/api/ecommercegql/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:

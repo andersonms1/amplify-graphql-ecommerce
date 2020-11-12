@@ -8,23 +8,23 @@
 		}
 	},
 	"api": {
-		"ecommerce": {
+		"ecommercegql": {
 			"service": "AppSync",
 			"providerPlugin": "awscloudformation",
 			"output": {
 				"authConfig": {
 					"defaultAuthentication": {
-						"authenticationType": "API_KEY",
-						"apiKeyConfig": {
-							"apiKeyExpirationDays": 7,
-							"description": "ecommerce_key"
+						"authenticationType": "AMAZON_COGNITO_USER_POOLS",
+						"userPoolConfig": {
+							"userPoolId": "authecommerce21967ec1"
 						}
 					},
 					"additionalAuthenticationProviders": [
 						{
-							"authenticationType": "AMAZON_COGNITO_USER_POOLS",
-							"userPoolConfig": {
-								"userPoolId": "authecommerce21967ec1"
+							"authenticationType": "API_KEY",
+							"apiKeyConfig": {
+								"apiKeyExpirationDays": 90,
+								"description": "Guest user access"
 							}
 						}
 					]

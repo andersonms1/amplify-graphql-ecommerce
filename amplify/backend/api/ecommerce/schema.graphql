@@ -1,14 +1,11 @@
 type Product @model 
-@key(name: "byCategory", fields: ["category", "subCategory"], queryField: "productByCategory")
-@key(name: "byCategoryPrice", fields: ["category", "price"], queryField: "productByCategoryByPrice")
-#@key(name: "byCategorySubCategory",  fields: ["category", "subCategory"], queryField: "productByCategorySubCategory")
+@key(name: "byCategory", fields: ["category", "id"])
 {
   id: ID!
   title: String!
   description: String!
   price: Float!
-  category: String!
-  subCategory: String
+  category: [String!]
   amount: Int
   photos: [S3Object]
   avaliation: Float
@@ -21,12 +18,16 @@ type S3Object {
     position: String!
 }
 
+type Price {
+  cents: Int
+  specie: Int!
+}
 
 type Cart @model{
   id: ID!
   products: [Product]
   status: String!
-  total: Float
+  price: Price
   createAt: String
   paidAt: String
 }

@@ -6,6 +6,7 @@ import {
   listProducts,
   getProduct,
   productsByCategorySubCategory,
+  productsByCategorySubCategoryBrand,
 } from "../graphql/queries";
 
 import { createProduct } from "../graphql/mutations";
@@ -56,21 +57,35 @@ const AppProvider = ({ children }) => {
         return await API.graphql(graphqlOperation(listProducts));
         break;
       case "productsByCategorySubCategory":
-        console.log("object");
-        // return await API.graphql(graphqlOperation(listProducts));
-        return await API.graphql(
-          graphqlOperation(productsByCategorySubCategory),
-          {
-            category: values.category,
-            subCategory: values.subCategory,
-          }
-        );
+        console.log("Querie initiated");
 
-      //   try {
-      //   return await API.graphql(graphqlOperation(listProducts));
-      // } catch (e) {
-      //   new Error(e);
-      // }
+        try {
+          const res = await API.graphql(
+            graphqlOperation(productsByCategorySubCategory, {
+              category: "FEMININO",
+              subCategory: { eq: "CAMISA" },
+            })
+          );
+
+          console.log("Querie done?");
+          console.log(res);
+          console.table(res.data);
+          return res;
+        } catch (e) {
+          return new Error(e);
+        }
+
+      case "productsByCategorySubCategoryBrand":
+        console.log("Querie begin.");
+        const res = await API.graphql(
+          graphqlOperation(productsByCategorySubCategoryBrand, {
+            category: "FEMININO",
+            subCategoryBrand: { eq: { brand: "ZARA", subCategory: "CAMISA" } },
+          })
+        );
+        console.log(res);
+        console.log("Querie end.");
+        return res;
 
       default:
         return new Error("Querie não encontrada.");
@@ -79,8 +94,7 @@ const AppProvider = ({ children }) => {
 
   const getProducts = async ({ props }) => {
     const { querie, values } = props;
-    console.log(querie);
-    console.log(values);
+
     try {
       const { data } = await stringToQuery(querie, values);
       const { items } = data[`${querie}`];
@@ -96,9 +110,11 @@ const AppProvider = ({ children }) => {
       console.log(items);
 
       setAppContext((prevState) => {
+        const _products = {};
+        _products[`${querie}`] = items;
         return {
           ...prevState,
-          products: items,
+          products: { ..._products },
         };
       });
     } catch (e) {
@@ -191,6 +207,7 @@ const AppProvider = ({ children }) => {
             brand: "",
             avaliation: 5,
             photos,
+            brand: "ZARA",
           },
         })
       );
@@ -200,11 +217,11 @@ const AppProvider = ({ children }) => {
 
   const appState = {
     items: {},
-    products: [], //
+    products: { listProducts: [] }, //
     product: null,
     loading: false,
     current: 0,
-    page: 0,
+    page: 1,
     updateItems,
     getById,
     getProducts, //

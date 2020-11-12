@@ -32,7 +32,13 @@ function Products(props) {
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
 
-  const { products, loading, getProducts, page } = useContext(AppContext);
+  const {
+    products,
+    loading,
+    getProducts,
+    page,
+    didGetProductsLoad,
+  } = useContext(AppContext);
 
   const priceButtonStyles = css({
     display: "flex",
@@ -52,9 +58,13 @@ function Products(props) {
   }, [page]);
 
   function renderGrid() {
-    return products.map((item, index) => {
-      return <FlexGridItem key={item.id}>{renderCard(item)}</FlexGridItem>;
-    });
+    if (products[`${props.querie}`]) {
+      return products[`${props.querie}`].map((item, index) => {
+        return <FlexGridItem key={item.id}>{renderCard(item)}</FlexGridItem>;
+      });
+    } else {
+      return null;
+    }
   }
 
   function renderCard(item) {
@@ -131,7 +141,10 @@ function Products(props) {
                 onLoad={() => {
                   setImgsLoadCounter(imgsLoadCounter + 1);
 
-                  if (imgsLoadCounter === products.length - 1) {
+                  if (
+                    imgsLoadCounter ===
+                    products[`${props.querie}`].length - 1
+                  ) {
                     setImgsDidLoad(true);
                   }
                 }}

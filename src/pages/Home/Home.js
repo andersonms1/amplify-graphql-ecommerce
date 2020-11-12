@@ -10,12 +10,6 @@ function Home() {
   const { page, setPage } = useContext(AppContext);
   const [admin, setAdmin] = useState(false);
 
-  useEffect(() => {
-    console.log("Teste");
-    setAdmin(false);
-    // console.log(theme);
-  }, []);
-
   // https://stackoverflow.com/questions/49058890/how-to-get-a-react-components-size-height-width-before-render
   // useLayoutEffect(() => {
   //   console.log(targetRef.current.offsetWidth);
@@ -57,20 +51,29 @@ function Home() {
           // fill={FILL.fixed}
         >
           <Tab title="HOME">
-            {/* <Products querie="listProducts" /> */}
-            <p>ok</p>
+            <Products querie="listProducts" />
+            {/* <p>ok</p> */}
           </Tab>
           <Tab title="MASCULINO">
             <Products
               querie="productsByCategorySubCategory"
               values={{
                 category: "MASCULINO",
-                subCategory: "BONE",
+                subCategory: { eq: "CAMISA" },
                 sort: "createdAt",
               }}
             />
           </Tab>
-          <Tab title="FEMININO">{/* <Products /> */}</Tab>
+          <Tab title="FEMININO">
+            <Products
+              querie="productsByCategorySubCategoryBrand"
+              values={{
+                category: "FEMININO",
+                subCategory: { eq: { brand: "ZARA", subCategory: "SHIRT" } },
+                sort: "createdAt",
+              }}
+            />
+          </Tab>
           <Tab title="INFANTIL">{/* <Products /> */}</Tab>
           <Tab title="PROMOÇÕES">{/* <Products /> */}</Tab>
         </Tabs>

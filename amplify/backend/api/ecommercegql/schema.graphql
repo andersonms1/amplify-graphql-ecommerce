@@ -17,8 +17,8 @@ type Product @model
   sold: Int!
   amount: [Amount]
   brand: String
-  avaliation: Float
   photos: [S3Object]
+  avaliation: Float
   comments: [Comment] @connection(name: "ProductComments")
 }
 
@@ -43,12 +43,6 @@ type Amount {
 }
 
 
-type Cart @model{
-  id: ID!
-  products: [Product]
-  status: String!
-  paidAt: String
-}
 
 type Order @model
 @key(name: "byUserCreatedAt", fields: ["user", "createdAt"], queryField: "ordersByUserCreatedAt")

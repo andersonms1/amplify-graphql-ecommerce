@@ -7,6 +7,7 @@ const AppContext = createContext({
   loading: false,
   current: 0,
   page: 0,
+  didGetProductsLoad: false,
   getById: (id) => {},
   getProducts: () => {},
   post: (files, data) => {},

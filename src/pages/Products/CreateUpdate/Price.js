@@ -240,7 +240,7 @@ function Price({ children }) {
         unstable_ModalBackdropScroll
       >
         <ModalHeader>Confirmar publicação de produto</ModalHeader>
-        <ModalBody>{spinner ? <StyledSpinnerNext /> : { message }}</ModalBody>
+        <ModalBody>{spinner ? <StyledSpinnerNext /> : null}</ModalBody>
         <ModalFooter>
           <ModalButton
             kind={ButtonKind.tertiary}

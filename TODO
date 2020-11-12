@@ -18,6 +18,10 @@ https://github.com/fabiospampinato/vscode-todo-plus
   ✔ Watch video https://www.youtube.com/watch?v=JgwI22y_eFA&list=WL&index=2&t=154s @done(20-09-04 00:44)
 ✔ Study to implement: https://dev.to/andreiduca/practical-implementation-of-data-fetching-with-react-suspense-that-you-can-use-today-273m @started(20-09-04 20:29) @done(20-09-04 20:50) @lasted(21m37s)
 ✔ Study to : https://hackernoon.com/magic-of-react-suspense-with-concurrent-react-and-react-lazy-api-e32dc5f30ed1 @done(20-09-04 21:02)
+☐ try change the queries, so they reflect your queries mocked?
+https://github.com/aws-amplify/amplify-cli/issues/2307
+https://github.com/aws-amplify/amplify-cli/issues/2059#issuecomment-523972539
+☐ products states is leaking, try separete state by page with, products: [] to products: {listProducts:[],...}
 ☐ Load of pages, use lazy? and or place holder svg
 ☐ Validate cart description size.
 ☐ Remember: revise responsivity. And if some one if a computer minimize the size of small smartphone, it is good?
