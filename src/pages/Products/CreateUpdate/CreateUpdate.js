@@ -6,7 +6,6 @@ import { Block } from "baseui/block";
 import { ProgressSteps, NumberedStep } from "baseui/progress-steps";
 import { Grid, Cell } from "baseui/layout-grid";
 import { useMediaQuery } from "react-responsive";
-import Header from "../../Home/Header";
 
 import AppContext from "../../../context/AppContext";
 
@@ -37,7 +36,6 @@ const CreateUpdate = (props) => {
   return (
     <Grid>
       <Cell span={[6, 8, 12]}>
-        <Header />
         {/* <div
         className={css({
           display: "flex",

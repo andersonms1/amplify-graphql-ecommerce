@@ -5,10 +5,20 @@ const CheckoutContext = createContext({
   // products: [],
   // product: [],
   // loading: false,
-  current: 1,
+  current: 0,
+  cart: {
+    products: [],
+    total: 0,
+    status: "criado",
+    address: {},
+  },
+  setCart: () => {},
+  addCartItem: () => {},
   // getById: (id) => {},
   // post: (files, data) => {},
   setCurrentStep: () => {},
+  removeCartItem: (index) => {},
+  addCartSelection: (index, selection) => {},
 });
 
 export default CheckoutContext;

@@ -7,29 +7,41 @@ import { Paragraph1, Display4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
+import { useHistory } from "react-router-dom";
+
 import AppContext from "../../context/AppContext";
+import CheckoutContext from "../../context/CheckoutContext";
 import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
 import { handleLoad } from "../../utils";
-import Header from "../Home/Header";
+import { setObj, getObj } from "../../utils/localStorage";
 
 function Details() {
   const [css, theme] = useStyletron();
   const { breakpoints } = theme;
   let { id } = useParams();
+  let history = useHistory();
+
   const { getById, product } = useContext(AppContext);
+  const { cart, setCart, addCartItem } = useContext(CheckoutContext);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
 
   const targetRef = useRef();
 
+  // useEffect(() => {
+  //   getById(id);
+  //   setCart(getObj("cart"));
+  //   console.log(JSON.stringify(getObj("cart")));
+  //   console.log(JSON.stringify(product));
+  //   setImgsDidLoad(false);
+  // }, [id]);
+
   useEffect(() => {
-    const get = async () => {
-      await getById(id);
-    };
-    get();
-  }, [id]);
+    setImgsDidLoad(true);
+    console.log(product.amount);
+  }, []);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${breakpoints.large}px)`,
@@ -69,7 +81,7 @@ function Details() {
               alt="Foto do produto"
               ref={targetRef}
               /* The carousel and baseui don't "talk", very well. 
-              So the photos are appearing first.  */
+              So the photos were appearing first.  */
               style={
                 image.loaded && imgsDidLoad
                   ? { display: "inline" }
@@ -155,9 +167,10 @@ function Details() {
     );
   };
 
-  const renderButton = (icon, kind, text) => {
+  const renderButton = (icon, kind, text, onClick) => {
     return (
       <Button
+        onClick={() => onClick}
         endEnhancer={() => (
           <i height="10px" className="material-icons">
             {icon}
@@ -170,6 +183,23 @@ function Details() {
       </Button>
     );
   };
+
+  const handleBuy = () => {
+    // setCart({products: product});
+    addCartItem(product);
+    history.push("/cart");
+  };
+
+  // useEffect(() => {
+  //   console.log(cart);
+  //   console.log(product);
+  //   const navigate = () => {
+  //     if (product === cart.products[cart.products.length - 1]) {
+  //       history.push("/cart");
+  //     }
+  //   };
+  //   navigate();
+  // }, [cart]);
 
   const renderContent = () => {
     if (!product) {
@@ -253,11 +283,18 @@ function Details() {
                 </Panel>
               </Accordion>
 
-              {renderButton(
-                "shopping_cart",
-                KIND.primary,
-                "Adicionar ao carrinho"
-              )}
+              <Button
+                onClick={() => handleBuy()}
+                endEnhancer={() => (
+                  <i height="10px" className="material-icons">
+                    shopping_cart
+                  </i>
+                )}
+                kind={KIND.primary}
+                className={css({ width: "100%" })}
+              >
+                Comprar
+              </Button>
 
               <Block marginBottom="scale300" />
 
@@ -275,7 +312,6 @@ function Details() {
 
   return (
     <>
-      <Header />
       <Block paddingBottom="10px" />
       {handleLoad(renderContent(), contentLoader(), imgsDidLoad)}
     </>

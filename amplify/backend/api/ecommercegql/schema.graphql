@@ -55,6 +55,6 @@ type Order @model
   price: Float!
   user: String!
   status: String!
-  product: [Product] @connection
+  product: [Product] 
 
 }

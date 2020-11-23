@@ -155,20 +155,30 @@ export const getOrder = /* GraphQL */ `
       user
       status
       product {
-        items {
-          id
-          createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
-          updatedAt
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
         }
-        nextToken
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          nextToken
+        }
+        updatedAt
       }
       updatedAt
     }
@@ -188,7 +198,17 @@ export const listOrders = /* GraphQL */ `
         user
         status
         product {
-          nextToken
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          brand
+          avaliation
+          updatedAt
         }
         updatedAt
       }
@@ -502,7 +522,17 @@ export const ordersByUserCreatedAt = /* GraphQL */ `
         user
         status
         product {
-          nextToken
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          brand
+          avaliation
+          updatedAt
         }
         updatedAt
       }
@@ -534,7 +564,17 @@ export const ordersByUserStatus = /* GraphQL */ `
         user
         status
         product {
-          nextToken
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          brand
+          avaliation
+          updatedAt
         }
         updatedAt
       }
@@ -566,7 +606,17 @@ export const ordersByStatusCreatedAt = /* GraphQL */ `
         user
         status
         product {
-          nextToken
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          brand
+          avaliation
+          updatedAt
         }
         updatedAt
       }

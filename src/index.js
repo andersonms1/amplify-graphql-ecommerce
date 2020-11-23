@@ -9,7 +9,7 @@ import { Provider as StyletronProvider } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
 
 import AppProvider from "./context/AppProvider";
-
+import CheckoutProvider from "./context/CheckoutProvider";
 const engine = new Styletron();
 
 Amplify.configure(amplify);
@@ -18,7 +18,9 @@ ReactDOM.render(
   <StyletronProvider value={engine}>
     <BaseProvider theme={LightTheme}>
       <AppProvider>
-        <App />
+        <CheckoutProvider>
+          <App />
+        </CheckoutProvider>
       </AppProvider>
     </BaseProvider>
   </StyletronProvider>,

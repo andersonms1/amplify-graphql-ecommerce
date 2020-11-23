@@ -4,7 +4,6 @@ import { Tabs, Tab } from "baseui/tabs-motion";
 
 import AppContext from "../../context/AppContext";
 import { Products } from "../index";
-import Header from "./Header";
 
 function Home() {
   const { page, setPage } = useContext(AppContext);
@@ -18,8 +17,6 @@ function Home() {
 
   return (
     <div>
-      <Header />
-
       {admin ? (
         <Tabs
           onChange={({ activeKey }) => {

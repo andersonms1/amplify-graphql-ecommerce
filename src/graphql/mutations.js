@@ -259,20 +259,30 @@ export const createOrder = /* GraphQL */ `
       user
       status
       product {
-        items {
-          id
-          createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
-          updatedAt
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
         }
-        nextToken
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          nextToken
+        }
+        updatedAt
       }
       updatedAt
     }
@@ -290,20 +300,30 @@ export const updateOrder = /* GraphQL */ `
       user
       status
       product {
-        items {
-          id
-          createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
-          updatedAt
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
         }
-        nextToken
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          nextToken
+        }
+        updatedAt
       }
       updatedAt
     }
@@ -321,20 +341,30 @@ export const deleteOrder = /* GraphQL */ `
       user
       status
       product {
-        items {
-          id
-          createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
-          updatedAt
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
         }
-        nextToken
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          nextToken
+        }
+        updatedAt
       }
       updatedAt
     }

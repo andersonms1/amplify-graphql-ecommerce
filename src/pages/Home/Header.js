@@ -20,6 +20,7 @@ import { Small, Large } from "../../mediaQueries";
 
 function Header() {
   const [css, theme] = useStyletron();
+  const [debug, setDebugger] = useState(false);
   const [drawer, setDrawer] = useState(false);
 
   const drawerStyles = css({
@@ -58,6 +59,8 @@ function Header() {
     // justifycontent: "center",
     alignSelf: "center",
   });
+
+  const renderDebugger = () => {};
 
   const renderDrawerContent = () => {
     return (

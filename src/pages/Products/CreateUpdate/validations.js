@@ -111,5 +111,6 @@ export {
   category,
   subCategory,
   price,
+  quantity,
   formPrice,
 };

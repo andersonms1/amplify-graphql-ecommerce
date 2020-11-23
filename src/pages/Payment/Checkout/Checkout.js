@@ -1,7 +1,6 @@
 import React, { useState, useContext } from "react";
 import { ProgressSteps, NumberedStep } from "baseui/progress-steps";
 import { Grid, Cell, ALIGNMENT } from "baseui/layout-grid";
-import Header from "../../Home/Header";
 
 import AppContext from "../../../context/CheckoutContext";
 import Cart from "./Cart";
@@ -12,7 +11,6 @@ function Checkout() {
   return (
     <Grid>
       <Cell span={[6, 8, 8]}>
-        <Header />
         <ProgressSteps current={current}>
           <NumberedStep title="Verificar compras">
             <Cart />
