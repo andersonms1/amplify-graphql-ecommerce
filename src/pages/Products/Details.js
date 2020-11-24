@@ -3,11 +3,35 @@ import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
 import { useParams } from "react-router-dom";
-import { Paragraph1, Display4 } from "baseui/typography";
+import {
+  Paragraph1,
+  Display4,
+  H1,
+  H2,
+  H3,
+  H4,
+  H5,
+  H6,
+} from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
 import { useHistory } from "react-router-dom";
+import { FormControl } from "baseui/form-control";
+import { Input } from "baseui/input";
+import { Select } from "baseui/select";
+import { Tag } from "baseui/tag";
+import ChevronDown from "baseui/icon/chevron-down";
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+  SIZE,
+  ROLE,
+} from "baseui/modal";
+import { KIND as ButtonKind } from "baseui/button";
 
 import AppContext from "../../context/AppContext";
 import CheckoutContext from "../../context/CheckoutContext";
@@ -15,7 +39,9 @@ import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
 import { handleLoad } from "../../utils";
+import { quantity as VAL_QUANTITY } from "../Products/CreateUpdate/validations";
 import { setObj, getObj } from "../../utils/localStorage";
+import { ValidationError } from "joi";
 
 function Details() {
   const [css, theme] = useStyletron();
@@ -28,20 +54,38 @@ function Details() {
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
 
-  const targetRef = useRef();
-
-  // useEffect(() => {
-  //   getById(id);
-  //   setCart(getObj("cart"));
-  //   console.log(JSON.stringify(getObj("cart")));
-  //   console.log(JSON.stringify(product));
-  //   setImgsDidLoad(false);
-  // }, [id]);
+  const [isOpen, setIsOpen] = useState(false); //modal
+  const [size, setSize] = useState([]);
+  const [quantity, setQuantity] = useState("1");
+  const [captionQuantity, setCaptionQuantity] = useState("");
 
   useEffect(() => {
-    setImgsDidLoad(true);
-    console.log(product.amount);
-  }, []);
+    getById(id);
+    setCart(getObj("cart"));
+    // console.log(JSON.stringify(getObj("cart")));
+
+    setImgsDidLoad(false);
+  }, [id]);
+
+  useEffect(() => {
+    setSize(
+      product
+        ? [
+            {
+              label: `${product.amount[0].size}`,
+              id: "0",
+              quantity: `${product.amount[0].amount}`,
+            },
+          ]
+        : [{ label: "Carregando...", id: "0", quantity: "0" }]
+    );
+  }, [product]);
+
+  // useEffect(() => {
+  //   setCart(getObj("cart"));
+  //   setImgsDidLoad(true);
+  //   console.log(product.amount);
+  // }, []);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${breakpoints.large}px)`,
@@ -79,7 +123,6 @@ function Details() {
             <img
               src={image.link}
               alt="Foto do produto"
-              ref={targetRef}
               /* The carousel and baseui don't "talk", very well. 
               So the photos were appearing first.  */
               style={
@@ -105,14 +148,14 @@ function Details() {
               >
                 shopping_cart
               </i>
-              <i
+              {/* <i
                 onClick={() => alert("Loyalty")}
                 height="10px"
                 className="material-icons"
                 style={{ paddingLeft: "5px" }}
               >
                 loyalty
-              </i>
+              </i> */}
             </div>
           </div>
         );
@@ -167,25 +210,22 @@ function Details() {
     );
   };
 
-  const renderButton = (icon, kind, text, onClick) => {
-    return (
-      <Button
-        onClick={() => onClick}
-        endEnhancer={() => (
-          <i height="10px" className="material-icons">
-            {icon}
-          </i>
-        )}
-        kind={kind}
-        className={css({ width: "100%" })}
-      >
-        {text}
-      </Button>
-    );
+  const isComoboValid = () => {
+    return product.amount.filter((_product) => _product.size === size[0].label);
   };
 
   const handleBuy = () => {
     // setCart({products: product});
+    const filter = isComoboValid();
+    console.log(filter);
+
+    const haveStock = filter[0].amount > quantity;
+    console.log(filter[0].amount);
+    console.log(haveStock);
+    product.selection = {
+      amount: quantity,
+      size: size[0].label,
+    };
     addCartItem(product);
     history.push("/cart");
   };
@@ -251,29 +291,60 @@ function Details() {
               }
             >
               <Display4 marginBottom="scale500">{product.title}</Display4>
-              <Accordion className={css({ maxWidth: "100%" })}>
-                <Panel
-                  title="Detalhes"
+              <H4 marginBottom="scale500">R${product.price}</H4>
+
+              <div>
+                <Tag
+                  onClick={() => setIsOpen(true)}
                   overrides={{
-                    Header: {
-                      style: { paddingLeft: "0px", paddingRight: "0px" },
+                    Root: {
+                      style: {
+                        marginLeft: "0px",
+                      },
                     },
+                    ActionIcon: () => (
+                      <ChevronDown onClick={() => setIsOpen(true)} />
+                    ),
                   }}
                 >
-                  Preço: R${product.price.specie},{product.price.cents}
-                  <p>Categoria: {product.category}, Tamanho: M</p>
-                </Panel>
+                  Tamanho
+                  {size.length
+                    ? ` ${size[0].label}`
+                    : ` ${product.amount[0].size}`}
+                </Tag>
+                <Tag closeable={false}>
+                  {`${size[0].quantity} `}
+                  unidades
+                </Tag>
+              </div>
+
+              <Accordion className={css({ maxWidth: "100%" })}>
                 <Panel
-                  title="Descrição"
+                  title="DESCRIÇÃO"
                   overrides={{
                     Root: {
                       style: { maxWidth: "100%" },
                     },
                     Header: {
-                      style: { paddingLeft: "0px", paddingRight: "0px" },
+                      style: {
+                        paddingLeft: "0px",
+                        paddingRight: "0px",
+                        marginBottom: "10px",
+                      },
                     },
                   }}
                 >
+                  <Tag
+                    closeable={false}
+                    overrides={{
+                      Root: {
+                        style: { marginLeft: "0px" },
+                      },
+                    }}
+                  >
+                    {product.category}
+                  </Tag>
+                  <Tag closeable={false}>{product.subCategory}</Tag>
                   <Paragraph1
                     className={css({ maxWidth: "100%" })}
                     marginBottom="scale500"
@@ -296,13 +367,13 @@ function Details() {
                 Comprar
               </Button>
 
-              <Block marginBottom="scale300" />
+              {/* <Block marginBottom="scale300" /> */}
 
-              {renderButton(
+              {/* {renderButton(
                 "loyalty",
                 KIND.secondary,
                 "Adicionar a lista de desejos"
-              )}
+              )} */}
             </div>
           </div>
         </>
@@ -310,10 +381,97 @@ function Details() {
     }
   };
 
+  const handleCombo = () => {
+    return !product
+      ? null
+      : product.amount.map((item, index) => {
+          return {
+            label: item.size,
+            quantity: item.amount,
+            id: `${index}`,
+          };
+        });
+  };
+
+  const handleModal = () => {
+    const _val = VAL_QUANTITY.validate({ quantity }, { abortEarly: false });
+    const MAX_SIZE = `Quantidade máxima ${
+      size[0] ? JSON.stringify(size[0].quantity) : "0"
+    }`;
+    if (_val.error) {
+      //ser error
+      setCaptionQuantity(`${JSON.stringify(_val.error.message)}`);
+    } else {
+      const filter = isComoboValid();
+      if (quantity > filter[0].amount) {
+        //set error
+        setCaptionQuantity(MAX_SIZE);
+      } else {
+        //remove error
+        setCaptionQuantity("");
+        setIsOpen(false);
+      }
+    }
+  };
+
+  const renderModal = () => {
+    return (
+      <Modal
+        onClose={() => setIsOpen(false)}
+        closeable
+        isOpen={isOpen}
+        animate
+        autoFocus
+        size={SIZE.default}
+        role={ROLE.dialog}
+        unstable_ModalBackdropScroll
+      >
+        <ModalHeader>Escolha o tamanho e quantidade</ModalHeader>
+        <ModalBody>
+          <FormControl label="Tamanho" caption="Teste">
+            <Select
+              options={handleCombo()}
+              value={size}
+              // placeholder={
+              //   handleStateComparation() && isOpen && !size
+              //     ? `${cart.products[currentItem].amount[0].size}`
+              //     : `${size}`
+              // }
+              onChange={(params) => {
+                setSize(params.value);
+              }}
+            />
+          </FormControl>
+          <FormControl
+            label="Quantidade"
+            placeholder="1"
+            caption={`${captionQuantity}`}
+            disabled={size ? false : true}
+          >
+            <Input
+              value={quantity}
+              onChange={(e) => {
+                setQuantity(e.target.value);
+              }}
+              placeholder=""
+              clearOnEscape
+            />
+          </FormControl>
+        </ModalBody>
+
+        <ModalFooter>
+          <ModalButton kind={ButtonKind.tertiary} onClick={() => handleModal()}>
+            OK
+          </ModalButton>
+        </ModalFooter>
+      </Modal>
+    );
+  };
   return (
     <>
       <Block paddingBottom="10px" />
       {handleLoad(renderContent(), contentLoader(), imgsDidLoad)}
+      {renderModal()}
     </>
   );
 }

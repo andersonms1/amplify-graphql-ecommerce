@@ -16,12 +16,11 @@ import {
 import { StyledLink } from "baseui/link";
 import { KIND as ButtonKind } from "baseui/button";
 import { Button } from "baseui/button";
-import { FormControl } from "baseui/form-control";
 import { Textarea } from "baseui/textarea";
-import { Input } from "baseui/input";
 import { Combobox } from "baseui/combobox";
+import { FormControl } from "baseui/form-control";
+import { Input } from "baseui/input";
 import { Select } from "baseui/select";
-import { SIZE as COMBO_SIZE } from "baseui/combobox";
 import {
   Display1,
   Display2,
@@ -234,7 +233,14 @@ function Cart() {
           </ModalBody>
 
           <ModalFooter>
-            <ModalButton kind={ButtonKind.tertiary}>Cancel</ModalButton>
+            <ModalButton
+              kind={ButtonKind.tertiary}
+              onClick={() => {
+                setConfirmRem(false);
+              }}
+            >
+              Cancel
+            </ModalButton>
             <ModalButton
               onClick={() => {
                 setConfirmRem(false);
