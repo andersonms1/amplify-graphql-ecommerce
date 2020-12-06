@@ -7,12 +7,18 @@ import {
   StyledNavigationList as NavigationList,
 } from "baseui/header-navigation";
 
+import { ListItem, ListItemLabel, ARTWORK_SIZES } from "baseui/list";
+import { Check } from "baseui/icon";
+import { ChevronRight } from "baseui/icon";
+
 import { Avatar } from "baseui/avatar";
 import { Link } from "react-router-dom";
+import { StyledLink } from "baseui/link";
+import { StatefulMenu } from "baseui/menu";
 import Menu from "baseui/icon/menu";
 import { Drawer } from "baseui/drawer";
 import { Block } from "baseui/block";
-import { Paragraph2 } from "baseui/typography";
+import { H4, H5, H6, Paragraph2 } from "baseui/typography";
 
 import { linkProps, StyledIcon } from "./index";
 
@@ -62,45 +68,81 @@ function Header() {
 
   const renderDebugger = () => {};
 
+  const DrawerItem = ({ icon, text }) => {
+    return (
+      <div
+        className={css({
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+        })}
+      >
+        <i className="material-icons">
+          <StyledIcon theme={theme}>{icon}</StyledIcon>
+        </i>
+
+        <Paragraph2 marginTop="0px" marginLeft="5vw">
+          {text}
+        </Paragraph2>
+      </div>
+    );
+  };
+
   const renderDrawerContent = () => {
     return (
-      <div className={drawerStyles}>
-        <div className={drawerIconStyles}>
-          Olá, Anderson
-          {/* <Avatar
-            name="Anderson Silva"
-            size="scale1200"
-            src="https://api.adorable.io/avatars/285/10@adorable.io.png"
-          /> */}
-        </div>
-        {/* This link removes one weird bug, let this here for the love of god! */}
-        <a href="www.google.com" />
-        <Link to="/cart" className={drawerItemStyles}>
-          <i className="material-icons">
-            <StyledIcon theme={theme}>shopping_cart</StyledIcon>
-          </i>
-          <Block paddingLeft="5vw">
-            <Paragraph2>Meu carrinho</Paragraph2>
-          </Block>
+      <div>
+        <H5>Olá, Anderson</H5>
+        {/* <Link to="/checkout" className={drawerItemStyles}>
+          <DrawerItem text="Carrinho" icon="shopping_cart" />
+        </Link>
+        <Link to="/user" className={drawerItemStyles}>
+          <DrawerItem text="Meu perfil" icon="face" />
+        </Link>
+
+        <Link to="/admin" className={drawerItemStyles}>
+          <DrawerItem text="Administrativo" icon="dashboard" />
         </Link>
 
         <Link to="/history" className={drawerItemStyles}>
-          <i className="material-icons">
-            <StyledIcon theme={theme}>loyalty</StyledIcon>
-          </i>
-          <Block paddingLeft="5vw">
-            <Paragraph2>Lista de desejos</Paragraph2>
-          </Block>
+          <DrawerItem text="Histórico de compras" icon="history" />
         </Link>
 
-        <Link to="/wishes" className={drawerItemStyles}>
-          <i className="material-icons">
-            <StyledIcon theme={theme}>history</StyledIcon>
-          </i>
-          <Block paddingLeft="5vw">
-            <Paragraph2>Historico de compras</Paragraph2>
-          </Block>
-        </Link>
+        <Link to="/" className={drawerItemStyles}>
+          <DrawerItem text="Home" icon="home" />
+        </Link> */}
+
+        <ul
+          className={css({
+            paddingLeft: 0,
+            paddingRight: 0,
+          })}
+        >
+          <ListItem sublist>
+            <ListItemLabel sublist>Label One</ListItemLabel>
+          </ListItem>
+          <ListItem
+            artwork={(props) => <Check {...props} />}
+            artworkSize={ARTWORK_SIZES.SMALL}
+            endEnhancer={() => <ListItemLabel>End Enhancer</ListItemLabel>}
+            sublist
+          >
+            <ListItemLabel>Label</ListItemLabel>
+          </ListItem>
+
+          <ListItem
+            artwork={() => {
+              return (
+                <i className="material-icons">
+                  <StyledIcon theme={theme}>shopping_cart</StyledIcon>
+                </i>
+              );
+            }}
+            endEnhancer={() => <ChevronRight />}
+            sublist
+          >
+            <ListItemLabel sublist>Label Three</ListItemLabel>
+          </ListItem>
+        </ul>
       </div>
     );
   };
@@ -120,7 +162,7 @@ function Header() {
               {drawer && (
                 <Drawer
                   isOpen={drawer}
-                  autoFocus
+                  autoFocus={false}
                   onClose={() => setDrawer(false)}
                 >
                   {renderDrawerContent()}
@@ -144,11 +186,6 @@ function Header() {
               <div>
                 <Link {...linkProps} to="/user">
                   Olá, Anderson
-                  {/* <Avatar
-                    name="Anderson Silva"
-                    size="scale1200"
-                    src="https://api.adorable.io/avatars/285/10@adorable.io.png"
-                  /> */}
                 </Link>
               </div>
             </NavigationList>

@@ -4,7 +4,7 @@ import App from "./App";
 import Amplify from "@aws-amplify/core";
 import amplify from "./aws-exports";
 
-import { BaseProvider, LightTheme } from "baseui";
+import { BaseProvider, LightTheme, DarkTheme } from "baseui";
 import { Provider as StyletronProvider } from "styletron-react";
 import { Client as Styletron } from "styletron-engine-atomic";
 

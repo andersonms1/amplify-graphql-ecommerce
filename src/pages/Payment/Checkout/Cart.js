@@ -31,7 +31,12 @@ import {
   H6,
   Paragraph1,
   Paragraph2,
+  Label4,
 } from "baseui/typography";
+import { Tag } from "baseui/tag";
+import { Block } from "baseui/block";
+import { Grid, Cell } from "baseui/layout-grid";
+import { useMediaQuery } from "react-responsive";
 
 import { getObj, clear, setObj } from "../../../utils/localStorage";
 import CheckoutContext from "../../../context/CheckoutContext";
@@ -56,6 +61,10 @@ function Cart() {
   const [captionSize, setCaptionSize] = useState("");
   const [captionQuantity, setCaptionQuantity] = useState("");
   const [css, theme] = useStyletron();
+
+  const isLarge = useMediaQuery({
+    query: `(min-width: ${theme.breakpoints.large}px)`,
+  });
 
   useEffect(() => {
     setCart(getObj("cart"));
@@ -109,16 +118,44 @@ function Cart() {
       return cart.products.map((item, index) => {
         return (
           <ListItem
+            onClick={() => console.log("Anderson")}
             key={index}
             overrides={{
               Content: {
                 style: {
                   // marginLeft: "0px",
+                  flexGrow: 1,
                 },
               },
             }}
+            // endEnhancer={() => (
+            //   <>
+            //     {/* <Button size="compact" kind="secondary" shape="round">
+            // <ChevronDown
+            //   onClick={() => {
+            //     setCurrentItem(index);
+            //     setIsOpen(true);
+            //   }}
+            // />
+            //     </Button> */}
+            //     {/* <Button size="compact" kind="primary" shape="round">
+            //       <Delete
+            //         onClick={() => {
+            //           setCurrentItem(index);
+            //           setConfirmRem(true);
+            //         }}
+            //       />
+            //     </Button> */}
+            //   </>
+            // )}
             endEnhancer={() => (
-              <>
+              <div
+                className={css({
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                })}
+              >
                 <Button size="compact" kind="secondary" shape="round">
                   <ChevronDown
                     onClick={() => {
@@ -127,23 +164,37 @@ function Cart() {
                     }}
                   />
                 </Button>
-                <Button size="compact" kind="primary" shape="round">
-                  <Delete
-                    onClick={() => {
-                      setCurrentItem(index);
-                      setConfirmRem(true);
-                    }}
-                  />
-                </Button>
-              </>
+
+                <Label4>R${item.price}</Label4>
+              </div>
             )}
           >
             <ListItemLabel
-              description={`quantidade, size, color, price ${10 * 3}`}
+              // description={`Tamanho: ${item.selection.size}, Quantidade:${item.selection.amount}`}
+              onClick={() => console.log("AMS")}
             >
               <StyledLink href={`${BASE}products/${item.id}`}>
                 {item.title}
               </StyledLink>
+
+              <br style={{ paddingTop: "5px" }} />
+              {/* <Block paddingTop="5px" /> */}
+              <Tag
+                closeable={false}
+                onClick={() => console.log("clicked")}
+                className={{ paddingTop: "100px" }}
+                overrides={{
+                  Root: {
+                    style: {
+                      marginLeft: "0px",
+                    },
+                  },
+                  ActionIcon: () => <ChevronDown />,
+                }}
+              >
+                {item.selection.size}
+              </Tag>
+              <Tag closeable={false}>{item.selection.amount}</Tag>
             </ListItemLabel>
           </ListItem>
         );
@@ -257,7 +308,7 @@ function Cart() {
 
   return (
     <>
-      <Display4 marginLeft="16px"> Meu carrinho</Display4>
+      {/* <Display4 marginLeft="16px"> Meu carrinho</Display4> */}
       {cart ? (
         <>
           {/* <p>{JSON.stringify(cart.products.length)}</p> */}
@@ -265,11 +316,16 @@ function Cart() {
             className={css({
               paddingLeft: 0,
               paddingRight: 0,
+              display: "flex",
+              flexDirection: "column",
+              alignContent: "stretch",
+              width: isLarge ? "50vw" : "70vw",
             })}
           >
             {renderListItems()}
           </ul>
           {renderModal()}
+
           <Button onClick={() => setCurrentStep(1)}>Próximo</Button>
         </>
       ) : (

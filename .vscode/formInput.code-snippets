@@ -1,0 +1,89 @@
+{
+	// Place your ecommerce workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+	
+	"input baseui string input with joi validations": {
+		"prefix": "inputFormString",
+		"body": [
+		  "$s0",
+		  "const [${1:state}, ${2:setState}] = useState(\"\")",
+		  "const [${3:captionState}, ${4:setCaptionState}] = useState(\"\")",
+		  "const [${6:stateError}, ${7:setStateError}] =  useState(false)",
+		  "import { ${8:validator} } from \"./${9:validatorImport}\";",
+		  "",
+		  "<FormControl label=\"${10:label}\" caption={`${${3:captionState}}`}>",
+		  "  <Input",
+		  "    value={${1:state}}",
+		  "    disabled={${11:false}}",
+		  "    error={${6:stateError}}",
+		  "    placeholder=\"${12:placeHolder}\"",
+		  "    clearOnEscape",
+		  "    onChange={(e) => {",
+		  "      ${2:setState}(e.target.value);",
+		  "      const { error } = ${8:validator}.validate(",
+		  "        { ${1:state}: `${e.target.value}` },",
+		  "        { abortEarly: false }",
+		  "      );",
+		  "      ",
+		  "      if (error) {",
+		  "        ${7:setStateError}(true)",
+		  "        ${4:setCaptionState}(`${error.message}`)",
+		  "      } else {",
+		  "        ${7:setStateError}(false)",
+		  "        ${4:setCaptionState}(\"\")",
+		  "      }",
+		  "      ",
+		  "    }}",
+		  "  />",
+		  "</FormControl>"
+		],
+		"description": "input baseui string input with joi validations"
+	  }
+}
+
+
+// $0
+// const [${1:state}, ${2:setState}] = useState("")
+// const [${3:captionState}, ${4:setCaptionState}] = useState("")
+// const [${6:stateError}, ${7:setStateError}] =  useState(false)
+// import { ${8:validator} } from "./${9:validatorImport}";
+
+// <FormControl label="${10:label}" caption={`${${3:captionState}}`}>
+//   <Input
+//     value={${1:state}}
+//     disabled={${11:false}}
+//     error={${6:stateError}}
+//     placeholder="${12:placeHolder}"
+//     clearOnEscape
+//     onChange={(e) => {
+//       setState(e.target.value);
+//       const { error } = ${8:validator}.validate(
+//         { ${1:state}: `${e.target.value}` },
+//         { abortEarly: false }
+//       );
+      
+//       if (error) {
+//         ${7:setStateError}(true)
+//         ${4:setCaptionState}(`${error.message}`)
+//       } else {
+//         ${7:setStateError}(false)
+//         ${4:setCaptionState}("")
+//       }
+      
+//     }}
+//   />
+// </FormControl>

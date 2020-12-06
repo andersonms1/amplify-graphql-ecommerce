@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from "react";
+
+import API, { graphql, graphqlOperation } from "@aws-amplify/api";
+import { listOrders, ordersByUserCreatedAt } from "../graphql/queries";
+
 import { setObj, getObj } from "../utils/localStorage";
 import _ from "lodash";
 
@@ -80,14 +84,42 @@ const CheckoutProvider = ({ children }) => {
     });
   };
 
+  const getAddress = async () => {
+    console.log("ANderson");
+    const res = await API.graphql(graphqlOperation(listOrders));
+    //Waiting until have more order, to correcly test data coparison
+    // const res = await API.graphql(graphqlOperation(ordersByUserCreatedAt, {user: "", createAt: {lt: ""}}));
+    // Set local storage address as well
+    setAppContext((prevState) => {
+      return {
+        ...prevState,
+        address: res.data.listOrders, //remind to chande atribute listOrders when updated
+      };
+    });
+  };
+
+  const setModalOpen = (isOpen) => {
+    setAppContext((prevState) => {
+      return {
+        ...prevState,
+        modalOpen: isOpen,
+      };
+    });
+  };
+
   const appState = {
     current: 0,
     setCurrentStep,
+    modalOpen: false,
+    setModalOpen,
     cart: {},
+    address: {},
+
     setCart,
     addCartItem,
     addCartSelection,
     removeCartItem,
+    getAddress,
   };
 
   const [appContext, setAppContext] = useState(appState);
@@ -99,14 +131,3 @@ const CheckoutProvider = ({ children }) => {
 };
 
 export default CheckoutProvider;
-
-/*
-* Entrar e recuperar um registro
-
-
-* Fazer o registro e comprar
-
-
-
-
-*/

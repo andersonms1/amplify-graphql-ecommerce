@@ -55,6 +55,20 @@ type Order @model
   price: Float!
   user: String!
   status: String!
-  product: [Product] 
+  product: [Product]
+  address: Address 
 
+}
+
+type Address {
+  deliverTo: String!
+  ZIP: String!
+  state: String!
+  city: String!
+  neighborhood: String!
+  street: String!
+  number: String!
+  haveNumber: String!
+  aditionalInformation: String!
+  homeOrWork: String!
 }

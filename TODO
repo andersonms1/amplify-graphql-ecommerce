@@ -41,6 +41,14 @@ https://www.javascriptstuff.com/detect-image-load/
 ☐ Add FB login? https://dev.to/aws/adding-facebook-sign-in-for-web-applications-with-aws-amplify-2fc8
 ✔ Hint: On mutation create there is a lot of obrigatory fields. A better aproach is use a temp obj, and only exec create mutation when really necessarily @done(20-11-05 21:20)
 ✔ Hint error setState on unmount comp: 1_try use arrows to invoke like on click, or bind it. 2_ Create another function/component. 3.0_ Conditional: Only set whem component is mounted. 3_ createMyHook @done(20-11-05 21:20)
+
+...
+☐ Dividir no cartão
+☐ Débito e crédito
+☐ Avaliações
+☐ Recomendações de produtos enquanto olha um produto
+☐ Chatbot
+☐ Campanha de emails, com base no perfil/gostos
 ...
 ☐ Create the ecommerce
 ☐ Create model ecommerce site? https://dev.to/aws/building-a-serverless-live-streaming-platform-with-react-aws-1jmk

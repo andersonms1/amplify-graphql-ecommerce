@@ -12,6 +12,9 @@ const CheckoutContext = createContext({
     status: "criado",
     address: {},
   },
+  modalOpen: false,
+  setModalOpen: () => {},
+  address: {},
   setCart: () => {},
   addCartItem: () => {},
   // getById: (id) => {},
@@ -19,6 +22,7 @@ const CheckoutContext = createContext({
   setCurrentStep: () => {},
   removeCartItem: (index) => {},
   addCartSelection: (index, selection) => {},
+  getAddress: () => {},
 });
 
 export default CheckoutContext;
