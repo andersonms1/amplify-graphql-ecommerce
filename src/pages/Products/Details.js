@@ -35,6 +35,7 @@ import { KIND as ButtonKind } from "baseui/button";
 
 import AppContext from "../../context/AppContext";
 import CheckoutContext from "../../context/CheckoutContext";
+import ModalSelection from "../Payment/Checkout/ModalSelection";
 import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
@@ -42,6 +43,7 @@ import { handleLoad } from "../../utils";
 import { quantity as VAL_QUANTITY } from "../Products/CreateUpdate/validations";
 import { setObj, getObj } from "../../utils/localStorage";
 import { ValidationError } from "joi";
+import { PRODUCT_SELECTION_TYPES as STATUS } from "../../utils/STATUS";
 
 function Details() {
   const [css, theme] = useStyletron();
@@ -50,14 +52,17 @@ function Details() {
   let history = useHistory();
 
   const { getById, product } = useContext(AppContext);
-  const { cart, setCart, addCartItem } = useContext(CheckoutContext);
+  const { cart, setCart, addCartItem, modalOpen, setModalOpen } = useContext(
+    CheckoutContext
+  );
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
 
-  const [isOpen, setIsOpen] = useState(false); //modal
   const [size, setSize] = useState([]);
   const [quantity, setQuantity] = useState("1");
   const [captionQuantity, setCaptionQuantity] = useState("");
+
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     getById(id);
@@ -80,12 +85,6 @@ function Details() {
         : [{ label: "Carregando...", id: "0", quantity: "0" }]
     );
   }, [product]);
-
-  // useEffect(() => {
-  //   setCart(getObj("cart"));
-  //   setImgsDidLoad(true);
-  //   console.log(product.amount);
-  // }, []);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${breakpoints.large}px)`,
@@ -148,14 +147,6 @@ function Details() {
               >
                 shopping_cart
               </i>
-              {/* <i
-                onClick={() => alert("Loyalty")}
-                height="10px"
-                className="material-icons"
-                style={{ paddingLeft: "5px" }}
-              >
-                loyalty
-              </i> */}
             </div>
           </div>
         );
@@ -209,37 +200,6 @@ function Details() {
       </div>
     );
   };
-
-  const isComoboValid = () => {
-    return product.amount.filter((_product) => _product.size === size[0].label);
-  };
-
-  const handleBuy = () => {
-    // setCart({products: product});
-    const filter = isComoboValid();
-    console.log(filter);
-
-    const haveStock = filter[0].amount > quantity;
-    console.log(filter[0].amount);
-    console.log(haveStock);
-    product.selection = {
-      amount: quantity,
-      size: size[0].label,
-    };
-    addCartItem(product);
-    history.push("/cart");
-  };
-
-  // useEffect(() => {
-  //   console.log(cart);
-  //   console.log(product);
-  //   const navigate = () => {
-  //     if (product === cart.products[cart.products.length - 1]) {
-  //       history.push("/cart");
-  //     }
-  //   };
-  //   navigate();
-  // }, [cart]);
 
   const renderContent = () => {
     if (!product) {
@@ -295,7 +255,7 @@ function Details() {
 
               <div>
                 <Tag
-                  onClick={() => setIsOpen(true)}
+                  onClick={() => setModalOpen(true)}
                   overrides={{
                     Root: {
                       style: {
@@ -303,7 +263,7 @@ function Details() {
                       },
                     },
                     ActionIcon: () => (
-                      <ChevronDown onClick={() => setIsOpen(true)} />
+                      <ChevronDown onClick={() => setModalOpen} />
                     ),
                   }}
                 >
@@ -313,8 +273,7 @@ function Details() {
                     : ` ${product.amount[0].size}`}
                 </Tag>
                 <Tag closeable={false}>
-                  {`${size[0].quantity} `}
-                  unidades
+                  {size.length ? `${size[0].quantity} unidades` : "0"}
                 </Tag>
               </div>
 
@@ -355,7 +314,7 @@ function Details() {
               </Accordion>
 
               <Button
-                onClick={() => handleBuy()}
+                onClick={() => setModalOpen(true)}
                 endEnhancer={() => (
                   <i height="10px" className="material-icons">
                     shopping_cart
@@ -366,14 +325,6 @@ function Details() {
               >
                 Comprar
               </Button>
-
-              {/* <Block marginBottom="scale300" /> */}
-
-              {/* {renderButton(
-                "loyalty",
-                KIND.secondary,
-                "Adicionar a lista de desejos"
-              )} */}
             </div>
           </div>
         </>
@@ -381,97 +332,11 @@ function Details() {
     }
   };
 
-  const handleCombo = () => {
-    return !product
-      ? null
-      : product.amount.map((item, index) => {
-          return {
-            label: item.size,
-            quantity: item.amount,
-            id: `${index}`,
-          };
-        });
-  };
-
-  const handleModal = () => {
-    const _val = VAL_QUANTITY.validate({ quantity }, { abortEarly: false });
-    const MAX_SIZE = `Quantidade máxima ${
-      size[0] ? JSON.stringify(size[0].quantity) : "0"
-    }`;
-    if (_val.error) {
-      //ser error
-      setCaptionQuantity(`${JSON.stringify(_val.error.message)}`);
-    } else {
-      const filter = isComoboValid();
-      if (quantity > filter[0].amount) {
-        //set error
-        setCaptionQuantity(MAX_SIZE);
-      } else {
-        //remove error
-        setCaptionQuantity("");
-        setIsOpen(false);
-      }
-    }
-  };
-
-  const renderModal = () => {
-    return (
-      <Modal
-        onClose={() => setIsOpen(false)}
-        closeable
-        isOpen={isOpen}
-        animate
-        autoFocus
-        size={SIZE.default}
-        role={ROLE.dialog}
-        unstable_ModalBackdropScroll
-      >
-        <ModalHeader>Escolha o tamanho e quantidade</ModalHeader>
-        <ModalBody>
-          <FormControl label="Tamanho" caption="Teste">
-            <Select
-              options={handleCombo()}
-              value={size}
-              // placeholder={
-              //   handleStateComparation() && isOpen && !size
-              //     ? `${cart.products[currentItem].amount[0].size}`
-              //     : `${size}`
-              // }
-              onChange={(params) => {
-                setSize(params.value);
-              }}
-            />
-          </FormControl>
-          <FormControl
-            label="Quantidade"
-            placeholder="1"
-            caption={`${captionQuantity}`}
-            disabled={size ? false : true}
-          >
-            <Input
-              value={quantity}
-              onChange={(e) => {
-                setQuantity(e.target.value);
-              }}
-              placeholder=""
-              clearOnEscape
-            />
-          </FormControl>
-        </ModalBody>
-
-        <ModalFooter>
-          <ModalButton kind={ButtonKind.tertiary} onClick={() => handleModal()}>
-            OK
-          </ModalButton>
-        </ModalFooter>
-      </Modal>
-    );
-  };
   return (
     <>
       <Block paddingBottom="10px" />
       {handleLoad(renderContent(), contentLoader(), imgsDidLoad)}
-      {renderModal()}
+      <ModalSelection status={STATUS.DETAILS} currentItem="-1" />
     </>
   );
 }
