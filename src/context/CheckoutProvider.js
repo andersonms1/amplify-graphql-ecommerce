@@ -85,7 +85,7 @@ const CheckoutProvider = ({ children }) => {
   };
 
   const getAddress = async () => {
-    console.log("ANderson");
+    console.log("Anderson");
     const res = await API.graphql(graphqlOperation(listOrders));
     //Waiting until have more order, to correcly test data coparison
     // const res = await API.graphql(graphqlOperation(ordersByUserCreatedAt, {user: "", createAt: {lt: ""}}));
@@ -98,23 +98,22 @@ const CheckoutProvider = ({ children }) => {
     });
   };
 
-  const setModalOpen = (isOpen) => {
+  const setModalOpen = (modalOpen) => {
     setAppContext((prevState) => {
       return {
         ...prevState,
-        modalOpen: isOpen,
+        modalOpen,
       };
     });
   };
 
   const appState = {
-    current: 0,
+    current: 2,
     setCurrentStep,
-    modalOpen: false,
+    modalOpen: {},
     setModalOpen,
     cart: {},
     address: {},
-
     setCart,
     addCartItem,
     addCartSelection,

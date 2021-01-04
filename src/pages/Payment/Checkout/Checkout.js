@@ -6,6 +6,7 @@ import AppContext from "../../../context/CheckoutContext";
 import Cart from "./Cart";
 import Address from "./Address";
 import Pay from "./Pay";
+import Payment from "./Payment";
 import { useStyletron } from "baseui";
 function Checkout() {
   const { current, setCurrentStep } = useContext(AppContext);
@@ -37,7 +38,8 @@ function Checkout() {
         <Address />
       </NumberedStep>
       <NumberedStep title="Verificar pagamento">
-        <Pay />
+        {/* <Pay /> */}
+        <Payment />
       </NumberedStep>
     </ProgressSteps>
     // </Cell>

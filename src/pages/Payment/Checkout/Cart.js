@@ -31,6 +31,7 @@ import {
   H6,
   Paragraph1,
   Paragraph2,
+  Paragraph4,
   Label4,
 } from "baseui/typography";
 import { Tag } from "baseui/tag";
@@ -42,6 +43,8 @@ import { getObj, clear, setObj } from "../../../utils/localStorage";
 import CheckoutContext from "../../../context/CheckoutContext";
 import { BASE, getAddress } from "../../../utils/LINKS";
 import { quantity as VAL_QUANTITY } from "../../Products/CreateUpdate/validations";
+import ModalSelection from "./ModalSelection";
+import { PRODUCT_SELECTION_TYPES as PS_TYPES } from "../../../utils/STATUS";
 
 function Cart() {
   const {
@@ -52,6 +55,8 @@ function Cart() {
     addCartSelection,
     setCart,
     removeCartItem,
+    modalOpen,
+    setModalOpen,
   } = useContext(CheckoutContext);
   const [currentItem, setCurrentItem] = useState(0);
   const [isOpen, setIsOpen] = useState(false); //modal
@@ -69,10 +74,6 @@ function Cart() {
   useEffect(() => {
     setCart(getObj("cart"));
   }, []);
-
-  useEffect(() => {
-    console.log(cart);
-  });
 
   const handleCombo = () => {
     if (handleStateComparation() && isOpen) {
@@ -128,26 +129,6 @@ function Cart() {
                 },
               },
             }}
-            // endEnhancer={() => (
-            //   <>
-            //     {/* <Button size="compact" kind="secondary" shape="round">
-            // <ChevronDown
-            //   onClick={() => {
-            //     setCurrentItem(index);
-            //     setIsOpen(true);
-            //   }}
-            // />
-            //     </Button> */}
-            //     {/* <Button size="compact" kind="primary" shape="round">
-            //       <Delete
-            //         onClick={() => {
-            //           setCurrentItem(index);
-            //           setConfirmRem(true);
-            //         }}
-            //       />
-            //     </Button> */}
-            //   </>
-            // )}
             endEnhancer={() => (
               <div
                 className={css({
@@ -156,11 +137,19 @@ function Cart() {
                   alignItems: "center",
                 })}
               >
-                <Button size="compact" kind="secondary" shape="round">
+                <Button
+                  onClick={() => {
+                    setCurrentItem(index);
+                    setModalOpen({ ...modalOpen, open: true });
+                  }}
+                  size="compact"
+                  kind="secondary"
+                  shape="round"
+                >
                   <ChevronDown
                     onClick={() => {
                       setCurrentItem(index);
-                      setIsOpen(true);
+                      setModalOpen({ ...modalOpen, open: true });
                     }}
                   />
                 </Button>
@@ -170,31 +159,13 @@ function Cart() {
             )}
           >
             <ListItemLabel
-              // description={`Tamanho: ${item.selection.size}, Quantidade:${item.selection.amount}`}
-              onClick={() => console.log("AMS")}
+              description={`Tamanho: ${item?.selection?.size}, Quantidade: ${item?.selection?.quantity}`}
             >
               <StyledLink href={`${BASE}products/${item.id}`}>
                 {item.title}
               </StyledLink>
 
               <br style={{ paddingTop: "5px" }} />
-              {/* <Block paddingTop="5px" /> */}
-              <Tag
-                closeable={false}
-                onClick={() => console.log("clicked")}
-                className={{ paddingTop: "100px" }}
-                overrides={{
-                  Root: {
-                    style: {
-                      marginLeft: "0px",
-                    },
-                  },
-                  ActionIcon: () => <ChevronDown />,
-                }}
-              >
-                {item.selection.size}
-              </Tag>
-              <Tag closeable={false}>{item.selection.amount}</Tag>
             </ListItemLabel>
           </ListItem>
         );
@@ -207,67 +178,7 @@ function Cart() {
   const renderModal = () => {
     return (
       <div>
-        <Modal
-          onClose={() => setIsOpen(false)}
-          closeable
-          isOpen={isOpen}
-          animate
-          autoFocus
-          size={SIZE.default}
-          role={ROLE.dialog}
-          unstable_ModalBackdropScroll
-        >
-          <ModalHeader>Escolha o tamanho e quantidade</ModalHeader>
-          <ModalBody>
-            <FormControl label="Tamanho" caption="Teste">
-              <Select
-                options={handleCombo()}
-                value={size}
-                // placeholder={
-                //   handleStateComparation() && isOpen && !size
-                //     ? `${cart.products[currentItem].amount[0].size}`
-                //     : `${size}`
-                // }
-                onChange={(params) => {
-                  setSize(params.value);
-                }}
-              />
-            </FormControl>
-            <FormControl
-              label="Quantidade"
-              placeholder="1"
-              caption={`Quantidade máxima ${
-                handleStateComparation() && isOpen
-                  ? `${cart.products[currentItem].amount[0].amount}`
-                  : ""
-              }
-              `}
-              disabled={size ? false : true}
-            >
-              <Input
-                value={quantity}
-                onChange={(e) => {
-                  setQuantity(e.target.value);
-                }}
-                placeholder=""
-                clearOnEscape
-              />
-            </FormControl>
-          </ModalBody>
-
-          <ModalFooter>
-            <ModalButton
-              kind={ButtonKind.tertiary}
-              onClick={() => {
-                setIsOpen(false);
-              }}
-            >
-              Cancelar
-            </ModalButton>
-            <ModalButton onClick={() => handleSelected()}>Salvar</ModalButton>
-          </ModalFooter>
-        </Modal>
-
+        <ModalSelection status={PS_TYPES.CART} currentItem={currentItem} />
         <Modal
           onClose={() => setConfirmRem(false)}
           closeable

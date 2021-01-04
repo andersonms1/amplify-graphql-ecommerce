@@ -33,6 +33,32 @@ export const createProduct = /* GraphQL */ `
           user
           content
           avaliation
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            amount {
+              size
+              amount
+            }
+            brand
+            photos {
+              bucket
+              region
+              key
+              position
+            }
+            avaliation
+            comments {
+              nextToken
+            }
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -74,6 +100,32 @@ export const updateProduct = /* GraphQL */ `
           user
           content
           avaliation
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            amount {
+              size
+              amount
+            }
+            brand
+            photos {
+              bucket
+              region
+              key
+              position
+            }
+            avaliation
+            comments {
+              nextToken
+            }
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -115,6 +167,32 @@ export const deleteProduct = /* GraphQL */ `
           user
           content
           avaliation
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            amount {
+              size
+              amount
+            }
+            brand
+            photos {
+              bucket
+              region
+              key
+              position
+            }
+            avaliation
+            comments {
+              nextToken
+            }
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -156,6 +234,27 @@ export const createComment = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -197,6 +296,27 @@ export const updateComment = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -238,6 +358,27 @@ export const deleteComment = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -258,30 +399,19 @@ export const createOrder = /* GraphQL */ `
       price
       user
       status
-      product {
+      address {
         id
+        uid
         createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        avaliation
-        comments {
-          nextToken
-        }
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
       updatedAt
@@ -299,30 +429,19 @@ export const updateOrder = /* GraphQL */ `
       price
       user
       status
-      product {
+      address {
         id
+        uid
         createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        avaliation
-        comments {
-          nextToken
-        }
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
       updatedAt
@@ -340,32 +459,87 @@ export const deleteOrder = /* GraphQL */ `
       price
       user
       status
-      product {
+      address {
         id
+        uid
         createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        avaliation
-        comments {
-          nextToken
-        }
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const createAddress = /* GraphQL */ `
+  mutation CreateAddress(
+    $input: CreateAddressInput!
+    $condition: ModelAddressConditionInput
+  ) {
+    createAddress(input: $input, condition: $condition) {
+      id
+      uid
+      createdAt
+      default
+      deliverTo
+      ZIP
+      state
+      city
+      neighborhood
+      street
+      number
+      complementation
+      updatedAt
+    }
+  }
+`;
+export const updateAddress = /* GraphQL */ `
+  mutation UpdateAddress(
+    $input: UpdateAddressInput!
+    $condition: ModelAddressConditionInput
+  ) {
+    updateAddress(input: $input, condition: $condition) {
+      id
+      uid
+      createdAt
+      default
+      deliverTo
+      ZIP
+      state
+      city
+      neighborhood
+      street
+      number
+      complementation
+      updatedAt
+    }
+  }
+`;
+export const deleteAddress = /* GraphQL */ `
+  mutation DeleteAddress(
+    $input: DeleteAddressInput!
+    $condition: ModelAddressConditionInput
+  ) {
+    deleteAddress(input: $input, condition: $condition) {
+      id
+      uid
+      createdAt
+      default
+      deliverTo
+      ZIP
+      state
+      city
+      neighborhood
+      street
+      number
+      complementation
       updatedAt
     }
   }

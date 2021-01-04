@@ -112,6 +112,7 @@ const AppProvider = ({ children }) => {
       };
     });
   };
+
   const setPage = (goTo) => {
     setAppContext((prevState) => {
       return {
@@ -124,16 +125,11 @@ const AppProvider = ({ children }) => {
   const getById = async (id) => {
     try {
       const { data } = await API.graphql(graphqlOperation(getProduct, { id }));
-      // console.log(data);
       const res = await data.getProduct.photos.map(async (i) => {
-        // console.log(i);
         const image = await Storage.get(i.key, { level: "public" });
         return (i.link = image);
       });
       await Promise.all(res);
-
-      // console.log(data);
-      // console.log(JSON.stringify(data.getProduct));
 
       setAppContext((prevState) => {
         return {

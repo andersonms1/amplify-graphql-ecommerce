@@ -1,0 +1,120 @@
+## [Start] Set query expression for @key **
+#set( $modelQueryExpression = {} )
+## [Start] Validate key arguments. **
+#if( !$util.isNull($ctx.args.subCategoryBrand) && $util.isNullOrBlank($ctx.args.category) )
+  $util.error("When providing argument 'subCategoryBrand' you must also provide 'category'.", "InvalidArgumentsError")
+#end
+#if( !$util.isNull($ctx.args.subCategoryBrand) )
+  #set( $sortKeyArgumentOperations = $ctx.args.subCategoryBrand.keySet() )
+  #if( $sortKeyArgumentOperations.size() > 1 )
+    $util.error("Argument subCategoryBrand must specify at most one key condition operation.", "InvalidArgumentsError")
+  #end
+  #foreach( $operation in $sortKeyArgumentOperations )
+    #if( $operation == "between" )
+      #if( $ctx.args.subCategoryBrand.between.size() != 2 )
+        $util.error("Argument 'subCategoryBrand.between' expects exactly two elements.", "InvalidArgumentsError")
+      #end
+      #if( !$util.isNullOrBlank($ctx.args.subCategoryBrand.between[0].brand) && $util.isNullOrBlank($ctx.args.subCategoryBrand.between[0].subCategory) )
+        $util.error("When providing argument 'subCategoryBrand.between[0].brand' you must also provide 'subCategoryBrand.between[0].subCategory'.", "InvalidArgumentsError")
+      #end
+      #if( !$util.isNullOrBlank($ctx.args.subCategoryBrand.between[1].brand) && $util.isNullOrBlank($ctx.args.subCategoryBrand.between[1].subCategory) )
+        $util.error("When providing argument 'subCategoryBrand.between[1].brand' you must also provide 'subCategoryBrand.between[1].subCategory'.", "InvalidArgumentsError")
+      #end
+    #else
+      #if( !$util.isNullOrBlank($ctx.args.subCategoryBrand.get("$operation").brand) && $util.isNullOrBlank($ctx.args.subCategoryBrand.get("$operation").subCategory) )
+        $util.error("When providing argument 'subCategoryBrand.$operation.brand' you must also provide 'subCategoryBrand.$operation.subCategory'.", "InvalidArgumentsError")
+      #end
+    #end
+  #end
+#end
+## [End] Validate key arguments. **
+#if( !$util.isNull($ctx.args.category) )
+  #set( $modelQueryExpression.expression = "#category = :category" )
+  #set( $modelQueryExpression.expressionNames = {
+  "#category": "category"
+} )
+  #set( $modelQueryExpression.expressionValues = {
+  ":category": {
+      "S": "$ctx.args.category"
+  }
+} )
+#end
+## [Start] Applying Key Condition **
+#set( $sortKeyValue = "" )
+#set( $sortKeyValue2 = "" )
+#if( !$util.isNull($ctx.args.subCategoryBrand) && !$util.isNull($ctx.args.subCategoryBrand.beginsWith) )
+#if( !$util.isNull($ctx.args.subCategoryBrand.beginsWith.subCategory) ) #set( $sortKeyValue = "$ctx.args.subCategoryBrand.beginsWith.subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.beginsWith.brand) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.subCategoryBrand.beginsWith.brand" ) #end
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND begins_with(#sortKey, :sortKey)" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "subCategory#brand"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+#end
+#if( !$util.isNull($ctx.args.subCategoryBrand) && !$util.isNull($ctx.args.subCategoryBrand.between) )
+  #if( $ctx.args.subCategoryBrand.between.size() != 2 )
+    $util.error("Argument subCategoryBrand.between expects exactly 2 elements.")
+  #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.between[0].subCategory) ) #set( $sortKeyValue = "$ctx.args.subCategoryBrand.between[0].subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.between[0].brand) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.subCategoryBrand.between[0].brand" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.between[1].subCategory) ) #set( $sortKeyValue2 = "$ctx.args.subCategoryBrand.between[1].subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.between[1].brand) ) #set( $sortKeyValue2 = "$sortKeyValue2#$ctx.args.subCategoryBrand.between[1].brand" ) #end
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey BETWEEN :sortKey0 AND :sortKey1" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "subCategory#brand"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey0", { "S": "$sortKeyValue" }))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey1", { "S": "$sortKeyValue2" }))
+#end
+#if( !$util.isNull($ctx.args.subCategoryBrand) && !$util.isNull($ctx.args.subCategoryBrand.eq) )
+#if( !$util.isNull($ctx.args.subCategoryBrand.eq.subCategory) ) #set( $sortKeyValue = "$ctx.args.subCategoryBrand.eq.subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.eq.brand) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.subCategoryBrand.eq.brand" ) #end
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey = :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "subCategory#brand"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+#end
+#if( !$util.isNull($ctx.args.subCategoryBrand) && !$util.isNull($ctx.args.subCategoryBrand.lt) )
+#if( !$util.isNull($ctx.args.subCategoryBrand.lt.subCategory) ) #set( $sortKeyValue = "$ctx.args.subCategoryBrand.lt.subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.lt.brand) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.subCategoryBrand.lt.brand" ) #end
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey < :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "subCategory#brand"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+#end
+#if( !$util.isNull($ctx.args.subCategoryBrand) && !$util.isNull($ctx.args.subCategoryBrand.le) )
+#if( !$util.isNull($ctx.args.subCategoryBrand.le.subCategory) ) #set( $sortKeyValue = "$ctx.args.subCategoryBrand.le.subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.le.brand) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.subCategoryBrand.le.brand" ) #end
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey <= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "subCategory#brand"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+#end
+#if( !$util.isNull($ctx.args.subCategoryBrand) && !$util.isNull($ctx.args.subCategoryBrand.gt) )
+#if( !$util.isNull($ctx.args.subCategoryBrand.gt.subCategory) ) #set( $sortKeyValue = "$ctx.args.subCategoryBrand.gt.subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.gt.brand) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.subCategoryBrand.gt.brand" ) #end
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey > :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "subCategory#brand"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+#end
+#if( !$util.isNull($ctx.args.subCategoryBrand) && !$util.isNull($ctx.args.subCategoryBrand.ge) )
+#if( !$util.isNull($ctx.args.subCategoryBrand.ge.subCategory) ) #set( $sortKeyValue = "$ctx.args.subCategoryBrand.ge.subCategory" ) #end
+#if( !$util.isNull($ctx.args.subCategoryBrand.ge.brand) ) #set( $sortKeyValue = "$sortKeyValue#$ctx.args.subCategoryBrand.ge.brand" ) #end
+  #set( $modelQueryExpression.expression = "$modelQueryExpression.expression AND #sortKey >= :sortKey" )
+  $util.qr($modelQueryExpression.expressionNames.put("#sortKey", "subCategory#brand"))
+  $util.qr($modelQueryExpression.expressionValues.put(":sortKey", { "S": "$sortKeyValue" }))
+#end
+
+
+## [End] Applying Key Condition **
+## [End] Set query expression for @key **
+#set( $limit = $util.defaultIfNull($context.args.limit, 100) )
+#set( $QueryRequest = {
+  "version": "2018-05-29",
+  "operation": "Query",
+  "limit": $limit,
+  "query": $modelQueryExpression,
+  "index": "byCatSubCatBrand"
+} )
+#if( !$util.isNull($ctx.args.sortDirection)
+                    && $ctx.args.sortDirection == "DESC" )
+  #set( $QueryRequest.scanIndexForward = false )
+#else
+  #set( $QueryRequest.scanIndexForward = true )
+#end
+#if( $context.args.nextToken ) #set( $QueryRequest.nextToken = $context.args.nextToken ) #end
+#if( $context.args.filter ) #set( $QueryRequest.filter = $util.parseJson("$util.transform.toDynamoDBFilterExpression($ctx.args.filter)") ) #end
+$util.toJson($QueryRequest)

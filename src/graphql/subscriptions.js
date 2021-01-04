@@ -30,6 +30,32 @@ export const onCreateProduct = /* GraphQL */ `
           user
           content
           avaliation
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            amount {
+              size
+              amount
+            }
+            brand
+            photos {
+              bucket
+              region
+              key
+              position
+            }
+            avaliation
+            comments {
+              nextToken
+            }
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -68,6 +94,32 @@ export const onUpdateProduct = /* GraphQL */ `
           user
           content
           avaliation
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            amount {
+              size
+              amount
+            }
+            brand
+            photos {
+              bucket
+              region
+              key
+              position
+            }
+            avaliation
+            comments {
+              nextToken
+            }
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -106,6 +158,32 @@ export const onDeleteProduct = /* GraphQL */ `
           user
           content
           avaliation
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            amount {
+              size
+              amount
+            }
+            brand
+            photos {
+              bucket
+              region
+              key
+              position
+            }
+            avaliation
+            comments {
+              nextToken
+            }
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -144,6 +222,27 @@ export const onCreateComment = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -182,6 +281,27 @@ export const onUpdateComment = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -220,6 +340,27 @@ export const onDeleteComment = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -237,30 +378,19 @@ export const onCreateOrder = /* GraphQL */ `
       price
       user
       status
-      product {
+      address {
         id
+        uid
         createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        avaliation
-        comments {
-          nextToken
-        }
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
       updatedAt
@@ -275,30 +405,19 @@ export const onUpdateOrder = /* GraphQL */ `
       price
       user
       status
-      product {
+      address {
         id
+        uid
         createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        avaliation
-        comments {
-          nextToken
-        }
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
       updatedAt
@@ -313,32 +432,78 @@ export const onDeleteOrder = /* GraphQL */ `
       price
       user
       status
-      product {
+      address {
         id
+        uid
         createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        avaliation
-        comments {
-          nextToken
-        }
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
+      updatedAt
+    }
+  }
+`;
+export const onCreateAddress = /* GraphQL */ `
+  subscription OnCreateAddress {
+    onCreateAddress {
+      id
+      uid
+      createdAt
+      default
+      deliverTo
+      ZIP
+      state
+      city
+      neighborhood
+      street
+      number
+      complementation
+      updatedAt
+    }
+  }
+`;
+export const onUpdateAddress = /* GraphQL */ `
+  subscription OnUpdateAddress {
+    onUpdateAddress {
+      id
+      uid
+      createdAt
+      default
+      deliverTo
+      ZIP
+      state
+      city
+      neighborhood
+      street
+      number
+      complementation
+      updatedAt
+    }
+  }
+`;
+export const onDeleteAddress = /* GraphQL */ `
+  subscription OnDeleteAddress {
+    onDeleteAddress {
+      id
+      uid
+      createdAt
+      default
+      deliverTo
+      ZIP
+      state
+      city
+      neighborhood
+      street
+      number
+      complementation
       updatedAt
     }
   }

@@ -16,22 +16,9 @@ import {
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
-import { useHistory } from "react-router-dom";
-import { FormControl } from "baseui/form-control";
-import { Input } from "baseui/input";
-import { Select } from "baseui/select";
 import { Tag } from "baseui/tag";
 import ChevronDown from "baseui/icon/chevron-down";
-import {
-  Modal,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
-  ModalButton,
-  SIZE,
-  ROLE,
-} from "baseui/modal";
-import { KIND as ButtonKind } from "baseui/button";
+import { Select, SIZE, TYPE } from "baseui/select";
 
 import AppContext from "../../context/AppContext";
 import CheckoutContext from "../../context/CheckoutContext";
@@ -40,29 +27,27 @@ import ContentLoader from "react-content-loader";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
 import { handleLoad } from "../../utils";
-import { quantity as VAL_QUANTITY } from "../Products/CreateUpdate/validations";
 import { setObj, getObj } from "../../utils/localStorage";
-import { ValidationError } from "joi";
 import { PRODUCT_SELECTION_TYPES as STATUS } from "../../utils/STATUS";
+import { FormControl } from "baseui/form-control";
+// import {Input} from 'baseui/input';
+import { LOCAL_IMAGE } from "../../assets/imgs/";
 
 function Details() {
   const [css, theme] = useStyletron();
   const { breakpoints } = theme;
   let { id } = useParams();
-  let history = useHistory();
 
   const { getById, product } = useContext(AppContext);
   const { cart, setCart, addCartItem, modalOpen, setModalOpen } = useContext(
     CheckoutContext
   );
-  const [imgsDidLoad, setImgsDidLoad] = useState(false);
+  const [imgsDidLoad, setImgsDidLoad] = useState(false); // was false
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
 
-  const [size, setSize] = useState([]);
-  const [quantity, setQuantity] = useState("1");
-  const [captionQuantity, setCaptionQuantity] = useState("");
-
-  const [error, setError] = useState(false);
+  const [size, setSize] = useState();
+  const [quantity, setQuantity] = useState();
+  const [wasSet, setWasSet] = useState(false);
 
   useEffect(() => {
     getById(id);
@@ -72,27 +57,33 @@ function Details() {
     setImgsDidLoad(false);
   }, [id]);
 
-  useEffect(() => {
-    setSize(
-      product
-        ? [
-            {
-              label: `${product.amount[0].size}`,
-              id: "0",
-              quantity: `${product.amount[0].amount}`,
-            },
-          ]
-        : [{ label: "Carregando...", id: "0", quantity: "0" }]
-    );
-  }, [product]);
-
   const isLarge = useMediaQuery({
-    query: `(min-width: ${breakpoints.large}px)`,
+    query: `(min-width: ${breakpoints.large - 136}px)`,
   });
 
-  const itemWidth = {
-    width: "25vw",
-  };
+  const containerStyles = css({
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "flex-start", // heigh of details
+    justifyContent: "center",
+    alignContent: "center",
+  });
+
+  const itemStyles = css({
+    flexGrow: "0",
+    flexBasis: "auto",
+    paddingRight: "5px",
+    paddingLeft: "5px",
+  });
+
+  const detailsContainerStyes = css({
+    width: "30vw",
+    height: "auto",
+  });
+  const imgStyles = css({
+    width: "30vw",
+    height: "auto",
+  });
 
   const getConfigurableProps = () => ({
     autoPlay: true,
@@ -140,7 +131,7 @@ function Details() {
             />
             <div className="legend">
               <i
-                onClick={() => alert("Shopping Cart")}
+                onClick={() => handleBuy()}
                 height="10px"
                 className="material-icons"
                 style={{ paddingRight: "5px" }}
@@ -201,80 +192,67 @@ function Details() {
     );
   };
 
+  const handleBuy = () => {
+    setModalOpen({ ...modalOpen, open: true });
+  };
+
   const renderContent = () => {
     if (!product) {
       return null;
     } else {
       return (
         <>
-          <div
-            className={
-              isLarge
-                ? css({
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "flex-start",
-                    justifyContent: "flex-end",
-                    alignContent: "flex-end",
-                    // maxWidth: "800px",
-                    // background: "gray",
-                    // width: "500px",
-                  })
-                : null
-            }
-          >
-            <div
-              className={
-                isLarge
-                  ? css({
-                      flexGrow: "3",
-                      flexShrink: "3",
-                      paddingRight: "5px",
-                      ...itemWidth,
-                    })
-                  : null
-              }
-            >
-              <Carousel {...getConfigurableProps()}>{iterateImages()}</Carousel>
+          <ModalSelection status={STATUS.DETAILS} currentItem="-1" />
+
+          <div className={isLarge ? containerStyles : null}>
+            <div className={isLarge ? itemStyles : null}>
+              <div className={isLarge ? imgStyles : null}>
+                <Carousel {...getConfigurableProps()}>
+                  {iterateImages()}
+                </Carousel>
+              </div>
             </div>
 
-            <div
-              className={
-                isLarge
-                  ? css({
-                      flexGrow: "3",
-                      flexShrink: "3",
-                      paddingLeft: "5px",
-                      ...itemWidth,
-                    })
-                  : null
-              }
-            >
-              <Display4 marginBottom="scale500">{product.title}</Display4>
-              <H4 marginBottom="scale500">R${product.price}</H4>
+            <div className={isLarge ? itemStyles : null}>
+              <div className={detailsContainerStyes}>
+                <Display4 marginBottom="scale500">{product.title}</Display4>
+                <H4 marginBottom="scale500">R${product.price}</H4>
 
-              <div>
-                <Tag
-                  onClick={() => setModalOpen(true)}
-                  overrides={{
-                    Root: {
-                      style: {
-                        marginLeft: "0px",
-                      },
-                    },
-                    ActionIcon: () => (
-                      <ChevronDown onClick={() => setModalOpen} />
-                    ),
-                  }}
-                >
-                  Tamanho
-                  {size.length
-                    ? ` ${size[0].label}`
-                    : ` ${product.amount[0].size}`}
-                </Tag>
-                <Tag closeable={false}>
-                  {size.length ? `${size[0].quantity} unidades` : "0"}
-                </Tag>
+                {imgsDidLoad && (
+                  // Conditional really necessary.
+                  // Select was showing before the of the elements ready and
+                  // even during loading screen
+                  <FormControl
+                    caption={() => {
+                      if (quantity || quantity === 0) {
+                        return `${quantity} unidade(s)`;
+                      }
+                    }}
+                    positive={undefined}
+                    error={undefined}
+                  >
+                    <Select
+                      backspaceRemoves
+                      clearable={false}
+                      closeOnSelect
+                      error={false}
+                      escapeClearsValue
+                      size={SIZE.default}
+                      options={product.amount.map((size, index) => {
+                        return { label: size.size, id: `${index}` };
+                      })}
+                      value={size}
+                      searchable={false}
+                      type={TYPE.select}
+                      placeholder="Tamanho"
+                      onChange={(params) => {
+                        setSize(params.value);
+                        setQuantity(product.amount[params.value[0].id].amount);
+                        setWasSet(true);
+                      }}
+                    />
+                  </FormControl>
+                )}
               </div>
 
               <Accordion className={css({ maxWidth: "100%" })}>
@@ -304,6 +282,7 @@ function Details() {
                     {product.category}
                   </Tag>
                   <Tag closeable={false}>{product.subCategory}</Tag>
+
                   <Paragraph1
                     className={css({ maxWidth: "100%" })}
                     marginBottom="scale500"
@@ -314,7 +293,7 @@ function Details() {
               </Accordion>
 
               <Button
-                onClick={() => setModalOpen(true)}
+                onClick={() => handleBuy()}
                 endEnhancer={() => (
                   <i height="10px" className="material-icons">
                     shopping_cart
@@ -336,7 +315,6 @@ function Details() {
     <>
       <Block paddingBottom="10px" />
       {handleLoad(renderContent(), contentLoader(), imgsDidLoad)}
-      <ModalSelection status={STATUS.DETAILS} currentItem="-1" />
     </>
   );
 }

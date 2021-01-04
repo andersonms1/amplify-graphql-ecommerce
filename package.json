@@ -16,7 +16,7 @@
     "@testing-library/user-event": "^7.2.1",
     "aws-appsync": "^4.0.0",
     "axios": "^0.21.0",
-    "baseui": "^9.102.0",
+    "baseui": "^9.106.1",
     "joi": "^17.2.1",
     "lodash": "^4.17.20",
     "react": "^16.13.1",

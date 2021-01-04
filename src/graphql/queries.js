@@ -30,6 +30,32 @@ export const getProduct = /* GraphQL */ `
           user
           content
           avaliation
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            amount {
+              size
+              amount
+            }
+            brand
+            photos {
+              bucket
+              region
+              key
+              position
+            }
+            avaliation
+            comments {
+              nextToken
+            }
+            updatedAt
+          }
           createdAt
           updatedAt
         }
@@ -68,6 +94,27 @@ export const listProducts = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -105,6 +152,27 @@ export const getComment = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -135,8 +203,29 @@ export const listComments = /* GraphQL */ `
           category
           subCategory
           sold
+          amount {
+            size
+            amount
+          }
           brand
+          photos {
+            bucket
+            region
+            key
+            position
+          }
           avaliation
+          comments {
+            items {
+              id
+              user
+              content
+              avaliation
+              createdAt
+              updatedAt
+            }
+            nextToken
+          }
           updatedAt
         }
         createdAt
@@ -154,30 +243,19 @@ export const getOrder = /* GraphQL */ `
       price
       user
       status
-      product {
+      address {
         id
+        uid
         createdAt
-        title
-        description
-        price
-        category
-        subCategory
-        sold
-        amount {
-          size
-          amount
-        }
-        brand
-        photos {
-          bucket
-          region
-          key
-          position
-        }
-        avaliation
-        comments {
-          nextToken
-        }
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
       updatedAt
@@ -197,19 +275,66 @@ export const listOrders = /* GraphQL */ `
         price
         user
         status
-        product {
+        address {
           id
+          uid
           createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
+          default
+          deliverTo
+          ZIP
+          state
+          city
+          neighborhood
+          street
+          number
+          complementation
           updatedAt
         }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const getAddress = /* GraphQL */ `
+  query GetAddress($id: ID!) {
+    getAddress(id: $id) {
+      id
+      uid
+      createdAt
+      default
+      deliverTo
+      ZIP
+      state
+      city
+      neighborhood
+      street
+      number
+      complementation
+      updatedAt
+    }
+  }
+`;
+export const listAddresss = /* GraphQL */ `
+  query ListAddresss(
+    $filter: ModelAddressFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAddresss(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        uid
+        createdAt
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
       nextToken
@@ -255,6 +380,27 @@ export const productsByCategorySubCategory = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -302,6 +448,27 @@ export const productsByCategorySubCategoryCreatedAt = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -349,6 +516,27 @@ export const productsByCategorySubCategoryPrice = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -396,6 +584,27 @@ export const productsByCategorySubCategorySold = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -443,6 +652,27 @@ export const productsByCategorySubCategoryBrand = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -490,6 +720,27 @@ export const productsByCategorySubCategoryBrandCreatedAt = /* GraphQL */ `
         }
         avaliation
         comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            product {
+              id
+              createdAt
+              title
+              description
+              price
+              category
+              subCategory
+              sold
+              brand
+              avaliation
+              updatedAt
+            }
+            createdAt
+            updatedAt
+          }
           nextToken
         }
         updatedAt
@@ -521,17 +772,19 @@ export const ordersByUserCreatedAt = /* GraphQL */ `
         price
         user
         status
-        product {
+        address {
           id
+          uid
           createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
+          default
+          deliverTo
+          ZIP
+          state
+          city
+          neighborhood
+          street
+          number
+          complementation
           updatedAt
         }
         updatedAt
@@ -563,17 +816,19 @@ export const ordersByUserStatus = /* GraphQL */ `
         price
         user
         status
-        product {
+        address {
           id
+          uid
           createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
+          default
+          deliverTo
+          ZIP
+          state
+          city
+          neighborhood
+          street
+          number
+          complementation
           updatedAt
         }
         updatedAt
@@ -605,19 +860,93 @@ export const ordersByStatusCreatedAt = /* GraphQL */ `
         price
         user
         status
-        product {
+        address {
           id
+          uid
           createdAt
-          title
-          description
-          price
-          category
-          subCategory
-          sold
-          brand
-          avaliation
+          default
+          deliverTo
+          ZIP
+          state
+          city
+          neighborhood
+          street
+          number
+          complementation
           updatedAt
         }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const addressesByUserDefault = /* GraphQL */ `
+  query AddressesByUserDefault(
+    $uid: String
+    $default: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAddressFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    addressesByUserDefault(
+      uid: $uid
+      default: $default
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        uid
+        createdAt
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const addressesByUserCreatedAt = /* GraphQL */ `
+  query AddressesByUserCreatedAt(
+    $uid: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelAddressFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    addressesByUserCreatedAt(
+      uid: $uid
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        uid
+        createdAt
+        default
+        deliverTo
+        ZIP
+        state
+        city
+        neighborhood
+        street
+        number
+        complementation
         updatedAt
       }
       nextToken
