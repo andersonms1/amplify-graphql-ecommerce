@@ -5,8 +5,65 @@ NoSQL Workbench-linux-x86_64-2.1.0
 
 
 ## Data Modeling
+
+
+- Legend
+- pk: **bold**
+- sk: *italic*
+
+
+
+## Product
+
+- User
+  - Queries
+    - Get product by **category**
+      - and *price*
+      - and *createdAt*
+      - and *avaliations*
+      - and *brand*
+      - and *sold*
+
+    - Get products by **category**, [*subcategory*](##productsByCategorySubCategory)
+        - and [*price*](#product)
+        - and *createAt*
+        - and *avaliations*
+        - and *brand*
+        - and *sold*
+
+- Admin
+  - Mutation
+    - Create/Update [*product*](##Mutation1)
+    - Delete? Really delete or only change status? Better delete at all, bc the queries get another level of complexity 
+
+## Order
+
+- User
+  - Queries
+    - Get orders by **user** *createdAt*  
+    - Get orders by **status** *create_at*
+  - Mutations
+    - Create order
+
+- Admin
+    - Get orders by **status** *createdAt*
+    - Get orders by **status** *clientId* *createdAt*
+
+## Address
+  - User
+    - Get address by **user** *createdAt*
+
+
 ```gql
+
+
 type Product @model 
+@key(name: "byCat", fields: ["category"], queryField: "productsByCategory")
+@key(name: "byCatCreatedAt", fields: ["category", "createdAt"], queryField: "productsByCategoryCreatedAt")
+@key(name: "byCatPrice", fields: ["category", "price"], queryField: "productsByCategoryPrice")
+@key(name: "byCatAvaliations", fields: ["category", "avaliation"], queryField: "productsByCategoryAvaliation")
+@key(name: "byCatBrand", fields: ["category", "brand"], queryField: "productsByCategoryBrand")
+@key(name: "byCatSold", fields: ["category", "sold"], queryField: "productsByCategorySold")
 @key(name: "byCatSubCat", fields: ["category", "subCategory"], queryField: "productsByCategorySubCategory")
 @key(name: "byCatSubCatCreatedAt", fields: ["category", "subCategory", "createdAt"], queryField: "productsByCategorySubCategoryCreatedAt")
 @key(name: "byCatSubCatPrice", fields: ["category", "subCategory", "price"], queryField: "productsByCategorySubCategoryPrice")
@@ -22,16 +79,11 @@ type Product @model
   category: String!
   subCategory: String!
   sold: Int!
-  amount: [Amount]!
+  amount: [Amount]
   brand: String
   photos: [S3Object]
   avaliation: Float
   comments: [Comment] @connection(name: "ProductComments")
-}
-
-type Amount {
-  size: String
-  amount: Int
 }
 
 type Comment @model {
@@ -49,9 +101,15 @@ type S3Object {
     position: String!
 }
 
+type Amount {
+  size: String
+  amount: Int
+}
+
+
+
 type Order @model
 @key(name: "byUserCreatedAt", fields: ["user", "createdAt"], queryField: "ordersByUserCreatedAt")
-@key(name: "byUserStatus", fields: ["user", "status"], queryField: "ordersByUserStatus")
 @key(name: "byStatusCreatedAt", fields: ["status", "createdAt"], queryField: "ordersByStatusCreatedAt")
 
 {
@@ -60,75 +118,36 @@ type Order @model
   price: Float!
   user: String!
   status: String!
-  selection: [Selection]!
-  address: Address 
+  products: [Products]
 
 }
 
-type Selection {
-  pid: String!
-  amount: Amount!
+type Products {
+  product: Product
+  amount: Amount
 }
 
 type Address @model
-@key(name: "byUserDefault", fields: ["uid", "default"], queryField: "addressesByUserDefault")
-@key(name: "byUserCreatedAt", fields: ["uid", "createdAt"], queryField: "addressesByUserCreatedAt")
-{  
+
+{
   id: ID!
-  uid: String!
+  user: String!
   createdAt: String!
-  default: String!
-  deliverTo: String!
-  ZIP: String!
-  state: String!
+  deliverTo: String
+  zip: String!
+  uf: String!
   city: String!
   neighborhood: String!
   street: String!
-  number: Int  
-  complementation: String
+  complement: String
+  phone: String!
+  number: String!
+
 }
 
-```    
+```
 
-
-
-## Product
-
-- User
-  - Queries
-    - Get products by **category**, [*subcategory*](##productsByCategorySubCategory)
-        - and [*price*](#product)
-        - and *createAt*
-        - and *avaliations*
-        - and *brand*
-        - and *sold*
-
-- Admin
-  - Mutation
-    - Create a [*product*](##Mutation1)
-  - Queries
-    - List **products** by id *createAt*
-    - Get **products** by *amount*
-        - sort by greater
-        - sort by less
-## Order
-
-- System
-  - Get address from **user** *createdAt*
-- User
-  - Queries
-    - Get orders by **id** *createdAt*  
-    - Get orders by **status** *create_at*
-  - Mutations
-    - Create order
-
-- Admin
-    - Get orders by client
-    - Get orders by createdAt
-    - Get orders by **status** *createdAt*
-
-  
-# Real Queries/Mutations
+# Queries/Mutations
 
 ## Mutation1
 ```gql
@@ -228,69 +247,4 @@ query MyQuery($subCategory: String = "SHIRT", $sold: Int = 10, $category: String
   }
 }
 ```    
-```gql
-
-type Product @model 
-@key(name: "byCat", fields: ["category"], queryField: "productsByCategory")
-@key(name: "byCatSubCat", fields: ["category", "subCategory"], queryField: "productsByCategorySubCategory")
-@key(name: "byCatSubCatCreatedAt", fields: ["category", "subCategory", "createdAt"], queryField: "productsByCategorySubCategoryCreatedAt")
-@key(name: "byCatSubCatPrice", fields: ["category", "subCategory", "price"], queryField: "productsByCategorySubCategoryPrice")
-@key(name: "byCatSubCatSold", fields: ["category", "subCategory", "sold"], queryField: "productsByCategorySubCategorySold")
-@key(name: "byCatSubCatBrand", fields: ["category", "subCategory", "brand"], queryField: "productsByCategorySubCategoryBrand")
-@key(name: "byCatSubCatBrandCreatedAt", fields: ["category", "subCategory", "brand", "createdAt"], queryField: "productsByCategorySubCategoryBrandCreatedAt")
-{
-  id: ID!
-  createdAt: String!
-  title: String!
-  description: String!
-  price: Float!
-  category: String!
-  subCategory: String!
-  sold: Int!
-  amount: [Amount]
-  brand: String
-  photos: [S3Object]
-  avaliation: Float
-  comments: [Comment] @connection(name: "ProductComments")
-}
-
-type Comment @model {
-  id: ID!
-  user: String!
-  content: String!
-  avaliation: Float!
-  product: Product @connection(name: "ProductComments")
-}
-
-type S3Object {
-    bucket: String!
-    region: String!
-    key: String!
-    position: String!
-}
-
-type Amount {
-  size: String
-  amount: Int
-}
-
-
-
-type Order @model
-@key(name: "byUserCreatedAt", fields: ["user", "createdAt"], queryField: "ordersByUserCreatedAt")
-@key(name: "byUserStatus", fields: ["user", "status"], queryField: "ordersByUserStatus")
-@key(name: "byStatusCreatedAt", fields: ["status", "createdAt"], queryField: "ordersByStatusCreatedAt")
-
-{
-  id: ID!
-  createdAt: String!
-  price: Float!
-  user: String!
-  status: String!
-  product: [Product] @connection
-
-}
-
-```
-
 [Custom foo description](#product)
