@@ -4,11 +4,15 @@ import { Tabs, Tab } from "baseui/tabs-motion";
 
 import AppContext from "../../context/AppContext";
 import { Products } from "../index";
+import { Display4, H2 } from "baseui/typography";
 
+import Pages from "./Pages";
+import { Cell, Grid } from "baseui/layout-grid";
+import { useStyletron } from "baseui";
 function Home() {
   const { page, setPage } = useContext(AppContext);
   const [admin, setAdmin] = useState(false);
-
+  const [css, theme] = useStyletron();
   // https://stackoverflow.com/questions/49058890/how-to-get-a-react-components-size-height-width-before-render
   // useLayoutEffect(() => {
   //   console.log(targetRef.current.offsetWidth);
@@ -48,8 +52,15 @@ function Home() {
           // fill={FILL.fixed}
         >
           <Tab title="HOME">
+            <div
+              className={css({
+                display: "flex",
+                justifyContent: "center",
+              })}
+            >
+              <Display4>Mais vendidos do momento</Display4>
+            </div>
             <Products querie="listProducts" />
-            {/* <p>ok</p> */}
           </Tab>
           <Tab title="MASCULINO">
             <Products

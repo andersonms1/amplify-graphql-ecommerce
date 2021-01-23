@@ -17,45 +17,30 @@ import { KIND as ButtonKind } from "baseui/button";
 import { StyledSpinnerNext } from "baseui/spinner";
 
 import AppContext from "../../../context/AppContext";
-import { formPrice as SCHEMA } from "./validations";
-import { HandleErrors } from "../../../components";
 import {
-  CATEGORYS as ALL_CAT,
-  SUBCATEGORYS as ALL_SUB_CAT,
-} from "../../../utils/CATEGORYSUBCATEGORYS";
-import InputReplacement from "../../../components/InputReplacement";
+  category as val_category,
+  subCategory as val_subCategoty,
+  price as val_price,
+} from "./validations";
+import { CATEGORYS, SUBCATEGORYS } from "../../../utils/CATEGORYSUBCATEGORYS";
+import { Select, SIZE as SSIZE, TYPE } from "baseui/select";
 
-function Price({ children }) {
+function Price() {
   useEffect(() => {
     console.log("pricec");
     console.log(items);
   }, []);
 
-  const [css] = useStyletron();
+  const [css, theme] = useStyletron();
   const { setCurrentStep, items, updateItems, post } = useContext(AppContext);
 
-  const [error, setError] = useState(false);
-  const [errorDescription, setErrorDescription] = useState("");
-  const [errorMsg, setErrorMsg] = useState([]);
-
-  const [categoryCaption, setCategoryCaption] = useState(
-    `Digite a categoria e aperte enter, somente categorias cadastradas aceitas. \n ${ALL_CAT.join(
-      ", "
-    )}`
-  );
   const [category, setCategory] = useState("");
-  const [categorys, setCategorys] = useState([]);
+  const [categoryCaption, setCategoryCaption] = useState("");
+
   const [subCategory, setSubCategory] = useState("");
-  const [subCategorys, setSubCategorys] = useState([]);
-  const [subCategoryCaption, setSubCategoryCaption] = useState(
-    `Digite a categoria e aperte enter, somente categorias cadastradas aceitas.\n ${ALL_SUB_CAT.join(
-      ", "
-    )}`
-  );
+  const [subCategoryCaption, setSubCategoryCaption] = useState("");
   const [price, setPrice] = useState("");
-  const [priceCaption, setPriceCaption] = useState(
-    "Digite todos os digitos. Ex: 010,25"
-  );
+  const [priceCaption, setPriceCaption] = useState("");
 
   const [isOpen, setIsOpen] = useState(false);
   const [spinner, setSpinner] = useState(false);
@@ -64,29 +49,49 @@ function Price({ children }) {
   );
 
   const handleNext = () => {
-    const _price = `${price.replace(",", ".")}`;
-    const validator = SCHEMA.validate(
-      {
-        category: categorys[0],
-        subCategory: subCategorys[0],
-        price: parseFloat(_price),
-      },
-      {
-        abortEarly: false,
-      }
+    let error = false;
+    const _val_category = val_category.validate(
+      { category: category[0]?.label },
+      { abortEarly: true }
     );
-
-    if (validator.error) {
-      setErrorDescription("Algum(s) campos não está(ão) válidos");
-      setErrorMsg(validator.error.details);
-      setError(true);
+    if (_val_category.error) {
+      error = true;
+      setCategoryCaption(_val_category.error.details.map((e) => e.message));
     } else {
-      setError(false);
+      setCategoryCaption("");
+    }
+
+    const _val_subCategory = val_subCategoty.validate(
+      { subCategory: subCategory[0]?.label },
+      { abortEarly: true }
+    );
+    if (_val_subCategory.error) {
+      error = true;
+      setSubCategoryCaption(
+        _val_subCategory.error.details.map((e) => e.message)
+      );
+    } else {
+      setSubCategoryCaption("");
+    }
+
+    const _val_price = val_price.validate(
+      { price: `${price.replace(",", ".")}` },
+      { abortEarly: true }
+    );
+    if (_val_price.error) {
+      error = true;
+      // setPriceCaption(_val_price.error.details.map((e) => e.message));
+      setPriceCaption("Digite todos os digitos. Ex: 010,05");
+    } else {
+      setPriceCaption("");
+    }
+
+    if (!error) {
       updateItems({
         ...items,
         price: `${price.replace(",", ".")}`,
-        category: categorys[0],
-        subCategory: subCategorys[0],
+        category: category[0].label,
+        subCategory: subCategory[0].label,
       });
       setIsOpen(true);
     }
@@ -94,112 +99,47 @@ function Price({ children }) {
 
   const handlePost = () => {
     setSpinner(true);
-    post(items);
+    const res = post(items);
+    console.log(res);
     setMessage("O seu produto foi enviado");
     setSpinner(false);
   };
 
   return (
     <>
-      {HandleErrors(error, errorDescription, errorMsg)}
-
       <FormControl label="Categoria" caption={`${categoryCaption}`}>
-        <Input
-          // placeholder={categorys.length ? "" : "Enter A Tag"}
+        <Select
+          clearable={true}
+          closeOnSelect={true}
+          searchable={false}
+          error={false}
+          size={SSIZE.default}
+          options={CATEGORYS}
           value={category}
-          onChange={(e) => setCategory(e.currentTarget.value.toUpperCase())}
-          overrides={{
-            Input: {
-              component: InputReplacement,
-              props: {
-                tags: categorys,
-                removeTag: (tag) => {
-                  setCategorys(categorys.filter((t) => t !== tag));
-                },
-                onKeyDown: (event) => {
-                  switch (event.keyCode) {
-                    // Enter
-                    case 13: {
-                      if (!category) return;
-                      const filterNotEqual = ALL_CAT.filter(
-                        (c) => c != category
-                      );
-                      if (filterNotEqual.length !== ALL_CAT.length) {
-                        setCategorys([category]);
-                        setCategory("");
-                        setError(false);
-                        return;
-                      } else {
-                        setErrorDescription(
-                          "Categoria inválida: Utilize as categorias abaixo"
-                        );
-                        setErrorMsg(ALL_CAT);
-                        setError(true);
-                        setCategory("");
-                        setCategoryCaption(`${categoryCaption} \n ${ALL_CAT}`);
-                        return;
-                      }
-                    }
-                    // Backspace
-                    case 8: {
-                      if (category || !categorys.length) return;
-                      setCategorys(categorys[categorys.length - 1]);
-                      return;
-                    }
-                  }
-                },
-              },
-            },
-          }}
+          filterOutSelected
+          openOnClick
+          required
+          type={TYPE.select}
+          placeholder="Selecione categoria"
+          onChange={(params) => setCategory(params.value)}
         />
       </FormControl>
 
-      <FormControl label="Subcategoria" caption={`${subCategoryCaption}`}>
-        <Input
-          // placeholder={categorys.length ? "" : "Enter A Tag"}
+      <FormControl label="Sub Categoria" caption={`${subCategoryCaption}`}>
+        <Select
+          clearable={true}
+          closeOnSelect={true}
+          searchable={false}
+          error={false}
+          size={SSIZE.default}
+          options={SUBCATEGORYS}
           value={subCategory}
-          onChange={(e) => setSubCategory(e.currentTarget.value.toUpperCase())}
-          overrides={{
-            Input: {
-              component: InputReplacement,
-              props: {
-                tags: subCategorys,
-                removeTag: (tag) =>
-                  setSubCategorys(subCategorys.filter((t) => t !== tag)),
-                onKeyDown: (event) => {
-                  switch (event.keyCode) {
-                    // Enter
-                    case 13: {
-                      if (!subCategory) return;
-                      const filterNotEqual = ALL_SUB_CAT.filter(
-                        (s) => s != subCategory
-                      );
-                      if (filterNotEqual.length !== ALL_SUB_CAT.length) {
-                        setSubCategorys([subCategory]);
-                        setSubCategory("");
-                        setError(false);
-                        return;
-                      } else {
-                        setErrorDescription(
-                          "SubCategoria inválida: Utilize as subcategorias abaixo"
-                        );
-                        setErrorMsg(ALL_SUB_CAT);
-                        setError(true);
-                        setCategory("");
-                        return;
-                      }
-                    }
-                    // Backspace
-                    case 8: {
-                      if (subCategory || !subCategorys.length) return;
-                      setCategorys(subCategorys[subCategorys.length - 1]);
-                      return;
-                    }
-                  }
-                },
-              },
-            },
-          }}
+          filterOutSelected
+          openOnClick
+          required
+          type={TYPE.select}
+          placeholder="Selecione subcategoria"
+          onChange={(params) => setSubCategory(params.value)}
         />
       </FormControl>
 
@@ -207,7 +147,7 @@ function Price({ children }) {
         <MaskedInput
           value={price}
           startEnhancer="R$"
-          placeholder="Valor"
+          placeholder="999,99"
           mask="999,99"
           onChange={(e) => {
             // setPriceCaption(caption);

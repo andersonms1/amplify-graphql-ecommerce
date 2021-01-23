@@ -39,21 +39,8 @@ export const getProduct = /* GraphQL */ `
             category
             subCategory
             sold
-            amount {
-              size
-              amount
-            }
             brand
-            photos {
-              bucket
-              region
-              key
-              position
-            }
             avaliation
-            comments {
-              nextToken
-            }
             updatedAt
           }
           createdAt
@@ -99,19 +86,6 @@ export const listProducts = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -157,19 +131,6 @@ export const getComment = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -216,14 +177,6 @@ export const listComments = /* GraphQL */ `
           }
           avaliation
           comments {
-            items {
-              id
-              user
-              content
-              avaliation
-              createdAt
-              updatedAt
-            }
             nextToken
           }
           updatedAt
@@ -385,19 +338,6 @@ export const productsByCategorySubCategory = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -453,19 +393,6 @@ export const productsByCategorySubCategoryCreatedAt = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -521,19 +448,6 @@ export const productsByCategorySubCategoryPrice = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -589,19 +503,6 @@ export const productsByCategorySubCategorySold = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -657,19 +558,6 @@ export const productsByCategorySubCategoryBrand = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -725,19 +613,6 @@ export const productsByCategorySubCategoryBrandCreatedAt = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }

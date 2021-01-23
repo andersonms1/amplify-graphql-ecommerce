@@ -214,7 +214,7 @@ function Details() {
             </div>
 
             <div className={isLarge ? itemStyles : null}>
-              <div className={detailsContainerStyes}>
+              <div className={isLarge ? detailsContainerStyes : null}>
                 <Display4 marginBottom="scale500">{product.title}</Display4>
                 <H4 marginBottom="scale500">R${product.price}</H4>
 

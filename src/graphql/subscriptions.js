@@ -39,21 +39,8 @@ export const onCreateProduct = /* GraphQL */ `
             category
             subCategory
             sold
-            amount {
-              size
-              amount
-            }
             brand
-            photos {
-              bucket
-              region
-              key
-              position
-            }
             avaliation
-            comments {
-              nextToken
-            }
             updatedAt
           }
           createdAt
@@ -103,21 +90,8 @@ export const onUpdateProduct = /* GraphQL */ `
             category
             subCategory
             sold
-            amount {
-              size
-              amount
-            }
             brand
-            photos {
-              bucket
-              region
-              key
-              position
-            }
             avaliation
-            comments {
-              nextToken
-            }
             updatedAt
           }
           createdAt
@@ -167,21 +141,8 @@ export const onDeleteProduct = /* GraphQL */ `
             category
             subCategory
             sold
-            amount {
-              size
-              amount
-            }
             brand
-            photos {
-              bucket
-              region
-              key
-              position
-            }
             avaliation
-            comments {
-              nextToken
-            }
             updatedAt
           }
           createdAt
@@ -227,19 +188,6 @@ export const onCreateComment = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -286,19 +234,6 @@ export const onUpdateComment = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }
@@ -345,19 +280,6 @@ export const onDeleteComment = /* GraphQL */ `
             user
             content
             avaliation
-            product {
-              id
-              createdAt
-              title
-              description
-              price
-              category
-              subCategory
-              sold
-              brand
-              avaliation
-              updatedAt
-            }
             createdAt
             updatedAt
           }

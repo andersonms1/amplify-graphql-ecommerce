@@ -108,7 +108,7 @@ const CheckoutProvider = ({ children }) => {
   };
 
   const appState = {
-    current: 2,
+    current: 0,
     setCurrentStep,
     modalOpen: {},
     setModalOpen,

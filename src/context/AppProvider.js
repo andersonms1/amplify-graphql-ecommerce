@@ -27,6 +27,7 @@ const AppProvider = ({ children }) => {
         const user = await Auth.currentAuthenticatedUser();
         console.log(user);
       } catch (error) {
+        Error(error);
         console.log("error: ", error);
       }
     }
@@ -174,24 +175,28 @@ const AppProvider = ({ children }) => {
 
       const { title, description, price, category, subCategory } = items;
 
-      const res = await API.graphql(
-        graphqlOperation(createProduct, {
-          input: {
-            title,
-            description,
-            price,
-            category,
-            subCategory,
-            sold: 0,
-            amount: items.inventory,
-            brand: "",
-            avaliation: 5,
-            photos,
-            brand: "ZARA",
-          },
-        })
-      );
-      console.log(res);
+      try {
+        const res = await API.graphql(
+          graphqlOperation(createProduct, {
+            input: {
+              title,
+              description,
+              price,
+              category,
+              subCategory,
+              sold: 0,
+              amount: items.inventory,
+              brand: "",
+              avaliation: 5,
+              photos,
+              brand: "ZARA",
+            },
+          })
+        );
+        return res;
+      } catch (e) {
+        return new Error(e);
+      }
     }
   };
 
@@ -201,7 +206,7 @@ const AppProvider = ({ children }) => {
     product: null, //was null
     loading: false,
     current: 0,
-    page: 1,
+    page: 0,
     updateItems,
     getById,
     getProducts, //

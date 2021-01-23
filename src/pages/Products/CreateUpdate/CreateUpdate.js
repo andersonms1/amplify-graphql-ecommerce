@@ -34,31 +34,22 @@ const CreateUpdate = (props) => {
   });
 
   return (
-    <Grid>
-      <Cell span={[6, 8, 12]}>
-        {/* <div
-        className={css({
-          display: "flex",
-          flexDirection: isLarge ? "row" : "column",
-        })}
-      > */}
-        <ProgressSteps current={context.current}>
-          <NumberedStep title="Enviar fotos">
-            <FileUpload />
-          </NumberedStep>
-          <NumberedStep title="Descrição">
-            <Title />
-          </NumberedStep>
-          <NumberedStep title="Estoque">
-            <Inventory />
-          </NumberedStep>
-          <NumberedStep title="Preços">
-            <Price />
-          </NumberedStep>
-        </ProgressSteps>
-        {/* </div> */}
-      </Cell>
-    </Grid>
+    <div>
+      <ProgressSteps current={context.current}>
+        <NumberedStep title="Enviar fotos">
+          <FileUpload />
+        </NumberedStep>
+        <NumberedStep title="Descrição">
+          <Title />
+        </NumberedStep>
+        <NumberedStep title="Estoque">
+          <Inventory />
+        </NumberedStep>
+        <NumberedStep title="Preços">
+          <Price />
+        </NumberedStep>
+      </ProgressSteps>
+    </div>
   );
 };
 export default CreateUpdate;

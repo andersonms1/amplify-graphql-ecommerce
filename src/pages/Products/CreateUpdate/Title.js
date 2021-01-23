@@ -37,7 +37,7 @@ function Title({ children }) {
     );
 
     if (validator.error) {
-      setErrorDescription("Algum(s) campos não está(ão) válidos");
+      setErrorDescription("");
       setErrorMsg(validator.error.details);
       setError(true);
     } else {
@@ -60,16 +60,18 @@ function Title({ children }) {
           id="input"
           value={items.title ? items.title : title}
           onChange={(e) => {
-            const { error } = TITLE.validate({ title }, { abortEarly: false });
-            let caption;
+            const _title = `${e.target.value}`.toUpperCase();
+            setTitle(_title);
+            const { error } = TITLE.validate(
+              { title: _title },
+              { abortEarly: false }
+            );
 
-            setTitle(e.target.value);
             if (error) {
-              caption = `${error.message}`;
+              setTitleCaption(`${error.message}`);
             } else {
-              caption = "";
+              setTitleCaption("");
             }
-            setTitleCaption(caption);
           }}
           placeholder=""
           clearOnEscape
@@ -80,18 +82,17 @@ function Title({ children }) {
           id="textarea-id"
           value={items.description ? items.description : description}
           onChange={(e) => {
+            const _description = `${e.target.value}`.toUpperCase();
+            setDescription(_description);
             const { error } = DESCRIPTION.validate(
-              { description },
+              { description: _description },
               { abortEarly: false }
             );
-            let caption;
-            setDescription(e.target.value);
             if (error) {
-              caption = `${error.message}`;
+              setDescriptionCaption(`${error.message}`);
             } else {
-              caption = "";
+              setDescriptionCaption("");
             }
-            setDescriptionCaption(caption);
           }}
         />
       </FormControl>

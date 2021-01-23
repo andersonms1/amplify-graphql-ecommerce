@@ -159,8 +159,7 @@ function Products(props) {
             </Paragraph4>
             <div className={priceButtonStyles}>
               <Paragraph4 margin="0" padding="0">
-                {/* <b>R${item.price.specie}</b> */}
-                <b>100</b>
+                <b>R${item.price}</b>
               </Paragraph4>
             </div>
           </StyledBody>

@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const title = Joi.object({
-  title: Joi.string().alphanum().min(3).max(52).required().messages({
+  title: Joi.string().min(3).max(52).required().messages({
     "string.base": `"Título" deve conter somente texto curto.'`,
     "string.empty": `"Título" não pode ficar vazio.`,
     "string.min": `"Título" Deve possuir ao menos {#limit} caracteres`,
@@ -10,7 +10,7 @@ const title = Joi.object({
   }),
 });
 const description = Joi.object({
-  description: Joi.string().alphanum().min(5).max(1000).required().messages({
+  description: Joi.string().min(5).max(1000).required().messages({
     "string.base": `"Descrição" deve conter detalhes do produto a ser cadastrado.'`,
     "string.empty": `"Descrição" não pode ficar vazio.`,
     "string.min": `"Descrição" Deve possuir ao menos {#limit} caracteres`,
@@ -73,8 +73,7 @@ formDescription = formDescription.concat(description);
 
 //////////////////////////////// Price ////////////////////////////////////////
 const category = Joi.object({
-  category: Joi.string().alphanum().min(3).max(52).required().messages({
-    "string.base": `"Categoria" deve conter somente texto curto.'`,
+  category: Joi.string().min(3).max(52).required().messages({
     "string.empty": `"Categoria" não pode ficar vazio.`,
     "string.min": `"Categoria" Deve possuir ao menos {#limit} caracteres`,
     "string.max": `"Categoria" deve ter no máximo {#limit} caracteres`,
@@ -83,8 +82,7 @@ const category = Joi.object({
 });
 
 const subCategory = Joi.object({
-  subCategory: Joi.string().alphanum().min(3).max(52).required().messages({
-    "string.base": `"Subcategoria" deve conter somente texto curto.'`,
+  subCategory: Joi.string().min(3).max(52).required().messages({
     "string.empty": `"Subcategoria" não pode ficar vazio.`,
     "string.min": `"Subcategoria" Deve possuir ao menos {#limit} caracteres`,
     "string.max": `"Subcategoria" deve ter no máximo {#limit} caracteres`,
@@ -94,6 +92,7 @@ const subCategory = Joi.object({
 
 const price = Joi.object({
   price: Joi.number().required().messages({
+    "string.base": `"Preço" sdfasdf.`,
     "string.empty": `"Preço" não pode ficar vazio.`,
     "any.required": `"Preço" É um campo obrigatório`,
   }),
