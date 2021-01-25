@@ -6,6 +6,7 @@ import HeaderNav from "./pages/Home/HeaderNav";
 import { Checkout, Cart } from "./pages/Payment";
 import { Grid, Cell } from "baseui/layout-grid";
 import { Home, Details, CreateUpdate } from "./pages";
+import ShowCase from "./pages/ShowCase/";
 import History from "./pages/User/History";
 
 import { withAuthenticator } from "@aws-amplify/ui-react";
@@ -18,12 +19,16 @@ function App() {
     return <div>User</div>;
   };
 
+  const Calacados = () => {
+    return <ShowCase item="Calçados" />;
+  };
+
   return (
     <Router>
-      {/* <Grid> */}
       <Header />
       <Switch>
         <Route exact path={"/"} component={Home} />
+        <Route exact path={"/calçados"} component={Calacados} />
         <Route exact path={"/products/:id"} component={Details} />
         <Route exact path={"/products/"} component={CreateUpdate} />
         <Route exact path={"/checkout/"} component={Checkout} />

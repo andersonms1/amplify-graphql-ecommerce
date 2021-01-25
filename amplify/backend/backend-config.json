@@ -1,14 +1,20 @@
 {
   "auth": {
-    "ecommerce21967ec1": {
+    "ecommercebeta272e2611": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
       "customAuth": false
     }
   },
+  "storage": {
+    "Images": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  },
   "api": {
-    "ecommerce": {
+    "ecommercebeta": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -16,26 +22,20 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authecommerce21967ec1"
+              "userPoolId": "authecommercebeta272e2611"
             }
           },
           "additionalAuthenticationProviders": [
             {
               "authenticationType": "API_KEY",
               "apiKeyConfig": {
-                "apiKeyExpirationDays": 365,
-                "description": "Guest user acess"
+                "apiKeyExpirationDays": 100,
+                "description": "key100"
               }
             }
           ]
         }
       }
-    }
-  },
-  "storage": {
-    "productImages": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
     }
   }
 }

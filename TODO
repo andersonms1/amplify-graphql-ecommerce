@@ -44,9 +44,20 @@ https://www.javascriptstuff.com/detect-image-load/
 ...
 ☐ Glass products?
 ☐ Preview images on mouse houver?
-☐ The product after registration is DUPLICATE!!! at home. Maybe because i clicked twice on save? See DB
-☐ Product creation remove only alfa
+✔ The product after registration is DUPLICATE!!! at home. Maybe because i clicked twice on save? See DB @done(21-01-23 12:02)
+✔ Product creation remove only alfa @done(21-01-23 12:02)
+☐ On details page: replace size selector?
 ☐ Uppercase sizes. Or even limit on a cliente ask
+☐ Remove image name size restrictions. The photos are coming from instagram
+☐ Create table for categorys, subcategorys, brands. And add cruds
+☐ Add product creation to localstorage
+☐ Bug on publish product modal
+☐ Description is incorrect checking gramar
+☐ On product detail, on click to see description is the description sizes grow and pushes the img to the left
+after show case
+☐ Payment api
+☐ Tests
+☐ Autorização
 ...
 ☐ Dividir no cartão
 ☐ Débito e crédito

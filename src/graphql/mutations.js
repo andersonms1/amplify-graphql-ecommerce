@@ -321,20 +321,37 @@ export const createOrder = /* GraphQL */ `
       price
       user
       status
-      address {
-        id
-        uid
-        createdAt
-        default
-        deliverTo
-        ZIP
-        state
-        city
-        neighborhood
-        street
-        number
-        complementation
-        updatedAt
+      products {
+        product {
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          amount {
+            size
+            amount
+          }
+          brand
+          photos {
+            bucket
+            region
+            key
+            position
+          }
+          avaliation
+          comments {
+            nextToken
+          }
+          updatedAt
+        }
+        amount {
+          size
+          amount
+        }
       }
       updatedAt
     }
@@ -351,20 +368,37 @@ export const updateOrder = /* GraphQL */ `
       price
       user
       status
-      address {
-        id
-        uid
-        createdAt
-        default
-        deliverTo
-        ZIP
-        state
-        city
-        neighborhood
-        street
-        number
-        complementation
-        updatedAt
+      products {
+        product {
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          amount {
+            size
+            amount
+          }
+          brand
+          photos {
+            bucket
+            region
+            key
+            position
+          }
+          avaliation
+          comments {
+            nextToken
+          }
+          updatedAt
+        }
+        amount {
+          size
+          amount
+        }
       }
       updatedAt
     }
@@ -381,20 +415,37 @@ export const deleteOrder = /* GraphQL */ `
       price
       user
       status
-      address {
-        id
-        uid
-        createdAt
-        default
-        deliverTo
-        ZIP
-        state
-        city
-        neighborhood
-        street
-        number
-        complementation
-        updatedAt
+      products {
+        product {
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          amount {
+            size
+            amount
+          }
+          brand
+          photos {
+            bucket
+            region
+            key
+            position
+          }
+          avaliation
+          comments {
+            nextToken
+          }
+          updatedAt
+        }
+        amount {
+          size
+          amount
+        }
       }
       updatedAt
     }
@@ -407,17 +458,17 @@ export const createAddress = /* GraphQL */ `
   ) {
     createAddress(input: $input, condition: $condition) {
       id
-      uid
+      user
       createdAt
-      default
       deliverTo
-      ZIP
-      state
+      zip
+      uf
       city
       neighborhood
       street
+      complement
+      phone
       number
-      complementation
       updatedAt
     }
   }
@@ -429,17 +480,17 @@ export const updateAddress = /* GraphQL */ `
   ) {
     updateAddress(input: $input, condition: $condition) {
       id
-      uid
+      user
       createdAt
-      default
       deliverTo
-      ZIP
-      state
+      zip
+      uf
       city
       neighborhood
       street
+      complement
+      phone
       number
-      complementation
       updatedAt
     }
   }
@@ -451,17 +502,17 @@ export const deleteAddress = /* GraphQL */ `
   ) {
     deleteAddress(input: $input, condition: $condition) {
       id
-      uid
+      user
       createdAt
-      default
       deliverTo
-      ZIP
-      state
+      zip
+      uf
       city
       neighborhood
       street
+      complement
+      phone
       number
-      complementation
       updatedAt
     }
   }

@@ -3,16 +3,7 @@ import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
 import { useParams } from "react-router-dom";
-import {
-  Paragraph1,
-  Display4,
-  H1,
-  H2,
-  H3,
-  H4,
-  H5,
-  H6,
-} from "baseui/typography";
+import { Paragraph1, Display4, H4 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
@@ -31,7 +22,6 @@ import { setObj, getObj } from "../../utils/localStorage";
 import { PRODUCT_SELECTION_TYPES as STATUS } from "../../utils/STATUS";
 import { FormControl } from "baseui/form-control";
 // import {Input} from 'baseui/input';
-import { LOCAL_IMAGE } from "../../assets/imgs/";
 
 function Details() {
   const [css, theme] = useStyletron();

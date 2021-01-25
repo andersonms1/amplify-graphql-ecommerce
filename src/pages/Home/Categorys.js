@@ -28,19 +28,35 @@ import {
 function Categorys() {
   const [css, theme] = useStyletron();
 
-  // const Item = ({ children }) => {
-  //   return (
-  //     <LabelSmall marginTop={theme.sizing.scale400}>{children}</LabelSmall>
-  //   );
-  // };
-
   const Item = ({ children }) => {
     return (
-      <Tag marginTop={theme.sizing.scale400} closeable={false}>
+      <LabelSmall
+        overrides={{
+          Block: {
+            style: {
+              // textDecoration: "underline",
+              // paddingRight: theme.sizing.scale400,
+              // paddingLeft: theme.sizing.scale400,
+              // marginTop: theme.sizing.scale400,
+              // marginBottom: theme.sizing.scale400,
+              // background: "#e0e0e0",
+            },
+          },
+        }}
+        marginTop={theme.sizing.scale400}
+      >
         {children}
-      </Tag>
+      </LabelSmall>
     );
   };
+
+  // const Item = ({ children }) => {
+  //   return (
+  //     <Tag marginTop={theme.sizing.scale400} closeable={false}>
+  //       {children}
+  //     </Tag>
+  //   );
+  // };
 
   // const renderList = () => {
   //   return SUBCATEGORYS.map((item, index) => {
@@ -63,65 +79,37 @@ function Categorys() {
   // };
 
   const renderList = () => {
-    return SUBCATEGORYS.map((item, index) => {
-      return (
-        <div
-          className={css({
-            display: "flex",
-            // display: "inline-block",
-            // whiteSpace: "nowrap",
-            // whiteSpaceCollapsing: "discard",
-            // scrollbarWidth: "none",
-            // paddingRight: "10px",
-          })}
-          key={index}
-        >
-          <Item>{`${item.label}`}</Item>
-        </div>
-      );
+    const ALL = [{ label: "TUDO" }, ...SUBCATEGORYS];
+    return ALL.map((item, index) => {
+      return <Item key={index}>{`${item.label}`}&nbsp;&nbsp;&nbsp;&nbsp;</Item>;
     });
   };
 
   return (
     <div
-      className={css({
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        alignItems: "flex-end",
-        alignContent: "flex-end",
-        alignSelf: "center",
-      })}
+    // className={css({
+    //   display: "flex",
+    //   flexDirection: "row",
+    //   justifyContent: "flex-end",
+    //   alignItems: "flex-end",
+    //   alignContent: "flex-end",
+    //   alignSelf: "center",
+    // })}
     >
-      {/* <div
-        className={css({
-          overflow: "auto",
-          scrollbarWidth: "none",
-          whiteSpace: "nowrap",
-        })}
-      >
-        <div
-          className={css({
-            display: "inline-block",
-
-            // overflow: "auto",
-            // whiteSpace: "nowrap",
-          })}
-        >
-          <Item>TUDO</Item>&nbsp;&nbsp;
-          {renderList()}
-        </div>
-      </div> */}
       <div
         className={css({
           display: "flex",
+          flexDirection: "row",
           flexWrap: "wrap",
+          // display: "inline-block",
+          // whiteSpace: "nowrap",
+          // whiteSpaceCollapsing: "discard",
+          // scrollbarWidth: "none",
+          // paddingRight: "10px",
         })}
       >
-        <Item>TUDO</Item>&nbsp;&nbsp;
         {renderList()}
       </div>
-      {/* <Options /> */}
     </div>
   );
 }

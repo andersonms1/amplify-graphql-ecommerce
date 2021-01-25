@@ -50,6 +50,24 @@ amplify add storage
 * ? What kind of access do you want for Guest users? ***read***
 * ? Do you want to add a Lambda Trigger for your S3 Bucket? ***No***
 
+- Pay attention to the bucked name.
+- If not root only specified folder is public
+
+```json
+{
+  "Version":"2012-10-17",
+  "Statement":[
+    {
+      "Sid":"PublicRead",
+      "Effect":"Allow",
+      "Principal": "*",
+      "Action":["s3:GetObject","s3:GetObjectVersion"],
+      "Resource":["arn:aws:s3:::DOC-EXAMPLE-BUCKET/*"]
+    }
+  ]
+}
+```
+
 ## Adicionando funções lambda
 
 ```shell
@@ -126,91 +144,4 @@ amplify add housting
 * ? error doc for the website ***index.html***
 
 
-
-type Product @model 
-@key(name: "byCatSubCat", fields: ["category", "subCategory"], queryField: "productsByCategorySubCategory")
-@key(name: "byCatSubCatCreatedAt", fields: ["category", "subCategory", "createdAt"], queryField: "productsByCategorySubCategoryCreatedAt")
-@key(name: "byCatSubCatPrice", fields: ["category", "subCategory", "price"], queryField: "productsByCategorySubCategoryPrice")
-@key(name: "byCatSubCatSold", fields: ["category", "subCategory", "sold"], queryField: "productsByCategorySubCategorySold")
-@key(name: "byCatSubCatBrand", fields: ["category", "subCategory", "brand"], queryField: "productsByCategorySubCategoryBrand")
-@key(name: "byCatSubCatBrandCreatedAt", fields: ["category", "subCategory", "brand", "createdAt"], queryField: "productsByCategorySubCategoryBrandCreatedAt")
-{
-  id: ID!
-  createdAt: String!
-  title: String!
-  description: String!
-  price: Float!
-  category: String!
-  subCategory: String!
-  sold: Int!
-  amount: [Amount]
-  brand: String
-  photos: [S3Object]
-  avaliation: Float
-  # selection: Selection
-  comments: [Comment] @connection(name: "ProductComments")
-}
-
-type Selection {
-  size: String!
-  quantity: Int!
-}
-
-
-type Comment @model {
-  id: ID!
-  user: String!
-  content: String!
-  avaliation: Float!
-  product: Product @connection(name: "ProductComments")
-}
-
-type S3Object {
-    bucket: String!
-    region: String!
-    key: String!
-    position: String!
-}
-
-type Amount {
-  size: String
-  amount: Int
-}
-
-
-
-type Order @model
-@key(name: "byUserCreatedAt", fields: ["user", "createdAt"], queryField: "ordersByUserCreatedAt")
-@key(name: "byUserStatus", fields: ["user", "status"], queryField: "ordersByUserStatus")
-@key(name: "byStatusCreatedAt", fields: ["status", "createdAt"], queryField: "ordersByStatusCreatedAt")
-
-{
-  id: ID!
-  createdAt: String!
-  price: Float!
-  user: String!
-  status: String!
-  address: Address 
-  # products: [Product] @connection
-  # In this many to one rel. can i create diferent orders with the same product?
-
-}
-
-type Address @model
-@key(name: "byUserDefault", fields: ["uid", "default"], queryField: "addressesByUserDefault")
-@key(name: "byUserCreatedAt", fields: ["uid", "createdAt"], queryField: "addressesByUserCreatedAt")
-{  
-  id: ID!
-  uid: String!
-  createdAt: String!
-  default: String!
-  deliverTo: String!
-  ZIP: String!
-  state: String!
-  city: String!
-  neighborhood: String!
-  street: String!
-  number: Int  
-  complementation: String
-}
 

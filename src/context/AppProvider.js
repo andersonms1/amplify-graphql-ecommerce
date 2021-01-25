@@ -7,6 +7,7 @@ import {
   getProduct,
   productsByCategorySubCategory,
   productsByCategorySubCategoryBrand,
+  productsByCategorySubCategoryCreatedAt,
 } from "../graphql/queries";
 
 import { createProduct } from "../graphql/mutations";
@@ -14,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import config from "../aws-exports";
 
 import AppContext from "./AppContext";
+import { subCategorys } from "../utils/CATEGORYSUBCATEGORYS";
 
 const {
   aws_user_files_s3_bucket_region: region,
@@ -43,16 +45,39 @@ const AppProvider = ({ children }) => {
     });
   };
 
-  const stringToQuery = async (querie, values) => {
+  const stringToQuery = async (querie, values = null) => {
     switch (querie) {
       case "listProducts":
-        return await API.graphql(graphqlOperation(listProducts));
+        try {
+          const res = await API.graphql(graphqlOperation(listProducts));
+          return res;
+        } catch (e) {
+          console.log(Error(e));
+          return new Error(e);
+        }
       case "productsByCategorySubCategory":
         try {
+          const { category, subCategory } = values;
           const res = await API.graphql(
             graphqlOperation(productsByCategorySubCategory, {
-              category: "FEMININO",
-              subCategory: { eq: "CAMISA" },
+              category,
+              subCategory,
+            })
+          );
+
+          return res;
+        } catch (e) {
+          console.log(Error(e));
+          return new Error(e);
+        }
+
+      case "productsByCategorySubCategoryCreatedAt":
+        try {
+          const { category, subCategoryCreatedAt } = values;
+          const res = await API.graphql(
+            graphqlOperation(productsByCategorySubCategoryCreatedAt, {
+              category,
+              subCategoryCreatedAt,
             })
           );
 
@@ -189,7 +214,6 @@ const AppProvider = ({ children }) => {
               brand: "",
               avaliation: 5,
               photos,
-              brand: "ZARA",
             },
           })
         );

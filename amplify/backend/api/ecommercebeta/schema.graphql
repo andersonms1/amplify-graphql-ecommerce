@@ -1,0 +1,87 @@
+type Product @model 
+@key(name: "byCat", fields: ["category"], queryField: "productsByCategory")
+@key(name: "byCatCreatedAt", fields: ["category", "createdAt"], queryField: "productsByCategoryCreatedAt")
+@key(name: "byCatPrice", fields: ["category", "price"], queryField: "productsByCategoryPrice")
+@key(name: "byCatAvaliations", fields: ["category", "avaliation"], queryField: "productsByCategoryAvaliation")
+@key(name: "byCatBrand", fields: ["category", "brand"], queryField: "productsByCategoryBrand")
+@key(name: "byCatSold", fields: ["category", "sold"], queryField: "productsByCategorySold")
+@key(name: "byCatSubCat", fields: ["category", "subCategory"], queryField: "productsByCategorySubCategory")
+@key(name: "byCatSubCatCreatedAt", fields: ["category", "subCategory", "createdAt"], queryField: "productsByCategorySubCategoryCreatedAt")
+@key(name: "byCatSubCatPrice", fields: ["category", "subCategory", "price"], queryField: "productsByCategorySubCategoryPrice")
+@key(name: "byCatSubCatSold", fields: ["category", "subCategory", "sold"], queryField: "productsByCategorySubCategorySold")
+@key(name: "byCatSubCatBrand", fields: ["category", "subCategory", "brand"], queryField: "productsByCategorySubCategoryBrand")
+@key(name: "byCatSubCatBrandCreatedAt", fields: ["category", "subCategory", "brand", "createdAt"], queryField: "productsByCategorySubCategoryBrandCreatedAt")
+{
+  id: ID!
+  createdAt: String!
+  title: String!
+  description: String!
+  price: Float!
+  category: String!
+  subCategory: String!
+  sold: Int!
+  amount: [Amount]
+  brand: String
+  photos: [S3Object]
+  avaliation: Float
+  comments: [Comment] @connection(name: "ProductComments")
+}
+
+type Comment @model {
+  id: ID!
+  user: String!
+  content: String!
+  avaliation: Float!
+  product: Product @connection(name: "ProductComments")
+}
+
+type S3Object {
+    bucket: String!
+    region: String!
+    key: String!
+    position: String!
+}
+
+type Amount {
+  size: String
+  amount: Int
+}
+
+
+
+type Order @model
+@key(name: "byUserCreatedAt", fields: ["user", "createdAt"], queryField: "ordersByUserCreatedAt")
+@key(name: "byStatusCreatedAt", fields: ["status", "createdAt"], queryField: "ordersByStatusCreatedAt")
+
+{
+  id: ID!
+  createdAt: String!
+  price: Float!
+  user: String!
+  status: String!
+  products: [Products]
+
+}
+
+type Products {
+  product: Product
+  amount: Amount
+}
+
+type Address @model
+
+{
+  id: ID!
+  user: String!
+  createdAt: String!
+  deliverTo: String
+  zip: String!
+  uf: String!
+  city: String!
+  neighborhood: String!
+  street: String!
+  complement: String
+  phone: String!
+  number: String!
+
+}

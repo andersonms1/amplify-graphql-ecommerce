@@ -196,20 +196,37 @@ export const getOrder = /* GraphQL */ `
       price
       user
       status
-      address {
-        id
-        uid
-        createdAt
-        default
-        deliverTo
-        ZIP
-        state
-        city
-        neighborhood
-        street
-        number
-        complementation
-        updatedAt
+      products {
+        product {
+          id
+          createdAt
+          title
+          description
+          price
+          category
+          subCategory
+          sold
+          amount {
+            size
+            amount
+          }
+          brand
+          photos {
+            bucket
+            region
+            key
+            position
+          }
+          avaliation
+          comments {
+            nextToken
+          }
+          updatedAt
+        }
+        amount {
+          size
+          amount
+        }
       }
       updatedAt
     }
@@ -228,20 +245,24 @@ export const listOrders = /* GraphQL */ `
         price
         user
         status
-        address {
-          id
-          uid
-          createdAt
-          default
-          deliverTo
-          ZIP
-          state
-          city
-          neighborhood
-          street
-          number
-          complementation
-          updatedAt
+        products {
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            brand
+            avaliation
+            updatedAt
+          }
+          amount {
+            size
+            amount
+          }
         }
         updatedAt
       }
@@ -253,17 +274,17 @@ export const getAddress = /* GraphQL */ `
   query GetAddress($id: ID!) {
     getAddress(id: $id) {
       id
-      uid
+      user
       createdAt
-      default
       deliverTo
-      ZIP
-      state
+      zip
+      uf
       city
       neighborhood
       street
+      complement
+      phone
       number
-      complementation
       updatedAt
     }
   }
@@ -277,17 +298,345 @@ export const listAddresss = /* GraphQL */ `
     listAddresss(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        uid
+        user
         createdAt
-        default
         deliverTo
-        ZIP
-        state
+        zip
+        uf
         city
         neighborhood
         street
+        complement
+        phone
         number
-        complementation
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const productsByCategory = /* GraphQL */ `
+  query ProductsByCategory(
+    $category: String
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    productsByCategory(
+      category: $category
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const productsByCategoryCreatedAt = /* GraphQL */ `
+  query ProductsByCategoryCreatedAt(
+    $category: String
+    $createdAt: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    productsByCategoryCreatedAt(
+      category: $category
+      createdAt: $createdAt
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const productsByCategoryPrice = /* GraphQL */ `
+  query ProductsByCategoryPrice(
+    $category: String
+    $price: ModelFloatKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    productsByCategoryPrice(
+      category: $category
+      price: $price
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const productsByCategoryAvaliation = /* GraphQL */ `
+  query ProductsByCategoryAvaliation(
+    $category: String
+    $avaliation: ModelFloatKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    productsByCategoryAvaliation(
+      category: $category
+      avaliation: $avaliation
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const productsByCategoryBrand = /* GraphQL */ `
+  query ProductsByCategoryBrand(
+    $category: String
+    $brand: ModelStringKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    productsByCategoryBrand(
+      category: $category
+      brand: $brand
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
+        updatedAt
+      }
+      nextToken
+    }
+  }
+`;
+export const productsByCategorySold = /* GraphQL */ `
+  query ProductsByCategorySold(
+    $category: String
+    $sold: ModelIntKeyConditionInput
+    $sortDirection: ModelSortDirection
+    $filter: ModelProductFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    productsByCategorySold(
+      category: $category
+      sold: $sold
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        createdAt
+        title
+        description
+        price
+        category
+        subCategory
+        sold
+        amount {
+          size
+          amount
+        }
+        brand
+        photos {
+          bucket
+          region
+          key
+          position
+        }
+        avaliation
+        comments {
+          items {
+            id
+            user
+            content
+            avaliation
+            createdAt
+            updatedAt
+          }
+          nextToken
+        }
         updatedAt
       }
       nextToken
@@ -647,64 +996,24 @@ export const ordersByUserCreatedAt = /* GraphQL */ `
         price
         user
         status
-        address {
-          id
-          uid
-          createdAt
-          default
-          deliverTo
-          ZIP
-          state
-          city
-          neighborhood
-          street
-          number
-          complementation
-          updatedAt
-        }
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const ordersByUserStatus = /* GraphQL */ `
-  query OrdersByUserStatus(
-    $user: String
-    $status: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelOrderFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    ordersByUserStatus(
-      user: $user
-      status: $status
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        createdAt
-        price
-        user
-        status
-        address {
-          id
-          uid
-          createdAt
-          default
-          deliverTo
-          ZIP
-          state
-          city
-          neighborhood
-          street
-          number
-          complementation
-          updatedAt
+        products {
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            brand
+            avaliation
+            updatedAt
+          }
+          amount {
+            size
+            amount
+          }
         }
         updatedAt
       }
@@ -735,93 +1044,25 @@ export const ordersByStatusCreatedAt = /* GraphQL */ `
         price
         user
         status
-        address {
-          id
-          uid
-          createdAt
-          default
-          deliverTo
-          ZIP
-          state
-          city
-          neighborhood
-          street
-          number
-          complementation
-          updatedAt
+        products {
+          product {
+            id
+            createdAt
+            title
+            description
+            price
+            category
+            subCategory
+            sold
+            brand
+            avaliation
+            updatedAt
+          }
+          amount {
+            size
+            amount
+          }
         }
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const addressesByUserDefault = /* GraphQL */ `
-  query AddressesByUserDefault(
-    $uid: String
-    $default: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelAddressFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    addressesByUserDefault(
-      uid: $uid
-      default: $default
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        uid
-        createdAt
-        default
-        deliverTo
-        ZIP
-        state
-        city
-        neighborhood
-        street
-        number
-        complementation
-        updatedAt
-      }
-      nextToken
-    }
-  }
-`;
-export const addressesByUserCreatedAt = /* GraphQL */ `
-  query AddressesByUserCreatedAt(
-    $uid: String
-    $createdAt: ModelStringKeyConditionInput
-    $sortDirection: ModelSortDirection
-    $filter: ModelAddressFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    addressesByUserCreatedAt(
-      uid: $uid
-      createdAt: $createdAt
-      sortDirection: $sortDirection
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
-      items {
-        id
-        uid
-        createdAt
-        default
-        deliverTo
-        ZIP
-        state
-        city
-        neighborhood
-        street
-        number
-        complementation
         updatedAt
       }
       nextToken
