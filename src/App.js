@@ -5,8 +5,9 @@ import Header from "./pages/Home/Header";
 import HeaderNav from "./pages/Home/HeaderNav";
 import { Checkout, Cart } from "./pages/Payment";
 import { Grid, Cell } from "baseui/layout-grid";
-import { Home, Details, CreateUpdate } from "./pages";
-import ShowCase from "./pages/ShowCase/";
+import { Home, CreateUpdate } from "./pages";
+import Details from "./pages/Products/Details/Details.js";
+import ShowCase from "./pages/Products/ShowCase/";
 import History from "./pages/User/History";
 
 import { withAuthenticator } from "@aws-amplify/ui-react";

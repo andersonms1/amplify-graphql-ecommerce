@@ -73,15 +73,10 @@ function ModalSelection({ status, currentItem }) {
   useEffect(() => {
     // const _cart = getObj("cart");Already loaded from the Cart page
 
-    if (PS_TYPES.DETAILS === status) {
-    } else if (PS_TYPES.CART === status) {
-      if (handleCartLoading()) {
-        // setSize(_cart.products[currentItem].size);
-        // setQuantity(_cart.products[currentItem].quantity);
-        // console.log(_cart);
-      }
-    } else {
-      new Error("status not seted!");
+    if (handleCartLoading()) {
+      // setSize(_cart.products[currentItem].size);
+      // setQuantity(_cart.products[currentItem].quantity);
+      // console.log(_cart);
     }
   }, [cart]);
 

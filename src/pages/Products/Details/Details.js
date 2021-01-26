@@ -11,20 +11,28 @@ import { Tag } from "baseui/tag";
 import ChevronDown from "baseui/icon/chevron-down";
 import { Select, SIZE, TYPE } from "baseui/select";
 
-import AppContext from "../../context/AppContext";
-import CheckoutContext from "../../context/CheckoutContext";
-import ModalSelection from "../Payment/Checkout/ModalSelection";
-import ContentLoader from "react-content-loader";
+import AppContext from "../../../context/AppContext";
+import CheckoutContext from "../../../context/CheckoutContext";
+// import ModalSelection from "../../Payment/Checkout/ModalSelection";
+import ModalDeatil from "../../Payment/Checkout/ModalDetail";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
-import { handleLoad } from "../../utils";
-import { setObj, getObj } from "../../utils/localStorage";
-import { PRODUCT_SELECTION_TYPES as STATUS } from "../../utils/STATUS";
+import { handleLoad } from "../../../utils";
+import { setObj, getObj } from "../../../utils/localStorage";
+import { PRODUCT_SELECTION_TYPES as STATUS } from "../../../utils/STATUS";
 import { FormControl } from "baseui/form-control";
-// import {Input} from 'baseui/input';
+import { useStyles } from "./useStyles";
+import Loader from "./Loader";
 
 function Details() {
   const [css, theme] = useStyletron();
+  const {
+    containerStyles,
+    itemStyles,
+    detailsContainerStyes,
+    imgStyles,
+  } = useStyles();
+
   const { breakpoints } = theme;
   let { id } = useParams();
 
@@ -37,7 +45,6 @@ function Details() {
 
   const [size, setSize] = useState();
   const [quantity, setQuantity] = useState();
-  const [wasSet, setWasSet] = useState(false);
 
   useEffect(() => {
     getById(id);
@@ -49,30 +56,6 @@ function Details() {
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${breakpoints.large - 136}px)`,
-  });
-
-  const containerStyles = css({
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "flex-start", // heigh of details
-    justifyContent: "center",
-    alignContent: "center",
-  });
-
-  const itemStyles = css({
-    flexGrow: "0",
-    flexBasis: "auto",
-    paddingRight: "5px",
-    paddingLeft: "5px",
-  });
-
-  const detailsContainerStyes = css({
-    width: "30vw",
-    height: "auto",
-  });
-  const imgStyles = css({
-    width: "30vw",
-    height: "auto",
   });
 
   const getConfigurableProps = () => ({
@@ -93,6 +76,10 @@ function Details() {
     // transitionTime: number('transitionTime', 150, {}, valuesGroupId),
     // swipeScrollTolerance: number('swipeScrollTolerance', 5, {}, valuesGroupId),
   });
+
+  const handleBuy = () => {
+    setModalOpen({ ...modalOpen, open: true });
+  };
 
   const iterateImages = () => {
     if (product) {
@@ -137,63 +124,13 @@ function Details() {
     }
   };
 
-  const contentLoader = () => {
-    return (
-      <div style={{ display: "flex" }}>
-        {!isLarge ? (
-          <ContentLoader
-            speed={2}
-            width="100vw"
-            height="100%"
-            viewBox="0 0 150 500"
-            backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
-          >
-            <rect x="0" y="131" rx="0" ry="0" width="139" height="26" />
-            <rect x="0" y="0" rx="0" ry="0" width="141" height="122" />
-            <rect x="0" y="165" rx="0" ry="0" width="139" height="77" />
-          </ContentLoader>
-        ) : (
-          <ContentLoader
-            speed={2}
-            width="100vw"
-            height="100%"
-            viewBox="0 0 1000 460"
-            backgroundColor="#f3f3f3"
-            foregroundColor="#ecebeb"
-            style={{
-              width: "100vw",
-              maxWidth: "100%",
-              height: "auto",
-              flexGrow: "1",
-              flexShrink: "1",
-            }}
-            className={{ flexGrow: "1", flexShrink: "1" }}
-          >
-            <rect x="5" y="1" rx="2" ry="2" width="272" height="396" />
-            <rect x="321" y="5" rx="0" ry="0" width="260" height="60" />
-            <rect x="323" y="96" rx="0" ry="0" width="261" height="160" />
-            <rect x="495" y="175" rx="0" ry="0" width="21" height="4" />
-            <rect x="325" y="301" rx="0" ry="0" width="261" height="31" />
-            <rect x="324" y="357" rx="0" ry="0" width="261" height="31" />
-          </ContentLoader>
-        )}
-      </div>
-    );
-  };
-
-  const handleBuy = () => {
-    setModalOpen({ ...modalOpen, open: true });
-  };
-
   const renderContent = () => {
     if (!product) {
       return null;
     } else {
       return (
         <>
-          <ModalSelection status={STATUS.DETAILS} currentItem="-1" />
-
+          <ModalDeatil />
           <div className={isLarge ? containerStyles : null}>
             <div className={isLarge ? itemStyles : null}>
               <div className={isLarge ? imgStyles : null}>
@@ -238,7 +175,6 @@ function Details() {
                       onChange={(params) => {
                         setSize(params.value);
                         setQuantity(product.amount[params.value[0].id].amount);
-                        setWasSet(true);
                       }}
                     />
                   </FormControl>
@@ -304,7 +240,7 @@ function Details() {
   return (
     <>
       <Block paddingBottom="10px" />
-      {handleLoad(renderContent(), contentLoader(), imgsDidLoad)}
+      {handleLoad(renderContent(), <Loader />, imgsDidLoad)}
     </>
   );
 }
