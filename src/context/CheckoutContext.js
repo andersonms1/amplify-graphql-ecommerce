@@ -15,7 +15,7 @@ const CheckoutContext = createContext({
   addCartItem: () => {},
   setCurrentStep: () => {},
   removeCartItem: (index) => {},
-  addCartSelection: (index, selection) => {},
+  updateCartItem: (index, selection) => {},
   getAddress: () => {},
 });
 

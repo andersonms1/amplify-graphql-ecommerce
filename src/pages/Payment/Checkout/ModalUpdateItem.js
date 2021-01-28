@@ -14,11 +14,12 @@ import { Select, TYPE } from "baseui/select";
 import { FormControl } from "baseui/form-control";
 import { Slider } from "baseui/slider";
 import { Button, KIND, SIZE as BTSIZE, SHAPE } from "baseui/button";
-import { ArrowUp, ArrowDown } from "baseui/icon";
+import { ArrowUp, ArrowDown, DeleteAlt, ChevronLeft, Check } from "baseui/icon";
 import { useHistory } from "react-router-dom";
 
 import AppContext from "../../../context/AppContext";
 import CheckoutContext from "../../../context/CheckoutContext";
+import _ from "lodash";
 
 import { PRODUCT_SELECTION_TYPES as PS_TYPES } from "../../../utils/STATUS";
 import {
@@ -33,10 +34,9 @@ function ModalSelection({ status, currentItem }) {
   let history = useHistory();
 
   const [size, setSize] = useState();
-  const [quantity, setQuantity] = useState(1);
-  const [inconsistent, setInconsistent] = useState(false); //Quantitty grater than stock
-  const [slider, setSlider] = useState([2]);
+  const [quantity, setQuantity] = useState(100);
   const [disabled, setDisabled] = useState(true);
+  const [select, setSelect] = useState([]);
   const [maxQuantity, setMaxQuantity] = useState(0);
 
   const { getById, product } = useContext(AppContext);
@@ -53,32 +53,66 @@ function ModalSelection({ status, currentItem }) {
     setModalOpen,
   } = useContext(CheckoutContext);
 
-  // useEffect(() => {
-  //   setObj(product.id, { quantity: 100, size: "G" });
-
-  //   const selection = getObj(product.id);
-
-  //   if (selection) {
-  //     setQuantity(selection.quantity);
-  //     setSize(selection.size);
-  //   }
-
-  //   console.log(quantity);
-  // }, [quantity, size, inconsistent]);
-
-  // useEffect(() => {
-  //   console.log(value);
-  // }, [value]);
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    // const _cart = getObj("cart");Already loaded from the Cart page
-
     if (handleCartLoading()) {
-      // setSize(_cart.products[currentItem].size);
-      // setQuantity(_cart.products[currentItem].quantity);
-      // console.log(_cart);
+      if (isCurrentItemValid()) {
+        setSize([
+          { label: cart.products[currentItem].selection.size, id: "0" },
+        ]);
+        setSelect(
+          cart.products[currentItem].amount.map((size, index) => {
+            return { label: size.size, id: `${index}` };
+          })
+        );
+
+        setQuantity(cart.products[currentItem].selection.quantity);
+        // setSize([
+        //   { label: cart.products[currentItem].selection.size, id: "0" },
+        // ]);
+        // setSelect(
+        //   cart.products[currentItem].amount.map((size, index) => {
+        //     return { label: size.size, id: `${index}` };
+        //   })
+        // );
+        // setQuantity(cart.products[currentItem].selection.quantity);
+      } else {
+        // setSize([{ label: cart.products[currentItem].selection.size, id: "0" }]);
+        // setSelect(
+        //   cart.products[currentItem].amount.map((size, index) => {
+        //     return { label: size.size, id: `${index}` };
+        //   })
+        // );
+        // setQuantity(cart.products[currentItem].selection.quantity);
+      }
     }
-  }, [cart]);
+
+    console.log(cart);
+    console.log(currentItem);
+  }, [cart, currentItem, modalOpen]);
+
+  useEffect(() => {
+    if (maxQuantity) {
+      if (quantity > maxQuantity) {
+        setQuantity(maxQuantity);
+      }
+      if (quantity < 1) {
+        setQuantity(1);
+      }
+    }
+  }, [quantity]);
+
+  const isCurrentItemValid = () => {
+    try {
+      if (cart.products[currentItem]) {
+        return true;
+      }
+    } catch (e) {
+      console.log("Not valid");
+      return false;
+    }
+  };
 
   const handleCartLoading = () => {
     // We need to wait until the cart state update
@@ -93,53 +127,24 @@ function ModalSelection({ status, currentItem }) {
     }
   };
 
-  const handleSelect = () => {
-    if (PS_TYPES.DETAILS === status) {
-      if (product) {
-        return product.amount.map((size, index) => {
-          return { label: size.size, id: `${index}` };
-        });
-      } else {
-        return [{ label: "Carregando...", id: "0" }];
-      }
-    } else if (PS_TYPES.CART === status) {
-      if (handleCartLoading()) {
-        return cart.products[currentItem].amount.map((size, index) => {
-          return { label: size.size, id: `${index}` };
-        });
-      } else {
-        return [{ label: "Carregando...", id: "0" }];
-      }
-    } else {
-      new Error("Produto não setado");
-      return [{ label: "Produto não setado", id: 0 }];
-    }
-  };
+  // const handleSelect = () => {
+  //   if (handleCartLoading() && isCurrentItemValid()) {
+  //     return cart.products[currentItem].amount.map((size, index) => {
+  //       return { label: size.size, id: `${index}` };
+  //     });
+  //   } else {
+  //     return [{ label: "Carregando...", id: "0" }];
+  //   }
+  // };
 
   const handleSave = () => {
-    if (PS_TYPES.DETAILS === status) {
-      addCartItem({
-        ...product,
-        selection: { size: "G", quantity: "1", inconsistency: false },
-      });
-      setModalOpen({ ...modalOpen, open: false });
-      history.push("/checkout");
-    } else if (PS_TYPES.CART === status) {
-    } else {
-      new Error("status not seted!");
-    }
+    console.log("save");
   };
 
   const handleMaxQuantity = (params) => {
-    if (PS_TYPES.DETAILS === status) {
-      setMaxQuantity(product.amount[params.value[0].id].amount);
-    } else if (PS_TYPES.CART === status) {
-      setMaxQuantity(
-        cart.products[currentItem].amount[params.value[0].id].amount
-      );
-    } else {
-      new Error("status not seted!");
-    }
+    setMaxQuantity(
+      cart.products[currentItem].amount[params.value[0].id].amount
+    );
   };
 
   const isValidSelection = () => {
@@ -166,12 +171,14 @@ function ModalSelection({ status, currentItem }) {
         <ModalBody>
           <FormControl label="Tamanho" caption="">
             <Select
-              options={handleSelect()}
+              options={select}
+              // placeholder={cart.products[currentItem].selection.size}
               clearable={false}
               searchable={false}
               value={size}
               onChange={(params) => {
                 setSize(params.value);
+                console.log(params.value);
                 handleMaxQuantity(params);
                 setDisabled(false);
               }}
@@ -187,7 +194,6 @@ function ModalSelection({ status, currentItem }) {
             }}
           >
             <Button
-              onClick={() => console.log("Clicked!")}
               startEnhancer={() => (
                 <ArrowUp onClick={() => setQuantity(quantity + 1)} />
               )}
@@ -202,31 +208,35 @@ function ModalSelection({ status, currentItem }) {
               {quantity}
             </Button>
           </FormControl>
-          {/* <FormControl
-            label="Quantidade"
-            placeholder="1"
-            caption={`Quantidade máxima ${
-              handleStateComparation() && isOpen
-                ? `${cart.products[currentItem].amount[0].amount}`
-                : ""
-            }
-              `}
-            disabled={size ? false : true}
-          >
-            <Input
-              value={quantity}
-              onChange={(e) => {
-                setQuantity(e.target.value);
-              }}
-              placeholder=""
-              clearOnEscape
-            />
-          </FormControl> */}
         </ModalBody>
 
         <ModalFooter>
           <ModalButton
-            kind={ButtonKind.tertiary}
+            endEnhancer={() => (
+              <DeleteAlt
+                // color="red"
+                onClick={() => {
+                  setModalOpen({ ...modalOpen, open: false });
+                }}
+              />
+            )}
+            kind={ButtonKind.minimal}
+            onClick={() => {
+              setModalOpen({ ...modalOpen, open: false });
+              removeCartItem(currentItem);
+            }}
+          >
+            Excluir
+          </ModalButton>
+          <ModalButton
+            endEnhancer={() => (
+              <ChevronLeft
+                onClick={() => {
+                  setModalOpen({ ...modalOpen, open: false });
+                }}
+              />
+            )}
+            kind={ButtonKind.secondary}
             onClick={() => {
               setModalOpen({ ...modalOpen, open: false });
             }}
@@ -234,7 +244,15 @@ function ModalSelection({ status, currentItem }) {
             Cancelar
           </ModalButton>
           <ModalButton
-            disabled={!isValidSelection()}
+            endEnhancer={() => (
+              <Check
+                // color="green"
+                onClick={() => {
+                  setModalOpen({ ...modalOpen, open: false });
+                }}
+              />
+            )}
+            disabled={false}
             onClick={() => {
               handleSave();
             }}

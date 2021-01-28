@@ -95,7 +95,7 @@ function ModalDetail({ status, currentItem }) {
       },
     });
     setModalOpen({ ...modalOpen, open: false });
-    history.push("/checkout");
+    // history.push("/checkout");
   };
 
   const handleMaxQuantity = (params) => {
@@ -147,9 +147,6 @@ function ModalDetail({ status, currentItem }) {
               //     return `Máximo de unidades ${maxQuantity}`;
               //   }
               // }}
-              className={css({
-                display: "inline-block",
-              })}
             >
               <Button
                 onClick={() => console.log("Clicked!")}
@@ -159,7 +156,7 @@ function ModalDetail({ status, currentItem }) {
                 endEnhancer={() => (
                   <ArrowDown onClick={() => setQuantity(quantity - 1)} />
                 )}
-                disabled={false}
+                disabled={!isValidSelection()}
                 kind={KIND.primary}
                 size={BTSIZE.default}
                 shape={SHAPE.default}

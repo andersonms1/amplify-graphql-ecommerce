@@ -18,9 +18,10 @@ const CheckoutProvider = ({ children }) => {
     });
   };
 
-  const setCart = (cart) => {
+  const setCart = () => {
     setAppContext((prevState) => {
       const newCart = getObj("cart");
+      console.log(newCart);
       return {
         ...prevState,
         cart: newCart,
@@ -73,7 +74,7 @@ const CheckoutProvider = ({ children }) => {
     });
   };
 
-  const addCartSelection = (index, selection) => {
+  const updateCartItem = (index, selection) => {
     setAppContext((prevState) => {
       prevState.cart.products[index].selection = selection;
       console.log(prevState.cart.products[index]);
@@ -116,7 +117,7 @@ const CheckoutProvider = ({ children }) => {
     address: {},
     setCart,
     addCartItem,
-    addCartSelection,
+    updateCartItem,
     removeCartItem,
     getAddress,
   };

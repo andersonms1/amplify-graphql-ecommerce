@@ -14,7 +14,7 @@ import { Select, SIZE, TYPE } from "baseui/select";
 import AppContext from "../../../context/AppContext";
 import CheckoutContext from "../../../context/CheckoutContext";
 // import ModalSelection from "../../Payment/Checkout/ModalSelection";
-import ModalDeatil from "../../Payment/Checkout/ModalDetail";
+import ModalAddItem from "../../Payment/Checkout/ModalAddItem";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
 import { handleLoad } from "../../../utils";
@@ -130,7 +130,7 @@ function Details() {
     } else {
       return (
         <>
-          <ModalDeatil />
+          <ModalAddItem />
           <div className={isLarge ? containerStyles : null}>
             <div className={isLarge ? itemStyles : null}>
               <div className={isLarge ? imgStyles : null}>

@@ -54,6 +54,7 @@ https://www.javascriptstuff.com/detect-image-load/
 ☐ Bug on publish product modal
 ☐ Description is incorrect checking gramar
 ☐ On product detail, on click to see description is the description sizes grow and pushes the img to the left
+☐ After deleted all product from cart is still show next button
 after show case
 ☐ Payment api
 ☐ Tests
