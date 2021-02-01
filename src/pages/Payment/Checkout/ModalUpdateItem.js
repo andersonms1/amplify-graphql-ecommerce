@@ -9,10 +9,8 @@ import {
   ROLE,
 } from "baseui/modal";
 import { KIND as ButtonKind } from "baseui/button";
-import { Input, ADJOINED } from "baseui/input";
 import { Select, TYPE } from "baseui/select";
 import { FormControl } from "baseui/form-control";
-import { Slider } from "baseui/slider";
 import { Button, KIND, SIZE as BTSIZE, SHAPE } from "baseui/button";
 import { ArrowUp, ArrowDown, DeleteAlt, ChevronLeft, Check } from "baseui/icon";
 import { useHistory } from "react-router-dom";
@@ -20,15 +18,6 @@ import { useHistory } from "react-router-dom";
 import AppContext from "../../../context/AppContext";
 import CheckoutContext from "../../../context/CheckoutContext";
 import _ from "lodash";
-
-import { PRODUCT_SELECTION_TYPES as PS_TYPES } from "../../../utils/STATUS";
-import {
-  getItem,
-  setItem,
-  getObj,
-  setObj,
-  removeAny,
-} from "../../../utils/localStorage";
 
 function ModalSelection({ status, currentItem }) {
   let history = useHistory();
@@ -53,8 +42,6 @@ function ModalSelection({ status, currentItem }) {
     setModalOpen,
   } = useContext(CheckoutContext);
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     if (handleCartLoading()) {
       if (isCurrentItemValid()) {
@@ -68,28 +55,8 @@ function ModalSelection({ status, currentItem }) {
         );
 
         setQuantity(cart.products[currentItem].selection.quantity);
-        // setSize([
-        //   { label: cart.products[currentItem].selection.size, id: "0" },
-        // ]);
-        // setSelect(
-        //   cart.products[currentItem].amount.map((size, index) => {
-        //     return { label: size.size, id: `${index}` };
-        //   })
-        // );
-        // setQuantity(cart.products[currentItem].selection.quantity);
-      } else {
-        // setSize([{ label: cart.products[currentItem].selection.size, id: "0" }]);
-        // setSelect(
-        //   cart.products[currentItem].amount.map((size, index) => {
-        //     return { label: size.size, id: `${index}` };
-        //   })
-        // );
-        // setQuantity(cart.products[currentItem].selection.quantity);
       }
     }
-
-    console.log(cart);
-    console.log(currentItem);
   }, [cart, currentItem, modalOpen]);
 
   useEffect(() => {
@@ -126,16 +93,6 @@ function ModalSelection({ status, currentItem }) {
       return false;
     }
   };
-
-  // const handleSelect = () => {
-  //   if (handleCartLoading() && isCurrentItemValid()) {
-  //     return cart.products[currentItem].amount.map((size, index) => {
-  //       return { label: size.size, id: `${index}` };
-  //     });
-  //   } else {
-  //     return [{ label: "Carregando...", id: "0" }];
-  //   }
-  // };
 
   const handleSave = () => {
     console.log("save");

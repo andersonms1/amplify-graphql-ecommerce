@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ProgressSteps, NumberedStep } from "baseui/progress-steps";
 import { Grid, Cell, ALIGNMENT } from "baseui/layout-grid";
 
@@ -7,6 +7,7 @@ import Cart from "./Cart";
 import Address from "./Address";
 import Pay from "./Pay";
 import Payment from "./Payment";
+
 import { useStyletron } from "baseui";
 function Checkout() {
   const { current, setCurrentStep } = useContext(AppContext);

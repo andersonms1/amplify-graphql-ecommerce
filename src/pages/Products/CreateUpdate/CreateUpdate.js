@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
@@ -14,6 +14,9 @@ import Title from "./Title";
 import Price from "./Price";
 import Inventory from "./Inventory";
 
+import { currentProductPage } from "../../../context/types";
+import { getItem } from "../../../utils/localStorage";
+
 // import Storage from "@aws-amplify/storage";
 // import API, { graphqlOperation } from "@aws-amplify/api";
 // import { createProduct } from "../../graphql/mutations";
@@ -23,7 +26,7 @@ const CreateUpdate = (props) => {
 
   const [modalConfirm, setModalConfirm] = useState(false);
 
-  const context = useContext(AppContext);
+  const { setCurrentStep, current } = useContext(AppContext);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${theme.breakpoints.large}px)`,
@@ -33,9 +36,18 @@ const CreateUpdate = (props) => {
     width: "100%",
   });
 
+  useEffect(() => {
+    const _currentProductPage = parseInt(getItem(currentProductPage));
+    console.log(_currentProductPage);
+    if (_currentProductPage) {
+      setCurrentStep(_currentProductPage);
+    }
+    // setCurrentStep(1);
+  }, []);
+
   return (
     <div>
-      <ProgressSteps current={context.current}>
+      <ProgressSteps current={current}>
         <NumberedStep title="Enviar fotos">
           <FileUpload />
         </NumberedStep>

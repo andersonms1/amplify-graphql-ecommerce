@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Auth from "@aws-amplify/auth";
 import Storage from "@aws-amplify/storage";
 import API, { graphql, graphqlOperation } from "@aws-amplify/api";
+import { items as tp_items, currentProductPage } from "./types";
 import {
   listProducts,
   getProduct,
@@ -16,6 +17,7 @@ import config from "../aws-exports";
 
 import AppContext from "./AppContext";
 import { subCategorys } from "../utils/CATEGORYSUBCATEGORYS";
+import { setObj, setItem, removeAny } from "../utils/localStorage";
 
 const {
   aws_user_files_s3_bucket_region: region,
@@ -24,19 +26,21 @@ const {
 
 const AppProvider = ({ children }) => {
   useEffect(() => {
-    async function getUser() {
-      try {
-        const user = await Auth.currentAuthenticatedUser();
-        console.log(user);
-      } catch (error) {
-        Error(error);
-        console.log("error: ", error);
-      }
-    }
-    getUser();
+    // async function getUser() {
+    //   try {
+    //     const user = await Auth.currentAuthenticatedUser();
+    //     console.log(user);
+    //   } catch (error) {
+    //     Error(error);
+    //     console.log("error: ", error);
+    //   }
+    // }
+    // getUser();
+    // removeAny(currentProductPage);
   }, []);
 
   const updateItems = (items) => {
+    setObj(tp_items, items);
     setAppContext((prevState) => {
       return {
         ...prevState,
@@ -132,6 +136,7 @@ const AppProvider = ({ children }) => {
 
   const setCurrentStep = (goTo) => {
     setAppContext((prevState) => {
+      setItem(currentProductPage, goTo);
       return {
         ...prevState,
         current: goTo,
@@ -168,8 +173,7 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const post = async (items) => {
-    const { files } = items;
+  const uploadPhotos = async (files) => {
     let photos = [];
     if (files) {
       const promises = await files.map(async (file, index) => {
@@ -177,10 +181,10 @@ const AppProvider = ({ children }) => {
         const name = file.name.split(".")[0];
         const key = `images/${uuidv4()}${name}.${extension}`;
 
-        console.log(`%c ${file}`, "color: red; font-weight: bold");
-        console.table(file);
-        console.log(name);
-        console.log(key);
+        // console.log(`%c ${file}`, "color: red; font-weight: bold");
+        // console.table(file);
+        // console.log(name);
+        // console.log(key);
 
         await Storage.put(
           key,
@@ -198,29 +202,44 @@ const AppProvider = ({ children }) => {
 
       await Promise.all(promises);
 
-      const { title, description, price, category, subCategory } = items;
+      updateItems({ photos, files });
 
-      try {
-        const res = await API.graphql(
-          graphqlOperation(createProduct, {
-            input: {
-              title,
-              description,
-              price,
-              category,
-              subCategory,
-              sold: 0,
-              amount: items.inventory,
-              brand: "",
-              avaliation: 5,
-              photos,
-            },
-          })
-        );
-        return res;
-      } catch (e) {
-        return new Error(e);
-      }
+      return;
+    }
+  };
+
+  const post = async (items) => {
+    const {
+      title,
+      description,
+      price,
+      category,
+      subCategory,
+      photos,
+      inventory: amount,
+    } = items;
+
+    try {
+      const res = await API.graphql(
+        graphqlOperation(createProduct, {
+          input: {
+            title,
+            description,
+            price,
+            category,
+            subCategory,
+            sold: 0,
+            amount,
+            brand: "Default",
+            avaliation: 5,
+            photos,
+          },
+        })
+      );
+      return res;
+    } catch (e) {
+      console.log(e);
+      return e;
     }
   };
 
@@ -237,6 +256,7 @@ const AppProvider = ({ children }) => {
     post,
     setCurrentStep,
     setPage,
+    uploadPhotos,
   };
 
   const [appContext, setAppContext] = useState(appState);

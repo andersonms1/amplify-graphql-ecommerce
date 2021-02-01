@@ -10,6 +10,8 @@ import _ from "lodash";
 import { HandleErrors } from "../../../components";
 
 import AppContext from "../../../context/AppContext";
+import { items as tp_items } from "../../../context/types";
+import { getObj } from "../../../utils/localStorage";
 
 function FileUpload({ children }) {
   const [css, theme] = useStyletron();
@@ -20,15 +22,19 @@ function FileUpload({ children }) {
   const [error, setError] = useState(false);
   const [files, setFiles] = useState([]);
 
-  const { items, updateItems, setCurrentStep, post } = useContext(AppContext);
+  const {
+    setCurrentStep,
+    uploadPhotos,
+    updateItems,
+    current,
+    items,
+  } = useContext(AppContext);
 
   useEffect(() => {
-    items.files && setFiles(items.files);
-  }, []);
+    const init = getObj(tp_items);
 
-  // useEffect(() => {
-  //   post(items);
-  // }, [items]);
+    updateItems(init);
+  }, [current]);
 
   return (
     <>
@@ -37,13 +43,16 @@ function FileUpload({ children }) {
         {files && (
           <List
             items={files.map((item, index) => {
-              return item.name;
+              if (item.name.length < 30) {
+                return item.name;
+              } else {
+                return item.name.slice(0, 19);
+              }
             })}
             removable
-            removableByMove
+            // removableByMove
             onChange={({ oldIndex, newIndex }) => {
               setPosition(position + 1);
-              console.log(newIndex);
 
               setFiles(
                 newIndex === -1
@@ -73,25 +82,6 @@ function FileUpload({ children }) {
         name={null}
         accept="image/*"
         onDrop={(acceptedFiles, rejectedFiles) => {
-          const aFiles = acceptedFiles.filter(
-            /* f.position = index;
-            not need to set position
-            by some witchcraft is set automatic */
-            (f) => {
-              if (f.name.length < 30) {
-                setError(false);
-                return true;
-              } else {
-                setErrorMsg(`${f.name.slice(0, 19)}...`);
-                setErrorDescription(
-                  "Arquivo com nome muito grande. Máximo aceito é de 30 caracteres"
-                );
-                setError(true);
-                return false;
-              }
-            }
-          );
-
           if (rejectedFiles.length) {
             setErrorDescription("Apenas fotos são aceitas.");
             setErrorMsg(`${rejectedFiles[0]["path"].slice(0, 19)}...`);
@@ -99,9 +89,9 @@ function FileUpload({ children }) {
           }
 
           if (files.length) {
-            setFiles(_.union(files, aFiles));
+            setFiles(_.union(files, acceptedFiles));
           } else {
-            setFiles(aFiles);
+            setFiles(acceptedFiles);
           }
           try {
           } catch (e) {
@@ -109,13 +99,13 @@ function FileUpload({ children }) {
           }
         }}
       />
-      {files.length ? (
+      {files.length || items?.photos?.length ? (
         <Block paddingTop="50px">
           <Button
             kind={KIND.primary}
             size="compact"
             onClick={() => {
-              updateItems({ files });
+              uploadPhotos(files);
               setCurrentStep(1);
             }}
           >

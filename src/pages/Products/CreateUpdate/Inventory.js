@@ -7,8 +7,12 @@ import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
 
 import { ListItem, ListItemLabel } from "baseui/list";
+import { List, arrayMove, arrayRemove } from "baseui/dnd-list";
+
 import Delete from "baseui/icon/delete";
 import AppContext from "../../../context/AppContext";
+import { items as tp_items } from "../../../context/types";
+import { getObj } from "../../../utils/localStorage";
 import {
   formDescription as SCHEMA,
   category as CATEGORY,
@@ -24,10 +28,34 @@ function Inventory({ children }) {
   // }, []);
 
   const [css] = useStyletron();
-  const { setCurrentStep, items, updateItems } = useContext(AppContext);
+  const { setCurrentStep, items, updateItems, current } = useContext(
+    AppContext
+  );
 
   const [inventory, setInventory] = useState([]);
   const [amount, setAmount] = useState({});
+
+  useEffect(() => {
+    const init = getObj(tp_items);
+    console.log(init);
+    console.log(items);
+    updateItems(init);
+    init.inventory && setInventory(init.inventory);
+    // init.description && setDescription(init.description);
+  }, [current]);
+
+  useEffect(() => {
+    console.log(inventory);
+  }, [inventory]);
+
+  useEffect(() => {
+    console.log(amount);
+  }, [amount]);
+
+  const handleSave = () => {
+    setInventory([...inventory, amount]);
+    setAmount({});
+  };
 
   const renderInventory = () => {
     const renderListItems = () => {
@@ -63,20 +91,23 @@ function Inventory({ children }) {
     );
   };
 
-  useEffect(() => {
-    console.log("title");
-    console.log(items);
-  }, []);
-
-  const handleSave = () => {
-    setInventory([...inventory, amount]);
-    setAmount({});
-  };
-
   return (
     <>
-      {inventory.length ? renderInventory() : null}
-      {/* {renderInventory()} */}
+      {inventory.length ? (
+        <List
+          removable
+          items={inventory.map((i) => {
+            return `Tamanho: ${i.size}, Quant.: ${i.amount}`;
+          })}
+          onChange={({ oldIndex, newIndex }) =>
+            setInventory(
+              newIndex === -1
+                ? arrayRemove(inventory, oldIndex)
+                : arrayMove(inventory, oldIndex, newIndex)
+            )
+          }
+        />
+      ) : null}
       <FormControl label="Tamanho" caption="">
         <Input
           value={amount.size ? amount.size : ""}
@@ -90,20 +121,28 @@ function Inventory({ children }) {
         <Input
           value={amount.amount ? amount.amount : ""}
           onChange={(e) => {
-            setAmount({ ...amount, amount: e.target.value });
+            setAmount({ ...amount, amount: parseInt(e.target.value) });
             console.log(amount);
           }}
         />
       </FormControl>
-      <Button kind={KIND.primary} size="compact" onClick={() => handleSave()}>
-        Salvar
+      <Button
+        kind={KIND.primary}
+        disabled={!amount.size || !Number.isInteger(parseInt(amount.amount))}
+        size="compact"
+        onClick={() => handleSave()}
+      >
+        Adicionar
       </Button>
 
       <Block paddingTop="50px" />
       <Button
         kind={KIND.secondary}
         size="compact"
-        onClick={() => setCurrentStep(1)}
+        onClick={() => {
+          updateItems({ ...items, inventory });
+          setCurrentStep(1);
+        }}
       >
         Anterior
       </Button>

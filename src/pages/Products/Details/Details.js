@@ -8,18 +8,16 @@ import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a lo
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
 import { Tag } from "baseui/tag";
-import ChevronDown from "baseui/icon/chevron-down";
 import { Select, SIZE, TYPE } from "baseui/select";
 
 import AppContext from "../../../context/AppContext";
 import CheckoutContext from "../../../context/CheckoutContext";
-// import ModalSelection from "../../Payment/Checkout/ModalSelection";
+import { ResponsiveProperty } from "../../../mediaQueries/mediaQueries";
 import ModalAddItem from "../../Payment/Checkout/ModalAddItem";
 import { Accordion, Panel } from "baseui/accordion";
 import { useMediaQuery } from "react-responsive";
 import { handleLoad } from "../../../utils";
 import { setObj, getObj } from "../../../utils/localStorage";
-import { PRODUCT_SELECTION_TYPES as STATUS } from "../../../utils/STATUS";
 import { FormControl } from "baseui/form-control";
 import { useStyles } from "./useStyles";
 import Loader from "./Loader";
@@ -92,6 +90,7 @@ function Details() {
               alt="Foto do produto"
               /* The carousel and baseui don't "talk", very well. 
               So the photos were appearing first.  */
+              width="100%"
               style={
                 image.loaded && imgsDidLoad
                   ? { display: "inline" }
@@ -106,16 +105,6 @@ function Details() {
                 }
               }}
             />
-            <div className="legend">
-              <i
-                onClick={() => handleBuy()}
-                height="10px"
-                className="material-icons"
-                style={{ paddingRight: "5px" }}
-              >
-                shopping_cart
-              </i>
-            </div>
           </div>
         );
       });
@@ -171,7 +160,7 @@ function Details() {
                       value={size}
                       searchable={false}
                       type={TYPE.select}
-                      placeholder="Tamanho"
+                      placeholder="TAMANHO"
                       onChange={(params) => {
                         setSize(params.value);
                         setQuantity(product.amount[params.value[0].id].amount);
@@ -181,19 +170,16 @@ function Details() {
                 )}
               </div>
 
-              <Accordion className={css({ maxWidth: "100%" })}>
+              <Accordion className={css({})}>
                 <Panel
                   title="DESCRIÇÃO"
+                  // expanded="true"
                   overrides={{
-                    Root: {
-                      style: { maxWidth: "100%" },
-                    },
-                    Header: {
-                      style: {
-                        paddingLeft: "0px",
-                        paddingRight: "0px",
-                        marginBottom: "10px",
-                      },
+                    PanelContainer: {
+                      style: ({ $theme }) => ({
+                        // width: ResponsiveProperty(["100%", "100%", "30vw"]),
+                        width: "30vw",
+                      }),
                     },
                   }}
                 >
@@ -226,7 +212,7 @@ function Details() {
                   </i>
                 )}
                 kind={KIND.primary}
-                className={css({ width: "100%" })}
+                className={css({ marginTop: "10px", width: "100%" })}
               >
                 Comprar
               </Button>

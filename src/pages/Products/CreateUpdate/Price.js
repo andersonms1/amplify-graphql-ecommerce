@@ -24,15 +24,15 @@ import {
 } from "./validations";
 import { CATEGORYS, SUBCATEGORYS } from "../../../utils/CATEGORYSUBCATEGORYS";
 import { Select, SIZE as SSIZE, TYPE } from "baseui/select";
-
+import { getObj, removeAny } from "../../../utils/localStorage";
+import { items as tp_items, currentProductPage } from "../../../context/types";
+import { useHistory } from "react-router-dom";
+import { H2, H4 } from "baseui/typography";
 function Price() {
-  useEffect(() => {
-    console.log("pricec");
-    console.log(items);
-  }, []);
-
   const [css, theme] = useStyletron();
-  const { setCurrentStep, items, updateItems, post } = useContext(AppContext);
+  const { setCurrentStep, items, updateItems, post, current } = useContext(
+    AppContext
+  );
 
   const [category, setCategory] = useState("");
   const [categoryCaption, setCategoryCaption] = useState("");
@@ -42,11 +42,21 @@ function Price() {
   const [price, setPrice] = useState("");
   const [priceCaption, setPriceCaption] = useState("");
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [confirmModal, setConfirmModal] = useState(false);
+  const [loadModal, setLoadModal] = useState(false);
   const [spinner, setSpinner] = useState(false);
-  const [message, setMessage] = useState(
-    "Deseja finalizar a edição e enviar o produto?"
-  );
+
+  const [isPostSuccessed, setIsPostSuccessed] = useState(false);
+  let history = useHistory();
+  useEffect(() => {
+    const init = getObj(tp_items);
+    console.log(init);
+    console.log(items);
+    updateItems(init);
+    init.price && setPrice(init.price);
+
+    console.log(items);
+  }, [current]);
 
   const handleNext = () => {
     let error = false;
@@ -93,16 +103,23 @@ function Price() {
         category: category[0].label,
         subCategory: subCategory[0].label,
       });
-      setIsOpen(true);
+      setConfirmModal(true);
     }
   };
 
-  const handlePost = () => {
+  const handlePost = async () => {
     setSpinner(true);
-    const res = post(items);
-    console.log(res);
-    setMessage("O seu produto foi enviado");
+    setLoadModal(true);
+    const res = await Promise.resolve(post(items));
+
+    if (res?.data?.createProduct === null) {
+      setIsPostSuccessed(false);
+    } else {
+      setIsPostSuccessed(true);
+    }
+    console.log(res.data);
     setSpinner(false);
+    console.log(res.data);
   };
 
   return (
@@ -121,7 +138,10 @@ function Price() {
           required
           type={TYPE.select}
           placeholder="Selecione categoria"
-          onChange={(params) => setCategory(params.value)}
+          onChange={(params) => {
+            setCategory(params.value);
+            console.log(params);
+          }}
         />
       </FormControl>
 
@@ -160,7 +180,9 @@ function Price() {
       <Button
         kind={KIND.secondary}
         size="compact"
-        onClick={() => setCurrentStep(1)}
+        onClick={() => {
+          setCurrentStep(2);
+        }}
       >
         Anterior
       </Button>
@@ -170,9 +192,9 @@ function Price() {
       </Button>
 
       <Modal
-        onClose={() => setIsOpen(false)}
+        onClose={() => setConfirmModal(false)}
         closeable
-        isOpen={isOpen}
+        isOpen={confirmModal}
         animate
         autoFocus
         size={SIZE.default}
@@ -180,15 +202,56 @@ function Price() {
         unstable_ModalBackdropScroll
       >
         <ModalHeader>Confirmar publicação de produto</ModalHeader>
-        <ModalBody>{spinner ? <StyledSpinnerNext /> : null}</ModalBody>
+        <ModalBody>Deseja finalizar a edição e enviar o produto?</ModalBody>
         <ModalFooter>
           <ModalButton
             kind={ButtonKind.tertiary}
-            onClick={() => setIsOpen(false)}
+            onClick={() => setConfirmModal(false)}
           >
             Cancelar
           </ModalButton>
-          <ModalButton onClick={() => handlePost()}>Sim</ModalButton>
+          <ModalButton
+            onClick={() => {
+              handlePost();
+              setConfirmModal(false);
+            }}
+          >
+            Sim
+          </ModalButton>
+        </ModalFooter>
+      </Modal>
+
+      <Modal
+        onClose={() => setLoadModal(false)}
+        closeable
+        isOpen={loadModal}
+        animate
+        autoFocus
+        size={SIZE.default}
+        role={ROLE.dialog}
+        unstable_ModalBackdropScroll
+      >
+        <ModalHeader>Enviando produto</ModalHeader>
+        <ModalBody>
+          {spinner ? (
+            <StyledSpinnerNext />
+          ) : isPostSuccessed ? (
+            <H4>O seu producto foi publicado!</H4>
+          ) : (
+            <H4>ERRO: O seu produto não foi publicado</H4>
+          )}
+        </ModalBody>
+        <ModalFooter>
+          <ModalButton
+            onClick={() => {
+              setLoadModal(false);
+              removeAny(tp_items);
+              removeAny(currentProductPage);
+              history.push("/");
+            }}
+          >
+            OK
+          </ModalButton>
         </ModalFooter>
       </Modal>
     </>

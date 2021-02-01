@@ -7,12 +7,16 @@ const CALCADOS = "CALÇADOS";
 const CAMISAS_CAMISETAS = "CAMISAS E CAMISETAS";
 const CALCAS = "CALÇAS";
 const SHORT_BEMUDAS = "SHORT E BEMUDAS";
+const PRAIA = "PRAIA";
+const ACADEMIA = "ACADEMIA";
 
 const subCategorys = {
+  ACADEMIA,
   ACESSORIOS,
   CALCADOS,
   CAMISAS_CAMISETAS,
   CALCAS,
+  PRAIA,
   SHORT_BEMUDAS,
 };
 
@@ -24,6 +28,7 @@ const CATEGORYS = [
 
 const SUBCATEGORYS = [
   { id: 1, categorys: [FEMININO, MASCULINO, INFANTIL], label: ACESSORIOS },
+  { id: 6, categorys: [FEMININO, MASCULINO], label: ACADEMIA },
   { id: 2, categorys: [FEMININO, MASCULINO, INFANTIL], label: CALCADOS },
   {
     id: 3,
@@ -31,6 +36,7 @@ const SUBCATEGORYS = [
     label: CAMISAS_CAMISETAS,
   },
   { id: 4, categorys: [FEMININO, MASCULINO, INFANTIL], label: CALCAS },
+  { id: 7, categorys: [FEMININO, MASCULINO, INFANTIL], label: PRAIA },
   { id: 5, categorys: [FEMININO, MASCULINO, INFANTIL], label: SHORT_BEMUDAS },
 ];
 

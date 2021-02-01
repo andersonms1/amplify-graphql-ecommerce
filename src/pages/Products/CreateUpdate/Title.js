@@ -12,12 +12,17 @@ import {
   description as DESCRIPTION,
 } from "./validations";
 
+import { getObj, setObj } from "../../../utils/localStorage";
+import { items as tp_items } from "../../../context/types";
+
 import { HandleErrors } from "../../../components";
 
 import AppContext from "../../../context/AppContext";
 
 function Title({ children }) {
-  const { setCurrentStep, items, updateItems } = useContext(AppContext);
+  const { setCurrentStep, items, updateItems, current } = useContext(
+    AppContext
+  );
 
   const [error, setError] = useState(false);
   const [errorDescription, setErrorDescription] = useState("");
@@ -27,6 +32,15 @@ function Title({ children }) {
   const [categoryCaption, setCategoryCaption] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    const init = getObj(tp_items);
+    console.log(init);
+    console.log(items);
+    updateItems(init);
+    init?.title && setTitle(init.title);
+    init?.description && setDescription(init.description);
+  }, [current]);
 
   const handleNext = () => {
     const validator = SCHEMA.validate(
@@ -47,18 +61,14 @@ function Title({ children }) {
     }
   };
 
-  useEffect(() => {
-    console.log("title");
-    console.log(items);
-  }, []);
-
   return (
     <>
       {HandleErrors(error, errorDescription, errorMsg)}
       <FormControl label="Título" caption={`${titleCaption}`}>
         <Input
           id="input"
-          value={items.title ? items.title : title}
+          value={title}
+          // value={items.title ? items.title : title}
           onChange={(e) => {
             const _title = `${e.target.value}`.toUpperCase();
             setTitle(_title);
@@ -80,9 +90,10 @@ function Title({ children }) {
       <FormControl label="Descrição" caption={`${descriptionCaption}`}>
         <Textarea
           id="textarea-id"
-          value={items.description ? items.description : description}
+          value={description}
+          // value={items.description ? items.description : description}
           onChange={(e) => {
-            const _description = `${e.target.value}`.toUpperCase();
+            const _description = `${e.target.value}`;
             setDescription(_description);
             const { error } = DESCRIPTION.validate(
               { description: _description },
@@ -101,7 +112,10 @@ function Title({ children }) {
       <Button
         kind={KIND.secondary}
         size="compact"
-        onClick={() => setCurrentStep(0)}
+        onClick={() => {
+          setCurrentStep(0);
+          updateItems({ ...items, title, description });
+        }}
       >
         Anterior
       </Button>

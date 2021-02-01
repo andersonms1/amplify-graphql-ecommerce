@@ -53,7 +53,7 @@ export const useStyles = () => {
       height: "auto",
     }),
     imgStyles: css({
-      width: "30vw",
+      width: "40vw",
       height: "auto",
     }),
   };

@@ -15,6 +15,7 @@ const AppContext = createContext({
   setPage: () => {},
   setLoading: () => {},
   updateItems: () => {},
+  uploadPhotos: () => {},
 });
 
 export default AppContext;
