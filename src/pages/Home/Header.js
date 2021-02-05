@@ -10,15 +10,30 @@ import {
 import { ListItem, ListItemLabel, ARTWORK_SIZES } from "baseui/list";
 import { Check } from "baseui/icon";
 import { ChevronRight } from "baseui/icon";
+import Cart from "../../pages/Payment/Checkout/Cart";
+import { ChevronLeft } from "baseui/icon";
 
 import { Avatar } from "baseui/avatar";
 import { Link } from "react-router-dom";
 import { StyledLink } from "baseui/link";
 import { StatefulMenu } from "baseui/menu";
 import Menu from "baseui/icon/menu";
+// import {
+//   Bag,
+//   User,
+//   ShoppingBag,
+//   ShoppingBagOpen,
+//   ShoppingCart,
+//   Info,
+//   Hamburguer,
+// } from "../../assets/icons/";
+
+import { ShoppingBagOpen, List } from "phosphor-react";
+
 import { Drawer } from "baseui/drawer";
 import { Block } from "baseui/block";
-import { H4, H5, H6, Paragraph2 } from "baseui/typography";
+import { Display4, H2, H4, H5, H6, Paragraph2 } from "baseui/typography";
+import { Button, KIND, SIZE, SHAPE } from "baseui/button";
 
 import { linkProps, StyledIcon } from "./index";
 
@@ -28,6 +43,8 @@ function Header() {
   const [css, theme] = useStyletron();
   const [debug, setDebugger] = useState(false);
   const [drawer, setDrawer] = useState(false);
+  const [drawerMenu, setDrawerMenu] = useState(false);
+  const [drawerCart, setDrawerCart] = useState(false);
 
   const drawerStyles = css({
     display: "flex",
@@ -88,61 +105,78 @@ function Header() {
     );
   };
 
-  const renderDrawerContent = () => {
+  const renderDrawerCart = () => {
     return (
       <div>
-        <H5>Olá, Anderson</H5>
-        {/* <Link to="/checkout" className={drawerItemStyles}>
-          <DrawerItem text="Carrinho" icon="shopping_cart" />
-        </Link>
-        <Link to="/user" className={drawerItemStyles}>
-          <DrawerItem text="Meu perfil" icon="face" />
-        </Link>
-
-        <Link to="/admin" className={drawerItemStyles}>
-          <DrawerItem text="Administrativo" icon="dashboard" />
-        </Link>
-
-        <Link to="/history" className={drawerItemStyles}>
-          <DrawerItem text="Histórico de compras" icon="history" />
-        </Link>
-
-        <Link to="/" className={drawerItemStyles}>
-          <DrawerItem text="Home" icon="home" />
-        </Link> */}
-
-        <ul
-          className={css({
-            paddingLeft: 0,
-            paddingRight: 0,
-          })}
+        <Drawer
+          isOpen={drawerCart}
+          onClose={() => setDrawerCart(false)}
+          size={SIZE.default}
+          // anchor={ANCHOR.default}
         >
-          <ListItem sublist>
-            <ListItemLabel sublist>Label One</ListItemLabel>
-          </ListItem>
-          <ListItem
-            artwork={(props) => <Check {...props} />}
-            artworkSize={ARTWORK_SIZES.SMALL}
-            endEnhancer={() => <ListItemLabel>End Enhancer</ListItemLabel>}
-            sublist
-          >
-            <ListItemLabel>Label</ListItemLabel>
-          </ListItem>
+          <H4>Finalizar compras?</H4>
 
-          <ListItem
-            artwork={() => {
-              return (
-                <i className="material-icons">
-                  <StyledIcon theme={theme}>shopping_cart</StyledIcon>
-                </i>
-              );
-            }}
-            endEnhancer={() => <ChevronRight />}
-            sublist
+          <Button
+            onClick={() => setDrawerCart(false)}
+            startEnhancer={() => <ChevronLeft />}
+            endEnhancer={undefined}
+            disabled
+            kind={KIND.primary}
+            size={SIZE.default}
+            shape={SHAPE.default}
           >
-            <ListItemLabel sublist>Label Three</ListItemLabel>
-          </ListItem>
-        </ul>
+            Não
+          </Button>
+          <Cart />
+        </Drawer>
+      </div>
+    );
+  };
+
+  const renderDrawerMenu = () => {
+    return (
+      <div>
+        <Drawer
+          isOpen={drawerMenu}
+          onClose={() => setDrawerMenu(false)}
+          size={SIZE.default}
+          // anchor={ANCHOR.default}
+        >
+          <H5>Olá, Anderson</H5>
+
+          <ul
+            className={css({
+              paddingLeft: 0,
+              paddingRight: 0,
+            })}
+          >
+            <ListItem sublist>
+              <ListItemLabel sublist>Label One</ListItemLabel>
+            </ListItem>
+            <ListItem
+              artwork={(props) => <Check {...props} />}
+              artworkSize={ARTWORK_SIZES.SMALL}
+              endEnhancer={() => <ListItemLabel>End Enhancer</ListItemLabel>}
+              sublist
+            >
+              <ListItemLabel>Label</ListItemLabel>
+            </ListItem>
+
+            <ListItem
+              artwork={() => {
+                return (
+                  <i className="material-icons">
+                    <StyledIcon theme={theme}>shopping_cart</StyledIcon>
+                  </i>
+                );
+              }}
+              endEnhancer={() => <ChevronRight />}
+              sublist
+            >
+              <ListItemLabel sublist>Label Three</ListItemLabel>
+            </ListItem>
+          </ul>
+        </Drawer>
       </div>
     );
   };
@@ -153,21 +187,31 @@ function Header() {
         <Small>
           <HeaderNavigation>
             <NavigationList $align={ALIGN.left}>
-              <NavigationItem>E-commerce</NavigationItem>
+              <NavigationItem>E</NavigationItem>
             </NavigationList>
-            <NavigationList $align={ALIGN.center}></NavigationList>
-
+            <NavigationList $align={ALIGN.center}>
+              <Button
+                onClick={() => setDrawerMenu(true)}
+                kind={KIND.secondary}
+                size={SIZE.mini}
+                shape={SHAPE.default}
+              >
+                <List size={22} />
+              </Button>
+              {drawerMenu && renderDrawerMenu()}
+            </NavigationList>
             <NavigationList $align={ALIGN.right}>
-              <Menu onClick={() => setDrawer(true)} />
-              {drawer && (
-                <Drawer
-                  isOpen={drawer}
-                  autoFocus={false}
-                  onClose={() => setDrawer(false)}
-                >
-                  {renderDrawerContent()}
-                </Drawer>
-              )}
+              <Button
+                onClick={() => setDrawerCart(true)}
+                startEnhancer={undefined}
+                endEnhancer={undefined}
+                kind={KIND.primary}
+                size={SIZE.mini}
+                shape={SHAPE.circle}
+              >
+                <ShoppingBagOpen size={22} />
+                {drawerCart && renderDrawerCart()}
+              </Button>
             </NavigationList>
           </HeaderNavigation>
         </Small>
