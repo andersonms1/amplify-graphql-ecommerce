@@ -5,6 +5,10 @@ const HeaderContext = createContext({
   setIsDrwCart: () => {},
   isDrwMenu: false,
   setIsDrwMenu: () => {},
+  isDrwOptions: false,
+  setIsDrwOptions: () => {},
+  querie: {},
+  setQuerie: () => {},
 });
 
 export default HeaderContext;

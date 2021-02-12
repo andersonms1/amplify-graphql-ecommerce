@@ -19,7 +19,6 @@ import {
   SUBCATEGORYS,
 } from "../../utils/CATEGORYSUBCATEGORYS";
 import { Tag, KIND, VARIANT, SIZE } from "baseui/tag";
-import Options from "./Options";
 import {
   ResponsiveProperty,
   MediaQuerie,

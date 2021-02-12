@@ -3,7 +3,14 @@ import { useStyletron } from "baseui";
 import { Button, KIND } from "baseui/button";
 import { Block } from "baseui/block";
 import { useParams } from "react-router-dom";
-import { Paragraph1, Display4, H4 } from "baseui/typography";
+import {
+  Paragraph1,
+  Display4,
+  H4,
+  LabelMedium,
+  H2,
+  LabelLarge,
+} from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
 import _ from "lodash";
@@ -29,6 +36,7 @@ function Details() {
     itemStyles,
     detailsContainerStyes,
     imgStyles,
+    sizeShow,
   } = useStyles();
 
   const { breakpoints } = theme;
@@ -60,14 +68,14 @@ function Details() {
     autoPlay: true,
     infiniteLoop: true,
     swipeable: true,
-    showThumbs: false,
-    showIndicators: true,
+    showThumbs: true,
+    showIndicators: false,
     showStatus: false,
+    dynamicHeight: true,
     // interval: 3000,
     // showArrows: boolean('showArrows', true, tooglesGroupId),
     // useKeyboardArrows: boolean('useKeyboardArrows', true, tooglesGroupId),
     // stopOnHover: boolean('stopOnHover', true, tooglesGroupId),
-    // dynamicHeight: boolean('dynamicHeight', true, tooglesGroupId),
     // emulateTouch: boolean('emulateTouch', true, tooglesGroupId),
     // thumbWidth: number('thumbWidth', 100, {}, valuesGroupId),
     // selectedItem: number('selectedItem', 0, {}, valuesGroupId),
@@ -78,6 +86,12 @@ function Details() {
   const handleBuy = () => {
     setModalOpen({ ...modalOpen, open: true });
   };
+
+  const accordionWidth = ResponsiveProperty(
+    ["100%", "100%", "30vw"],
+    breakpoints.large - 136,
+    500
+  );
 
   const iterateImages = () => {
     if (product) {
@@ -131,54 +145,88 @@ function Details() {
 
             <div className={isLarge ? itemStyles : null}>
               <div className={isLarge ? detailsContainerStyes : null}>
-                <Display4 marginBottom="scale500">{product.title}</Display4>
-                <H4 marginBottom="scale500">R${product.price}</H4>
-
+                <H2 marginBottom="scale500">{product.title}</H2>
+                <LabelLarge marginBottom="scale500">
+                  R$ {product.price}
+                </LabelLarge>
                 {imgsDidLoad && (
                   // Conditional really necessary.
                   // Select was showing before the of the elements ready and
                   // even during loading screen
-                  <FormControl
-                    caption={() => {
-                      if (quantity || quantity === 0) {
-                        return `${quantity} unidade(s)`;
-                      }
-                    }}
-                    positive={undefined}
-                    error={undefined}
-                  >
-                    <Select
-                      backspaceRemoves
-                      clearable={false}
-                      closeOnSelect
-                      error={false}
-                      escapeClearsValue
-                      size={SIZE.default}
-                      options={product.amount.map((size, index) => {
-                        return { label: size.size, id: `${index}` };
-                      })}
-                      value={size}
-                      searchable={false}
-                      type={TYPE.select}
-                      placeholder="TAMANHO"
-                      onChange={(params) => {
-                        setSize(params.value);
-                        setQuantity(product.amount[params.value[0].id].amount);
-                      }}
-                    />
-                  </FormControl>
+
+                  <>
+                    {/* <H4>{JSON.stringify(product.amount)}</H4> */}
+                    <div className={sizeShow}>
+                      {product.amount.map((p, i) => (
+                        <LabelLarge
+                          key={i}
+                          className={css({
+                            paddingRight: theme.sizing.scale500,
+                          })}
+                          overrides={{
+                            Block: {
+                              style: {
+                                textDecoration:
+                                  p.amount <= 0 ? "line-through" : "none",
+                              },
+                            },
+                          }}
+                        >
+                          {p.size}
+                        </LabelLarge>
+                      ))}
+                    </div>
+                  </>
+                  // <FormControl
+                  //   caption={() => {
+                  //     if (quantity || quantity === 0) {
+                  //       return `${quantity} unidade(s)`;
+                  //     }
+                  //   }}
+                  //   positive={undefined}
+                  //   error={undefined}
+                  // >
+                  //   <Select
+                  //     backspaceRemoves
+                  //     clearable={false}
+                  //     closeOnSelect
+                  //     error={false}
+                  //     escapeClearsValue
+                  //     size={SIZE.default}
+                  //     options={product.amount.map((size, index) => {
+                  //       return { label: size.size, id: `${index}` };
+                  //     })}
+                  //     value={size}
+                  //     searchable={false}
+                  //     type={TYPE.select}
+                  //     placeholder="TAMANHO"
+                  //     onChange={(params) => {
+                  //       setSize(params.value);
+                  //       setQuantity(product.amount[params.value[0].id].amount);
+                  //     }}
+                  //   />
+                  // </FormControl>
                 )}
               </div>
 
-              <Accordion className={css({})}>
+              <Paragraph1 className={isLarge ? detailsContainerStyes : null}>
+                {product.description}
+              </Paragraph1>
+
+              {/* <Accordion className={css({})}>
                 <Panel
                   title="DESCRIÇÃO"
                   // expanded="true"
                   overrides={{
+                    Header: {
+                      style: {
+                        paddingLeft: "0px",
+                      },
+                    },
                     PanelContainer: {
                       style: ({ $theme }) => ({
                         // width: ResponsiveProperty(["100%", "100%", "30vw"]),
-                        width: "30vw",
+                        width: accordionWidth,
                       }),
                     },
                   }}
@@ -202,7 +250,7 @@ function Details() {
                     {product.description}
                   </Paragraph1>
                 </Panel>
-              </Accordion>
+              </Accordion> */}
 
               <Button
                 onClick={() => handleBuy()}

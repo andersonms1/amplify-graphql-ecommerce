@@ -42,30 +42,47 @@ https://www.javascriptstuff.com/detect-image-load/
 ✔ Hint: On mutation create there is a lot of obrigatory fields. A better aproach is use a temp obj, and only exec create mutation when really necessarily @done(20-11-05 21:20)
 ✔ Hint error setState on unmount comp: 1_try use arrows to invoke like on click, or bind it. 2_ Create another function/component. 3.0_ Conditional: Only set whem component is mounted. 3_ createMyHook @done(20-11-05 21:20)
 ...
-☐ Glass products?
-☐ Preview images on mouse houver?
 ✔ The product after registration is DUPLICATE!!! at home. Maybe because i clicked twice on save? See DB @done(21-01-23 12:02)
 ✔ Product creation remove only alfa @done(21-01-23 12:02)
-☐ On details page: replace size selector?
-☐ Uppercase sizes. Or even limit on a cliente ask
-☐ Remove image name size restrictions. The photos are coming from instagram
-☐ Create table for categorys, subcategorys, brands. And add cruds
-☐ Add product creation to localstorage
-☐ Bug on publish product modal
-☐ Description is incorrect checking gramar
-☐ On product detail, on click to see description is the description sizes grow and pushes the img to the left
-☐ After deleted all product from cart is still show next button
-after show case
-☐ Payment api
-☐ Tests
-☐ Autorização
+✔ On details page: replace size selector? @done(21-02-03 12:39)
+✔ Uppercase sizes. Or even limit on a cliente ask @done(21-02-03 12:39)
+✔ Remove image name size restrictions. The photos are coming from instagram @done(21-02-03 12:39)
+✔ Add product creation to localstorage @done(21-02-03 12:39)
+✔ Bug on publish product modal @done(21-02-03 12:39)
+✔ Description is incorrect checking gramar @done(21-02-03 12:40)
+✔ On product detail, on click to see description is the description sizes grow and pushes the img to the left @done(21-02-03 12:40)
 ...
+BUGS
+✔ After deleted all product from cart is still show next button @done(21-02-05 17:37)
+☐ On details page: Img carossel have diferent sizes
+☐ On cart page: When open size modal is wrong
+☐ On enter zip code, the input elements autocompleted are growing
+☐ On add products. The imgs is not at selected position
+☐ Drawer Cart Desktop: Full content is cliped
+☐ Loader content: Details and Products have bugs
+
+...
+To implement
+✔ Create orders view page (admin and user) @done(21-02-09 11:04)
+✔ Create branding page @done(21-02-11 11:31)
+✔ Create footer @done(21-02-11 11:31)
+☐ Query for the home page, and correct padding
+☐ On add item to cart open drawer
+☐ Remove icons from addProductsModal. And separete delete?
+
+☐ Add default description on create product. Default description with social links
+☐ Payment api
+☐ Autorização
+☐ Tests
 ☐ Dividir no cartão
 ☐ Débito e crédito
 ☐ Avaliações
 ☐ Recomendações de produtos enquanto olha um produto
 ☐ Chatbot
 ☐ Campanha de emails, com base no perfil/gostos
+☐ Glass products?
+☐ Preview images on mouse houver?
+☐ Create table for categorys, subcategorys, brands. And add cruds
 ...
 ☐ Create the ecommerce
 ☐ Create model ecommerce site? https://dev.to/aws/building-a-serverless-live-streaming-platform-with-react-aws-1jmk

@@ -1,3 +1,4 @@
 import ShowCase from "./ShowCase";
+import Calçados from "./Calçados";
 
-export default ShowCase;
+export { ShowCase, Calçados };

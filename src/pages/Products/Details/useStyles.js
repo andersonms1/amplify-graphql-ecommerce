@@ -45,16 +45,22 @@ export const useStyles = () => {
     itemStyles: css({
       flexGrow: "0",
       flexBasis: "auto",
-      paddingRight: "5px",
-      paddingLeft: "5px",
+      paddingRight: "10px",
+      paddingLeft: "10px",
     }),
     detailsContainerStyes: css({
       width: "30vw",
       height: "auto",
     }),
     imgStyles: css({
-      width: "40vw",
+      width: "30vw",
       height: "auto",
+    }),
+    sizeShow: css({
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "start",
     }),
   };
 };

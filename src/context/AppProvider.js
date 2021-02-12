@@ -9,6 +9,10 @@ import {
   productsByCategorySubCategory,
   productsByCategorySubCategoryBrand,
   productsByCategorySubCategoryCreatedAt,
+  productsByCategorySold,
+  productsByCategorySubCategorySold,
+  productsByCategorySubCategoryPrice,
+  productsByCategoryCreatedAt,
 } from "../graphql/queries";
 
 import { createProduct } from "../graphql/mutations";
@@ -51,9 +55,73 @@ const AppProvider = ({ children }) => {
 
   const stringToQuery = async (querie, values = null) => {
     switch (querie) {
+      // Home querie
+      case "productsByCategorySold":
+        try {
+          const { category, sold, sortDirection, limit } = values;
+          const res = await API.graphql(
+            graphqlOperation(productsByCategorySold, {
+              sortDirection,
+              limit,
+              category,
+              sold,
+            })
+          );
+          return res;
+        } catch (e) {
+          console.log(e);
+          return Error(e);
+        }
+
+      case "productsByCategoryCreatedAt":
+        try {
+          const { category, createdAt, sortDirection, limit } = values;
+          const res = await API.graphql(
+            graphqlOperation(productsByCategoryCreatedAt, {
+              sortDirection,
+              limit,
+              category,
+              createdAt,
+            })
+          );
+          return res;
+        } catch (e) {
+          console.log(e);
+          return e;
+        }
+
+      case "productsByCategorySubCategorySold":
+        try {
+          alert("Silva Anderson");
+          const { category, subCategorySold, sortDirection } = values;
+          const res = await API.graphql(
+            graphqlOperation(productsByCategorySubCategorySold, {
+              sortDirection: "ASC",
+              category: "FEMININO",
+              // subCategory: "CALÇADOS",
+              // sold: { ge: "5" },
+              // subCategorySold: { ge: { subCategory: "CALÇADOS", sold: "1" } },
+              subCategorySold: {
+                le: { subCategory: "CALÇADOS", sold: "10" },
+              },
+              // subCategorySold: { ge: { sold: "100" } },
+              // sold: { ge: 0 },
+              // subCategorySold: { le: { subCategory: "CALÇADOS", sold: "0" } },
+            })
+          );
+
+          return res;
+        } catch (e) {
+          console.log(e);
+          return Error(e);
+        }
+
       case "listProducts":
         try {
-          const res = await API.graphql(graphqlOperation(listProducts));
+          const res = await API.graphql(
+            graphqlOperation(listProducts, { limit: 2 })
+          );
+          console.log(res);
           return res;
         } catch (e) {
           console.log(Error(e));
@@ -80,6 +148,7 @@ const AppProvider = ({ children }) => {
           const { category, subCategoryCreatedAt } = values;
           const res = await API.graphql(
             graphqlOperation(productsByCategorySubCategoryCreatedAt, {
+              limit: 2,
               category,
               subCategoryCreatedAt,
             })
@@ -120,6 +189,8 @@ const AppProvider = ({ children }) => {
         })
       );
       console.log(items);
+
+      items.map((i) => console.log(i.createdAt));
 
       setAppContext((prevState) => {
         const _products = {};
@@ -266,3 +337,10 @@ const AppProvider = ({ children }) => {
 };
 
 export default AppProvider;
+
+// ne: Int # "not equal to"
+// eq: Int # "equal to"
+// le: Int # "less than or equal to"
+// lt: Int # "less than"
+// ge: Int # "greater than or equal to"
+// gt: Int # "greater than"

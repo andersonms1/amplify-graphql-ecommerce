@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Products } from "../index";
 import { useStyletron } from "baseui";
-import { Display4 } from "baseui/typography";
+import { Display4, H4 } from "baseui/typography";
 import { FEMININO, subCategorys } from "../../../utils/CATEGORYSUBCATEGORYS";
 
 import {
@@ -18,12 +18,27 @@ import { FormControl } from "baseui/form-control";
 import { Input } from "baseui/input";
 import { Button, KIND, SIZE, SHAPE } from "baseui/button";
 import { Block } from "baseui/block";
+import { Accordion, Panel } from "baseui/accordion";
+import { ResponsiveProperty } from "../../../mediaQueries/mediaQueries";
+import { Card, StyledBody, StyledAction, StyledHeaderImage } from "baseui/card";
+import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
+import img1 from "../../../assets/imgs/praia/jehpraiaefitness_138559108_3642980572463544_1983380386058123719_n.jpg";
+import img2 from "../../../assets/imgs/praia/jehpraiaefitness_138951739_715442999365405_7705630361538637222_n.jpg";
 
-function ShowCase({ item }) {
+function ShowCase({ item, query }) {
   const [css, theme] = useStyletron();
   const [isOpen, setIsOpen] = useState(true);
   const [value, setValue] = useState(true);
+  const [calcHeight, setCalcHeight] = useState(100);
+  const cardRef = useRef();
+
   console.log(subCategorys.CALCADOS);
+
+  const fkData = [
+    { size: "G", amount: 100 },
+    { size: "M", amount: 1 },
+    { size: "P", amount: 15 },
+  ];
 
   const inputStyles = css({
     width: "30vw",
@@ -36,9 +51,24 @@ function ShowCase({ item }) {
     alignContent: "space-between",
     justifyContent: "space-between",
   });
+
+  const accordionWidth = ResponsiveProperty(
+    ["100%", "100%", "30vw"],
+    1000,
+    500
+  );
+
+  useEffect(() => {
+    console.log(cardRef?.current?.offsetWidth);
+    setCalcHeight(cardRef?.current?.offsetWidth / 0.8);
+  }, [cardRef]);
+
   return (
     <div>
       <Display4 paddingTop={theme.sizing.scale850}>{item}</Display4>
+
+      {console.log(query)}
+
       {/* <Products querie="listProducts" /> */}
       {/* <Products
         querie="productsByCategorySubCategory"
@@ -48,7 +78,7 @@ function ShowCase({ item }) {
           sort: "createdAt",
         }}
       /> */}
-      {/* <Products
+      <Products
         querie="productsByCategorySubCategoryCreatedAt"
         values={{
           category: FEMININO,
@@ -60,82 +90,7 @@ function ShowCase({ item }) {
             },
           },
         }}
-      /> */}
-      <Modal
-        onClose={() => setIsOpen(false)}
-        closeable
-        isOpen
-        role={ROLE.dialog}
-      >
-        <ModalHeader>Hello world</ModalHeader>
-        <ModalBody>
-          Form Proin ut dui sed metus pharetra hend rerit vel non mi. Nulla
-          ornare faucibus ex, non facilisis nisl. Maecenas aliquet mauris ut
-          tempus.
-        </ModalBody>
-        <div className={container}>
-          <FormControl className={inputStyles}>
-            <Select
-              width="100px"
-              backspaceRemoves
-              clearable
-              closeOnSelect
-              creatable
-              deleteRemoves
-              disabled
-              escapeClearsValue
-              options={[
-                { label: "AliceBlue", id: "#F0F8FF" },
-                { label: "AntiqueWhite", id: "#FAEBD7" },
-                { label: "Aqua", id: "#00FFFF" },
-                { label: "Aquamarine", id: "#7FFFD4" },
-                { label: "Azure", id: "#F0FFFF" },
-                { label: "Beige", id: "#F5F5DC" },
-              ]}
-              value={[]}
-              getOptionLabel={undefined}
-              getValueLabel={undefined}
-              labelKey={undefined}
-              valueKey={undefined}
-              filterOutSelected
-              isLoading
-              multi
-              onBlurResetsInput
-              onCloseResetsInput
-              onSelectResetsInput
-              openOnClick
-              required
-              searchable
-              type={TYPE.select}
-              placeholder="Select color"
-              onChange={(params) => setValue(params.value)}
-              filterOptions={undefined}
-              onInputChange={undefined}
-              onOpen={undefined}
-              onClose={undefined}
-            />
-          </FormControl>
-          <Block padding="5vw" />
-          <FormControl>
-            <Button
-              onClick={() => alert("click")}
-              startEnhancer={undefined}
-              endEnhancer={undefined}
-              disabled
-              kind={KIND.primary}
-              size={SIZE.default}
-              shape={SHAPE.default}
-              disabled={false}
-            >
-              Hello
-            </Button>
-          </FormControl>
-        </div>
-        <ModalFooter>
-          <ModalButton kind={ButtonKind.tertiary}>Cancel</ModalButton>
-          <ModalButton>Okay</ModalButton>
-        </ModalFooter>
-      </Modal>
+      />
     </div>
   );
 }

@@ -13,7 +13,6 @@ import {
 } from "baseui/typography";
 import "react-responsive-carousel/lib/styles/carousel.min.css"; // requires a loader
 import { Carousel } from "react-responsive-carousel";
-import ahmed from "../../assets/imgs/crop-ahmed-carter.jpg";
 
 function Pages() {
   const getConfigurableProps = () => ({
@@ -36,12 +35,6 @@ function Pages() {
   });
   return (
     <div>
-      {/* <Carousel {...getConfigurableProps()}>
-        <div>
-          <img src={ahmed} />
-          <div className="legend">Teste promocional desejado.</div>
-        </div>
-      </Carousel> */}
       <Categorys />
     </div>
   );

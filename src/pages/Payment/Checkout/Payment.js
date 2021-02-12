@@ -1,12 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Button } from "baseui/button";
 import { PaymentCard } from "baseui/payment-card";
 import { SIZE, ADJOINED } from "baseui/input";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { Button, KIND, SIZE as BTSIZE, SHAPE } from "baseui/button";
+
+import CheckoutContext from "../../../context/CheckoutContext";
+import { H2, H4 } from "baseui/typography";
 
 function Payment() {
+  const {
+    current,
+    setCurrentStep,
+    cart,
+    getAddress,
+    setCart,
+    address,
+    updateAddress,
+    postOrder,
+  } = useContext(CheckoutContext);
+
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState("");
@@ -113,11 +127,48 @@ function Payment() {
     );
   };
 
+  // return (
+  //   <div>
+  //     <Elements stripe={stripePromise}>
+  //       <Form />
+  //     </Elements>
+  //   </div>
+  // );
+
+  const handlePost = async () => {
+    const res = await postOrder(cart);
+    Promise.resolve(res);
+    if (res?.data) {
+      alert("Pagamento efetuado com sucesso!");
+    } else {
+      console.log(res);
+      alert("Erro no post");
+    }
+  };
+
   return (
     <div>
-      <Elements stripe={stripePromise}>
-        <Form />
-      </Elements>
+      <H4>Em desenvolvimento!</H4>
+
+      <Button
+        onClick={() => setCurrentStep(1)}
+        kind={KIND.secondary}
+        size={SIZE.default}
+        shape={SHAPE.default}
+      >
+        Anterior
+      </Button>
+
+      <Button
+        onClick={() => handlePost()}
+        startEnhancer={undefined}
+        endEnhancer={undefined}
+        kind={KIND.primary}
+        size={SIZE.default}
+        shape={SHAPE.default}
+      >
+        Emular pagamento
+      </Button>
     </div>
   );
 }

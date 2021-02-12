@@ -29,13 +29,12 @@ export const MediaQuerie = (all, small, medium, large) => {
   }
 };
 
-export const ResponsiveProperty = (responsive) => {
-  const [css, theme] = useStyletron();
+export const ResponsiveProperty = (responsive, large, small) => {
   const isLarge = useMediaQuery({
-    query: `(min-width: ${theme.breakpoints.large}px)`,
+    query: `(min-width: ${large}px)`,
   });
   const isSmall = useMediaQuery({
-    query: `(max-width: ${theme.breakpoints.small}px)`,
+    query: `(max-width: ${small}px)`,
   });
 
   if (isSmall) {

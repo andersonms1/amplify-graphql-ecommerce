@@ -3,16 +3,22 @@ import { useStyletron } from "baseui";
 import { FormControl } from "baseui/form-control";
 import { useMediaQuery } from "react-responsive";
 
-import { Textarea } from "baseui/textarea";
 import { Input, MaskedInput } from "baseui/input";
-import { Tabs, Tab } from "baseui/tabs-motion";
-import _ from "lodash";
+import _, { zip } from "lodash";
 import { Button, KIND } from "baseui/button";
-import { Block } from "baseui/block";
+import {
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  ModalButton,
+  SIZE,
+  ROLE,
+} from "baseui/modal";
 
 import CheckoutContext from "../../../context/CheckoutContext";
-import { deliverTo as VAL_DELIVER } from "./CheckoutValidations";
 import { getInfoFromCEP } from "./api";
+import { deliverTo as VAL_DELIVER } from "./CheckoutValidations";
 import { state as VAL_UF } from "./CheckoutValidations";
 import { city as VAL_CITY } from "./CheckoutValidations";
 import { neighborhood as VAL_NEIGH } from "./CheckoutValidations";
@@ -26,16 +32,25 @@ import {
   setItem,
   getItem,
 } from "../../../utils/localStorage";
+import { NIL } from "uuid";
+import { currentCheckoutPage } from "../../../context/types";
 
 function Cart() {
-  const { current, setCurrentStep, cart, getAddress, address } = useContext(
-    CheckoutContext
-  );
+  const {
+    current,
+    setCurrentStep,
+    cart,
+    getAddress,
+    setCart,
+    address,
+    updateAddress,
+  } = useContext(CheckoutContext);
   const [lsAdrress, setLsAddress] = useState();
 
   const [css, theme] = useStyletron();
   const { breakpoints } = theme;
   const [inputEnable, setInputEnable] = useState(true);
+  const [error, setError] = useState();
 
   const [deliverTo, setDeliverTo] = useState(""); //name
   const [captionDeliverTo, setCaptionDeliverTo] = useState("");
@@ -83,26 +98,78 @@ function Cart() {
 
   const PHONE_SIZE = 11;
 
-  useEffect(() => {
-    console.log("ola");
-    getAddress();
-    console.log(address);
-  }, []);
+  // useEffect(() => {
+  //   setCart(getObj("cart"));
+  //   console.log(getObj("cart"));
+  // }, []);
 
   useEffect(() => {
-    const {
+    if (cart?.address) {
+      console.log("here");
+      console.log(cart?.address);
+      const {
+        deliverTo,
+        ZIP,
+        UF,
+        city,
+        neighborhood,
+        street,
+        complement,
+        phone,
+        number,
+      } = cart.address;
+
+      setDeliverTo(deliverTo);
+      setZIP(ZIP);
+      setUF(UF);
+      setCity(city);
+      setNeighborhood(neighborhood);
+      setStreet(street);
+      setComplement(complement);
+      setPhone(phone);
+      setNumber(number);
+    }
+  }, [cart, current]);
+
+  useEffect(() => {
+    updateAddress({
       deliverTo,
       ZIP,
-      UF, // state
+      UF,
       city,
       neighborhood,
       street,
+      complement,
+      phone,
       number,
-      haveNumber,
-      aditionalInformation,
-      homeOrWork,
-    } = address;
-  }, [address]);
+    });
+    console.log(getObj("cart"));
+  }, [
+    deliverTo,
+    ZIP,
+    UF,
+    city,
+    neighborhood,
+    street,
+    complement,
+    phone,
+    number,
+  ]);
+
+  // useEffect(() => {
+  //   const {
+  //     deliverTo,
+  //     ZIP,
+  //     UF, // state
+  //     city,
+  //     neighborhood,
+  //     street,
+  //     number,
+  //     haveNumber,
+  //     aditionalInformation,
+  //     homeOrWork,
+  //   } = address;
+  // }, [address]);
 
   const isLarge = useMediaQuery({
     query: `(min-width: ${breakpoints.large}px)`,
@@ -125,6 +192,22 @@ function Cart() {
   const handleFormSubmit = () => {
     // Remember: This implementation validate the fields deliverTo, phone and number.
     // The other fields are linked to zip, so without a zip, without next button. Remember THIS!
+    let erro = false;
+    if (
+      delivetToErro ||
+      phoneError ||
+      zipError ||
+      UFError ||
+      cityError ||
+      neighborhoodError ||
+      streetError ||
+      numberError
+    ) {
+      setError(true);
+    } else {
+      setCurrentStep(2);
+      setError(false);
+    }
   };
 
   const setErrors = (condition) => {
@@ -151,9 +234,9 @@ function Cart() {
             placeholder="Nome destinatário"
             error={captionDeliverTo}
             onChange={(e) => {
-              const _deliverTo = `${e.target.value}`.trim().toUpperCase();
+              const _deliverTo = `${e.target.value}`.toUpperCase();
               setDeliverTo(_deliverTo);
-              setObj({ ...lsAdrress, deliverTo: _deliverTo });
+
               const { error } = VAL_DELIVER.validate(
                 { deliverTo },
                 { abortEarly: false }
@@ -182,7 +265,7 @@ function Cart() {
             onChange={(e) => {
               const _phone = `${e.target.value}`;
               setPhone(_phone);
-              setObj({ ...lsAdrress, phone: _phone });
+
               const unmasked = getUnmasked(_phone);
               const error = unmasked.length === PHONE_SIZE ? false : true;
               if (error) {
@@ -206,15 +289,16 @@ function Cart() {
             onChange={async (e) => {
               const _ZIP = `${e.target.value}`;
               setZIP(_ZIP);
-              setObj({ ...lsAdrress, zip: _ZIP });
+
               let unmasked = getUnmasked(_ZIP);
               if (unmasked.length === 8) {
                 const res = await getInfoFromCEP(unmasked);
-                setInputEnable(false);
+                console.log(res);
 
                 const { erro } = res.data;
-
+                setInputEnable(false);
                 if (erro) {
+                  console.log(erro);
                   setZipError(true);
                   setCaptionZIP("Endereço não encontrado");
                   setErrors(true);
@@ -222,6 +306,7 @@ function Cart() {
                   setZipError(false);
                   setErrors(false);
                   setCaptionZIP("");
+                  console.log("bp");
                   const {
                     uf,
                     localidade,
@@ -229,13 +314,15 @@ function Cart() {
                     logradouro,
                     complemento,
                   } = res.data;
+                  console.log("bp");
                   setUF(uf);
                   setCity(localidade);
                   setNeighborhood(bairro);
                   setStreet(logradouro);
                   setComplement(complemento);
+                  console.log("bp");
+                  // setInputEnable(false);
                 }
-                console.log(erro);
               }
               // setCaptionZIP(caption);
             }}
@@ -274,7 +361,7 @@ function Cart() {
             <FormControl label="Cidade" caption={`${captionCity}`}>
               <Input
                 value={city}
-                disabled={inputEnable}
+                // disabled={inputEnable}
                 error={cityError}
                 placeholder=""
                 clearOnEscape
@@ -299,7 +386,7 @@ function Cart() {
             <FormControl label="Bairro" caption={`${captionNeighborhood}`}>
               <Input
                 value={neighborhood}
-                disabled={inputEnable}
+                // disabled={inputEnable}
                 error={neighborhoodError}
                 placeholder=""
                 clearOnEscape
@@ -324,7 +411,7 @@ function Cart() {
             <FormControl label="Rua/Avenida" caption={`${captionStreet}`}>
               <Input
                 value={street}
-                disabled={inputEnable}
+                // disabled={inputEnable}
                 error={streetError}
                 placeholder=""
                 clearOnEscape
@@ -349,7 +436,7 @@ function Cart() {
             <FormControl label="Complemento" caption={`${captionComplement}`}>
               <Input
                 value={complement}
-                disabled={inputEnable}
+                // disabled={inputEnable}
                 error={complementError}
                 placeholder=""
                 clearOnEscape
@@ -374,7 +461,7 @@ function Cart() {
             <FormControl label="Número" caption={`${captionNumber}`}>
               <Input
                 value={number}
-                disabled={inputEnable}
+                // disabled={inputEnable}
                 error={numberError}
                 placeholder=""
                 clearOnEscape
@@ -398,10 +485,33 @@ function Cart() {
                 }}
               />
             </FormControl>
-
-            <Button onClick={() => alert("click")}>Hello</Button>
+            <Modal
+              onClose={() => setError(false)}
+              closeable
+              isOpen={error}
+              size={SIZE.default}
+              role={ROLE.dialog}
+              unstable_ModalBackdropScroll
+            >
+              <ModalHeader>Erro na validação</ModalHeader>
+              <ModalBody>
+                É necessário corrigir o(s) erro(s) para poder continuar.
+              </ModalBody>
+              <ModalFooter>
+                <ModalButton onClick={() => setError(false)}>Okay</ModalButton>
+              </ModalFooter>
+            </Modal>
           </>
         ) : null}
+
+        <Button
+          type="secondary"
+          kind={KIND.secondary}
+          onClick={() => setCurrentStep(0)}
+        >
+          Anterior
+        </Button>
+        <Button onClick={() => handleFormSubmit()}>Próximo</Button>
       </div>
     );
   };
@@ -417,12 +527,7 @@ function Cart() {
     if (!isLoading) {
       return <div>{JSON.stringify(address)}</div>;
     } else {
-      return (
-        <>
-          <p>Carregando</p>
-          {handleInputs()}
-        </>
-      );
+      return <>{handleInputs()}</>;
     }
   };
 

@@ -17,6 +17,7 @@ export const getInfoFromCEP = async (cep) => {
   // 72.420-290
   try {
     const response = await axios.get(`http://viacep.com.br/ws/${cep}/json/`);
+    await Promise.resolve(response);
 
     return response;
 

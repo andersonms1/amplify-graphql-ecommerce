@@ -6,7 +6,13 @@
 // https://stackoverflow.com/questions/31366735/how-to-load-images-async-with-rxjs-and-perform-a-method-when-all-loaded
 // https://blog.logrocket.com/rxjs-with-react-hooks-for-state-management/
 // https://github.com/danilowoz/react-content-loader
-import React, { useState, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import { FlexGrid, FlexGridItem } from "baseui/flex-grid";
 import {
   Card,
@@ -17,7 +23,7 @@ import {
 } from "baseui/card";
 import { Layer } from "baseui/layer";
 import { useStyletron } from "baseui";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
 import AppContext from "../../context/AppContext";
@@ -26,11 +32,15 @@ import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
 import { HandleLoad, Wrapper, WrapperLoayalty } from "../../components";
 import { handleLoad } from "../../utils";
+import useResizeObserver from "use-resize-observer";
+import { Button } from "baseui/button";
 
 function Products(props) {
   const [css, theme] = useStyletron();
+  let history = useHistory();
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
+  const [cardHeight, setCardHeight] = useState();
 
   const {
     products,
@@ -53,14 +63,31 @@ function Products(props) {
     alignItems: "center",
   });
 
+  const aspect_ratio = 1;
+
+  const itemCardRef = useRef();
+
   useEffect(() => {
     getProducts({ props });
   }, [page]);
 
+  const { ref } = useResizeObserver({
+    onResize: ({ width, height }) => {
+      // do something here.
+      setCardHeight(width / aspect_ratio);
+    },
+  });
+
+  useEffect(() => {
+    console.log(props);
+  });
+
   function renderGrid() {
     if (products[`${props.querie}`]) {
       return products[`${props.querie}`].map((item, index) => {
-        return <FlexGridItem key={item.id}>{renderCard(item)}</FlexGridItem>;
+        return (
+          <FlexGridItem key={item.id}>{renderCard(item, index)}</FlexGridItem>
+        );
       });
     } else {
       return null;
@@ -69,8 +96,8 @@ function Products(props) {
 
   function renderCard(item) {
     return (
-      <div>
-        {imgsDidLoad ? (
+      <div ref={ref}>
+        {/* {imgsDidLoad ? (
           <WrapperLoayalty>
             <StatefulPopover
               content={
@@ -87,57 +114,45 @@ function Products(props) {
               <i className="material-icons">loyalty</i>
             </StatefulPopover>
           </WrapperLoayalty>
-        ) : null}
+        ) : null} */}
         <Card
           // headerImage={}
+          // headerImage={
+
+          // }
+          className={css({
+            marginLeft: "0px",
+            paddingLeft: "0px",
+          })}
           overrides={{
             // maxWidth: "15vw"
             Root: {
               style: {
-                borderRightStyle: "none",
-                borderBottomStyle: "none",
-                borderLeftStyle: "none",
-                borderTopStyle: "none",
+                // borderRightStyle: "none",
+                // borderBottomStyle: "none",
+                // borderLeftStyle: "none",
+                // borderTopStyle: "none",
               },
             },
-            // Root: { style: { borderStyle: "none" } },
             // Thumbnail:
-            // HeaderImage: {
-            //   style: { maxWidth: "100%", height: "auto" },
-            // },
+            HeaderImage: {
+              // style: { maxWidth: "100%", height: "auto" },
+
+              style: { height: "100%", objectFit: "cover" },
+            },
           }}
         >
           <Link to={`/products/${item.id}`}>
             <div>
-              {/* <StyledHeaderImage
-                className={css({
-                  borderStyle: "none",
-                  // display: "none",
-                  visibility: "hidden",
-                  // maxWidth: "50px",
-                  // height: "50px",
-                })}
-                src={PHOTO_HILL}
-                onLoad={() => {
-                  item.didImgLoad = true;
-                  display = "visible";
-                }}
-                alt="Imagem do produto"
-              /> */}
-              {/* <img
-                src={item.link}
-                style={{ maxWidth: "100%", height: "auto" }}
-                alt="sdf"
-              /> */}
               <StyledHeaderImage
-                className={css({
-                  // borderStyle: "none",
-                  // display: "none",
-                  // visibility: "hidden",
-                  // maxWidth: "50px",
-                  // height: "50px",
-                })}
                 src={item.link}
+                // height={`${cardHeight}px`}
+                // width="100%"
+                style={{
+                  objectFit: "cover",
+                  width: "100%",
+                  height: `${cardHeight}px`,
+                }}
                 onLoad={() => {
                   setImgsLoadCounter(imgsLoadCounter + 1);
 
@@ -154,7 +169,16 @@ function Products(props) {
           </Link>
 
           <StyledBody>
-            <Paragraph4 margin="0" padding="0">
+            <Paragraph4
+              className={css({
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                width: "auto",
+              })}
+              margin="0"
+              padding="0"
+            >
               {item.title}
             </Paragraph4>
             <div className={priceButtonStyles}>
@@ -163,6 +187,17 @@ function Products(props) {
               </Paragraph4>
             </div>
           </StyledBody>
+
+          <StyledAction>
+            <Button
+              onClick={() => history.push(`products/${item.id}`)}
+              overrides={{
+                BaseButton: { style: { width: "100%" } },
+              }}
+            >
+              OPÇÕES
+            </Button>
+          </StyledAction>
         </Card>
       </div>
     );
@@ -195,11 +230,11 @@ function Products(props) {
 
   const handleGrid = (item) => {
     return (
-      <div className={centerRow}>
+      <div>
         <Small>
           <FlexGrid
             flexGridColumnCount={2}
-            // flexGridColumnGap="scale100"
+            flexGridColumnGap="scale100"
             flexGridRowGap="scale100"
           >
             {item}

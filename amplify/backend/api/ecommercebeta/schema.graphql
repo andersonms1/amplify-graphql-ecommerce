@@ -64,7 +64,7 @@ type Order @model
 }
 
 type Products {
-  product: Product
+  product: Product @connection
   amount: Amount
 }
 

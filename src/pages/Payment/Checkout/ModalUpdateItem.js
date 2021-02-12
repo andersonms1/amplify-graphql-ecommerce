@@ -37,6 +37,7 @@ function ModalSelection({ status, currentItem }) {
     addCartItem,
     addCartSelection,
     setCart,
+    updateCartItem,
     removeCartItem,
     modalOpen,
     setModalOpen,
@@ -46,29 +47,40 @@ function ModalSelection({ status, currentItem }) {
     if (handleCartLoading()) {
       if (isCurrentItemValid()) {
         setSize([
-          { label: cart.products[currentItem].selection.size, id: "0" },
+          {
+            label: cart.products[currentItem].selection.size,
+            id: `${currentItem}`,
+          },
         ]);
         setSelect(
           cart.products[currentItem].amount.map((size, index) => {
             return { label: size.size, id: `${index}` };
           })
         );
+        // setSelect(cart.products[currentItem].amount)
+        // console.log(cart.products[currentItem].selection.size);
+        // console.log(
+        //   cart.products[currentItem].amount[
+        //     _.findIndex(cart.products[currentItem].selection.size, {})
+        //   ]
+        // );
 
         setQuantity(cart.products[currentItem].selection.quantity);
       }
     }
   }, [cart, currentItem, modalOpen]);
+  // }, [cart, currentItem, modalOpen]);
 
   useEffect(() => {
     if (maxQuantity) {
       if (quantity > maxQuantity) {
         setQuantity(maxQuantity);
       }
-      if (quantity < 1) {
-        setQuantity(1);
-      }
     }
-  }, [quantity]);
+    if (quantity < 1) {
+      setQuantity(1);
+    }
+  });
 
   const isCurrentItemValid = () => {
     try {
@@ -83,7 +95,7 @@ function ModalSelection({ status, currentItem }) {
 
   const handleCartLoading = () => {
     // We need to wait until the cart state update
-    if (Array.isArray(cart.products)) {
+    if (Array.isArray(cart?.products)) {
       if (cart.products.length) {
         return true;
       } else {
@@ -95,10 +107,12 @@ function ModalSelection({ status, currentItem }) {
   };
 
   const handleSave = () => {
-    console.log("save");
+    updateCartItem(currentItem, { size: size[0].label, quantity });
+    setModalOpen({ ...modalOpen, open: false });
   };
 
   const handleMaxQuantity = (params) => {
+    // setMaxQuantity(10);
     setMaxQuantity(
       cart.products[currentItem].amount[params.value[0].id].amount
     );
@@ -134,9 +148,9 @@ function ModalSelection({ status, currentItem }) {
               searchable={false}
               value={size}
               onChange={(params) => {
-                setSize(params.value);
                 console.log(params.value);
                 handleMaxQuantity(params);
+                setSize(params.value);
                 setDisabled(false);
               }}
             />

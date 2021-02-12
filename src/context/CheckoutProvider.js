@@ -2,14 +2,21 @@ import React, { useEffect, useState } from "react";
 
 import API, { graphql, graphqlOperation } from "@aws-amplify/api";
 import { listOrders, ordersByUserCreatedAt } from "../graphql/queries";
+import { createOrder } from "../graphql/mutations";
 
-import { setObj, getObj } from "../utils/localStorage";
+import { cart as tp_cart, currentCheckoutPage, status } from "./types";
+import total from "./util/calculateCartTotal";
+import getUser from "./util/getUsername";
+import { setObj, getObj, setItem } from "../utils/localStorage";
 import _ from "lodash";
 
 import CheckoutContext from "./CheckoutContext";
+import { ConsoleLogger } from "@aws-amplify/core";
+import { types } from "joi";
 
 const CheckoutProvider = ({ children }) => {
   const setCurrentStep = (goTo) => {
+    setItem(currentCheckoutPage, goTo);
     setAppContext((prevState) => {
       return {
         ...prevState,
@@ -32,11 +39,12 @@ const CheckoutProvider = ({ children }) => {
   const removeCartItem = (index) => {
     setAppContext((prevState) => {
       if (prevState.cart.products.lenght === 1) {
-        setObj("cart", null);
+        setObj(tp_cart, null);
         setCart();
       } else {
         _.pullAt(prevState.cart.products, index); //Change state  by reference
-        setObj("cart", prevState.cart);
+        prevState.cart.total = total(prevState.cart.products);
+        setObj(tp_cart, prevState.cart);
       }
       return {
         ...prevState,
@@ -46,12 +54,11 @@ const CheckoutProvider = ({ children }) => {
 
   const addCartItem = (items) => {
     setAppContext((prevState) => {
-      console.log(prevState.cart);
-
       if (prevState.cart) {
         const cart = {
           products: [...prevState.cart.products, items],
-          ..._.omit(prevState.cart, "products"),
+          total: total([...prevState.cart.products, items]),
+          ..._.omit(prevState.cart, ["products", "total"]),
         };
         setObj("cart", cart);
         return {
@@ -61,7 +68,7 @@ const CheckoutProvider = ({ children }) => {
       } else {
         const cart = {
           products: [items],
-          total: 0,
+          total: total([items]),
           address: {},
           status: "",
         };
@@ -77,8 +84,21 @@ const CheckoutProvider = ({ children }) => {
   const updateCartItem = (index, selection) => {
     setAppContext((prevState) => {
       prevState.cart.products[index].selection = selection;
-      console.log(prevState.cart.products[index]);
-      setObj("cart", prevState.cart);
+      prevState.cart.total = total(prevState.cart.products);
+
+      setObj(tp_cart, prevState.cart);
+      return {
+        ...prevState,
+      };
+    });
+  };
+
+  const updateAddress = (address) => {
+    setAppContext((prevState) => {
+      prevState.cart.address = address;
+      /* update price calc here */
+      setObj(tp_cart, prevState.cart);
+
       return {
         ...prevState,
       };
@@ -108,6 +128,77 @@ const CheckoutProvider = ({ children }) => {
     });
   };
 
+  const postOrder = async (cart) => {
+    const { total: price, products: _products } = cart;
+
+    const res = await getUser();
+    console.log(res.username);
+
+    console.log(price);
+    console.log(_products);
+
+    const products = _products.map((product, index) => {
+      const {
+        selection,
+        id,
+        createdAt,
+        title,
+        description,
+        price,
+        category,
+        subCategory,
+        sold,
+        amount,
+        brand,
+        photos,
+        avaliation,
+        comments,
+        updatedAt,
+      } = product;
+
+      return {
+        product: {
+          id,
+          createdAt,
+          title,
+          description,
+          price,
+          category,
+          subCategory,
+          sold,
+          amount,
+          brand,
+          photos,
+          avaliation,
+          comments,
+          updatedAt,
+        },
+        amount: {
+          size: selection.size,
+          amount: selection.quantity,
+        },
+      };
+    });
+    console.log(products);
+
+    try {
+      res = await API.graphql(
+        graphqlOperation(createOrder, {
+          input: {
+            price,
+            user: res.username,
+            status: status.wait_payment_confimation,
+            products,
+          },
+        })
+      );
+      return res;
+    } catch (e) {
+      console.log(e);
+      return e;
+    }
+  };
+
   const appState = {
     current: 0,
     setCurrentStep,
@@ -120,6 +211,8 @@ const CheckoutProvider = ({ children }) => {
     updateCartItem,
     removeCartItem,
     getAddress,
+    updateAddress,
+    postOrder,
   };
 
   const [appContext, setAppContext] = useState(appState);

@@ -17,6 +17,7 @@ const CheckoutContext = createContext({
   removeCartItem: (index) => {},
   updateCartItem: (index, selection) => {},
   getAddress: () => {},
+  updateAddress: () => {},
 });
 
 export default CheckoutContext;

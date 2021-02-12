@@ -7,11 +7,22 @@ import Cart from "./Cart";
 import Address from "./Address";
 import Pay from "./Pay";
 import Payment from "./Payment";
+import { currentCheckoutPage } from "../../../context/types";
+import { getItem } from "../../../utils/localStorage";
 
 import { useStyletron } from "baseui";
 function Checkout() {
   const { current, setCurrentStep } = useContext(AppContext);
   const [css, theme] = useStyletron();
+
+  useEffect(() => {
+    const _currentCheckoutPage = parseInt(getItem(currentCheckoutPage));
+    console.log(_currentCheckoutPage);
+    if (_currentCheckoutPage) {
+      setCurrentStep(_currentCheckoutPage);
+    }
+    // setCurrentStep(1);
+  }, [current]);
 
   // console.log(theme);
 

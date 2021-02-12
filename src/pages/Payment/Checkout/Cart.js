@@ -3,15 +3,20 @@ import { useStyletron } from "baseui";
 import { ListItem, ListItemLabel } from "baseui/list";
 import ChevronDown from "baseui/icon/chevron-down";
 import { StyledLink } from "baseui/link";
-import { KIND as ButtonKind } from "baseui/button";
-import { Button } from "baseui/button";
+import { Button, KIND, SIZE, SHAPE } from "baseui/button";
 import { Display4, H4, Label4 } from "baseui/typography";
 import { useMediaQuery } from "react-responsive";
+import { ChevronLeft } from "baseui/icon";
 
 import { getObj } from "../../../utils/localStorage";
 import CheckoutContext from "../../../context/CheckoutContext";
+import HeaderContext from "../../../context/HeaderContext";
 import { BASE } from "../../../utils/LINKS";
 import ModalUpdateItem from "./ModalUpdateItem";
+import { DotsThree } from "phosphor-react";
+import { useHistory } from "react-router-dom";
+import { Block } from "baseui/block";
+import chevronDown from "baseui/icon/chevron-down";
 
 function Cart() {
   const {
@@ -20,14 +25,17 @@ function Cart() {
     cart,
     addCartItem,
     addCartSelection,
+    updateCartItem,
     setCart,
     removeCartItem,
     modalOpen,
     setModalOpen,
   } = useContext(CheckoutContext);
+  const { isDrwCart, setIsDrwCart } = useContext(HeaderContext);
   const [currentItem, setCurrentItem] = useState(0);
   const [css, theme] = useStyletron();
 
+  let history = useHistory();
   const isLarge = useMediaQuery({
     query: `(min-width: ${theme.breakpoints.large}px)`,
   });
@@ -100,7 +108,7 @@ function Cart() {
             <ListItemLabel
               description={`Tamanho: ${item?.selection?.size}, Quantidade: ${item?.selection?.quantity}`}
             >
-              <StyledLink href={`${BASE}products/${item.id}`}>
+              <StyledLink onClick={() => history.push(`/products/${item.id}`)}>
                 {item.title}
               </StyledLink>
 
@@ -117,7 +125,7 @@ function Cart() {
   return (
     <>
       <ModalUpdateItem currentItem={currentItem} />
-      {cart ? (
+      {cart && cart?.products?.length ? (
         <>
           <ul
             className={css({
@@ -130,9 +138,61 @@ function Cart() {
             })}
           >
             {renderListItems()}
+            <Display4 className={css({ textAlign: "right" })}>
+              R$ {JSON.stringify(cart?.total)}
+            </Display4>
           </ul>
 
-          <Button onClick={() => setCurrentStep(1)}>Próximo</Button>
+          {isDrwCart ? (
+            <>
+              <H4
+                className={css({
+                  paddingLeft: theme.sizing.scale600,
+                })}
+              >
+                Finalizar compras?
+              </H4>
+              <Button
+                className={css({
+                  marginLeft: theme.sizing.scale600,
+                  paddingRight: theme.sizing.scale600,
+                  marginRight: theme.sizing.scale600,
+                })}
+                onClick={() => {
+                  setIsDrwCart(false);
+                }}
+                kind={KIND.secondary}
+                size={SIZE.default}
+                shape={SHAPE.default}
+              >
+                Não
+              </Button>
+              <Button
+                size={SIZE.default}
+                shape={SHAPE.default}
+                onClick={() => {
+                  setCurrentStep(1);
+                  setIsDrwCart(false);
+                  history.push("/checkout");
+                }}
+              >
+                Próximo
+              </Button>
+            </>
+          ) : (
+            <Button
+              size={SIZE.default}
+              shape={SHAPE.default}
+              className={css({
+                marginLeft: theme.sizing.scale600,
+              })}
+              onClick={() => {
+                setCurrentStep(1);
+              }}
+            >
+              Próximo
+            </Button>
+          )}
         </>
       ) : (
         <div>
