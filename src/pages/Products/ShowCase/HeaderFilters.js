@@ -22,10 +22,10 @@ function HeaderFilters(props) {
         return;
       case "productsByCategoryPrice":
         if (querie.values.sortDirection === "ASC") {
-          setFilter("Maiores preços");
+          setFilter("Menores preços");
           return;
         } else {
-          setFilter("Menores preços");
+          setFilter("Maiores preços");
           return;
         }
       default:
