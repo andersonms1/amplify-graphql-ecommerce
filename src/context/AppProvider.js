@@ -13,6 +13,7 @@ import {
   productsByCategorySubCategorySold,
   productsByCategorySubCategoryPrice,
   productsByCategoryCreatedAt,
+  productsByCategoryPrice,
 } from "../graphql/queries";
 
 import { createProduct } from "../graphql/mutations";
@@ -90,6 +91,22 @@ const AppProvider = ({ children }) => {
           return e;
         }
 
+      case "productsByCategoryPrice":
+        try {
+          const { category, price, sortDirection, limit } = values;
+          const res = await API.graphql(
+            graphqlOperation(productsByCategoryPrice, {
+              sortDirection,
+              limit,
+              category,
+              price,
+            })
+          );
+          return res;
+        } catch (e) {
+          console.log(e);
+          return e;
+        }
       case "productsByCategorySubCategorySold":
         try {
           alert("Silva Anderson");
@@ -173,9 +190,11 @@ const AppProvider = ({ children }) => {
     }
   };
 
-  const getProducts = async ({ props }) => {
-    const { querie, values } = props;
-
+  const getProducts = async (args) => {
+    const { querie, values } = args.querie;
+    // alert("here");
+    // console.log(querie);
+    // console.log(values);
     try {
       const { data } = await stringToQuery(querie, values);
       const { items } = data[`${querie}`];

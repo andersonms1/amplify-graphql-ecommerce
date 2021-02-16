@@ -30,7 +30,7 @@ function OptionsDrw() {
         setQuerie({
           querie: "productsByCategoryCreatedAt",
           values: {
-            sortDirection: "ASC",
+            sortDirection: "DESC",
             category: "FEMININO",
             createdAt: { ge: initial_date },
           },
@@ -51,12 +51,26 @@ function OptionsDrw() {
         return;
 
       case priceLow:
-        setQuerie({});
+        setQuerie({
+          querie: "productsByCategoryPrice",
+          values: {
+            sortDirection: "ASC",
+            category: "FEMININO",
+            price: { ge: 0 },
+          },
+        });
         setIsDrwOptions(false);
         return;
 
       case priceHigh:
-        setQuerie({});
+        setQuerie({
+          querie: "productsByCategoryPrice",
+          values: {
+            sortDirection: "DESC",
+            category: "FEMININO",
+            price: { ge: 0 },
+          },
+        });
         setIsDrwOptions(false);
         return;
     }
@@ -93,15 +107,39 @@ function OptionsDrw() {
             <ListItemLabel>Novidades</ListItemLabel>
           </ListItem>
 
-          <ListItem sublist>
+          <ListItem
+            endEnhancer={() => (
+              <ChevronRight
+                size={22}
+                onClick={() => handleSelection(types.sold)}
+              />
+            )}
+            sublist
+          >
             <ListItemLabel>Mais vendidos</ListItemLabel>
           </ListItem>
 
-          <ListItem sublist>
+          <ListItem
+            endEnhancer={() => (
+              <ChevronRight
+                size={22}
+                onClick={() => handleSelection(types.priceLow)}
+              />
+            )}
+            sublist
+          >
             <ListItemLabel>Menores preços</ListItemLabel>
           </ListItem>
 
-          <ListItem sublist>
+          <ListItem
+            endEnhancer={() => (
+              <ChevronRight
+                size={22}
+                onClick={() => handleSelection(types.priceHigh)}
+              />
+            )}
+            sublist
+          >
             <ListItemLabel>Maiores preços</ListItemLabel>
           </ListItem>
         </ul>

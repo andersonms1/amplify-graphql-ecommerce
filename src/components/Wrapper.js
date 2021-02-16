@@ -9,12 +9,12 @@ const Wrapper = (props) => {
     <div
       className={css({
         position: "absolute",
-        // top: offset || "46%",
-        // left: offset || "46%",
-        // width: '200px',
-        // paddingBottom: '2px',
+        // top: "46%",
+        // left: "46%",
+        // width: "200px",
+        // paddingBottom: "2px",
         // paddingRight: "20px",
-        // textAlign: 'center',
+        // textAlign: "center",
         backgroundColor: `${theme.colors.backgroundPrimary}`,
       })}
       ref={forwardedRef}

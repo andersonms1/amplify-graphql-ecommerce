@@ -27,6 +27,7 @@ import { Link, useHistory } from "react-router-dom";
 import { Paragraph4, Paragraph3 } from "baseui/typography";
 import { StatefulPopover } from "baseui/popover";
 import AppContext from "../../context/AppContext";
+import HeaderContext from "../../context/HeaderContext";
 import { Small, Medium, Large } from "./MediaQueriesContainers";
 import ContentLoader from "react-content-loader";
 import { PHOTO_HILL } from "../../assets/imgs/";
@@ -50,6 +51,8 @@ function Products(props) {
     didGetProductsLoad,
   } = useContext(AppContext);
 
+  const { querie, setQuerie } = useContext(HeaderContext);
+
   const priceButtonStyles = css({
     display: "flex",
     flexDirection: "row",
@@ -62,14 +65,15 @@ function Products(props) {
     flexDirection: "row",
     alignItems: "center",
   });
-
   const aspect_ratio = 1;
 
   const itemCardRef = useRef();
 
   useEffect(() => {
-    getProducts({ props });
-  }, [page]);
+    // console.log(querie);
+    // console.log(products);
+    getProducts({ querie });
+  }, [page, querie]);
 
   const { ref } = useResizeObserver({
     onResize: ({ width, height }) => {
@@ -78,13 +82,13 @@ function Products(props) {
     },
   });
 
-  useEffect(() => {
-    console.log(props);
-  });
-
   function renderGrid() {
-    if (products[`${props.querie}`]) {
-      return products[`${props.querie}`].map((item, index) => {
+    // alert("here");
+
+    // console.log(querie);
+    // console.log(products);
+    if (querie?.querie && products[`${querie.querie}`]) {
+      return products[`${querie.querie}`].map((item, index) => {
         return (
           <FlexGridItem key={item.id}>{renderCard(item, index)}</FlexGridItem>
         );
@@ -158,7 +162,7 @@ function Products(props) {
 
                   if (
                     imgsLoadCounter ===
-                    products[`${props.querie}`].length - 1
+                    products[`${querie.querie}`].length - 1
                   ) {
                     setImgsDidLoad(true);
                   }
@@ -264,10 +268,15 @@ function Products(props) {
 
   return (
     <div>
-      {handleLoad(
-        handleGrid(renderGrid()),
-        handleGrid(renderContentLoader()),
-        imgsDidLoad
+      {querie?.querie ? (
+        handleLoad(
+          handleGrid(renderGrid(querie)),
+          handleGrid(renderContentLoader()),
+          imgsDidLoad
+        )
+      ) : (
+        // renderGrid(querie)
+        <p>Querie not seted</p>
       )}
     </div>
   );

@@ -37,12 +37,26 @@ import { FEMININO } from "../../utils/CATEGORYSUBCATEGORYS";
 import Carousel from "./Carousel";
 
 import Footer from "./Footer";
+import HeaderContext from "../../context/HeaderContext";
 
 function Home() {
   const { page, setPage } = useContext(AppContext);
   const [admin, setAdmin] = useState(false);
+  const { querie, setQuerie } = useContext(HeaderContext);
   const [css, theme] = useStyletron();
   let history = useHistory();
+
+  useEffect(() => {
+    setQuerie({
+      querie: "productsByCategorySold",
+      values: {
+        category: FEMININO,
+        sold: { ge: 0 },
+        sortDirection: "DESC",
+        limit: 4,
+      },
+    });
+  }, []);
 
   const container = css({
     // background: "#55DCE7",
@@ -154,7 +168,9 @@ function Home() {
       <Grid>
         <Cell span={[4, 8, 12]}>
           <HeadingMedium>Produtos em destaque</HeadingMedium>
-          <Products
+
+          {querie && <Products />}
+          {/* <Products
             querie="productsByCategorySold"
             values={{
               category: FEMININO,
@@ -162,7 +178,7 @@ function Home() {
               sortDirection: "DESC",
               limit: 4,
             }}
-          />
+          /> */}
         </Cell>
       </Grid>
 

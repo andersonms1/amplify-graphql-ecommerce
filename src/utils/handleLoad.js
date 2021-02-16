@@ -9,8 +9,10 @@ function handleLoad(content, contentLoader, imgsDidLoad) {
     return (
       <>
         <Layer>
-          <Wrapper>{contentLoader}</Wrapper>
-          {content}
+          <Wrapper>
+            {contentLoader}
+            {content}
+          </Wrapper>
         </Layer>
       </>
     );

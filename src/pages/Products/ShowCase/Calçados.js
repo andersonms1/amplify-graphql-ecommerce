@@ -12,6 +12,7 @@ import Products from "../Products";
 import { Button, KIND, SIZE, SHAPE } from "baseui/button";
 import HeaderContext from "../../../context/HeaderContext";
 import { FEMININO, subCategorys } from "../../../utils/CATEGORYSUBCATEGORYS";
+import HeaderFilters from "./HeaderFilters";
 import OptionsDrw from "./OptionsDrw";
 // import { listProducts } from "../../../graphql/queries";
 
@@ -23,93 +24,26 @@ const Calçados = () => {
   const [isQuerie, setIsQuerie] = useState(false);
 
   const initial_date = "2021-01-23T15:25:14.159Z";
+
   useEffect(() => {
-    // setQuerie({
-    //   querie: "productsByCategorySubCategorySold",
-    //   values: {
-    //     sortDirection: "ASC",
-    //     category: "FEMININO",
-    //     subCategorySold: { eg: { subCategory: "CALÇADOS", sold: 0 } },
-    //   },
-    // });
-    // setQuerie({
-    //   querie: "productsByCategorySubCategorySold",
-    //   values: {
-    //     sortDirection: "ASC",
-    //     category: "CALÇADOS",
-    // subCategorySold: { eg: { sold: 0 } },
-
-    // subCategorySold: { eg: { sold: 0 } },
-    //   },
-    // });
-
-    // if (!isQuerie) {
-    //   // setQuerie({
-    //   //   querie: "productsByCategorySold",
-    //   // values: {
-    //   //   sortDirection: "DESC",
-    //   //   category: "FEMININO",
-    //   //   sold: { ge: 10 },
-    //   // },
-    //   // });
-
-    //   // setQuerie({
-    //   //   querie: "productsByCategoryCreatedAt",
-    //   //   values: {
-    //   //     sortDirection: "DESC",
-    //   //     category: "FEMININO",
-    //   //     createdAt: { ge: initial_date },
-    //   //   },
-    //   // });
-    // }
-    console.log(querie);
+    setQuerie({
+      querie: "productsByCategorySold",
+      values: {
+        sortDirection: "DESC",
+        category: "FEMININO",
+        sold: { ge: 0 },
+      },
+    });
     setIsQuerie(true);
-  }, [querie]);
+  }, []);
 
   return (
     <div>
-      <OptionsDrw />
+      <HeaderFilters title="Calçados" />
 
-      <div
-        className={css({
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        })}
-      >
-        <div>
-          <HeadingMedium marginBottom="5px">Calçados</HeadingMedium>
-          <LabelSmall>Mais vendidos</LabelSmall>
-        </div>
-        <Button
-          onClick={() => setIsDrwOptions(true)}
-          kind={KIND.secondary}
-          size={SIZE.default}
-          shape={SHAPE.default}
-        >
-          Filtros
-        </Button>
-      </div>
-
-      {querie || true ? (
-        <Products
-          querie={querie.querie ? querie.querie : "productsByCategorySold"}
-          values={
-            querie.querie
-              ? querie.values
-              : {
-                  sortDirection: "DESC",
-                  category: "FEMININO",
-                  sold: { ge: 10 },
-                }
-          }
-        />
-      ) : null}
-
-      {/* {isQuerie ? (
+      {isQuerie ? (
         <Products querie={querie.querie} values={querie.values} />
-      ) : null} */}
+      ) : null}
     </div>
   );
 };
