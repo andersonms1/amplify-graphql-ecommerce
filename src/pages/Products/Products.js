@@ -30,15 +30,17 @@ import AppContext from "../../context/AppContext";
 import HeaderContext from "../../context/HeaderContext";
 import { Small, Medium, Large } from "./MediaQueriesContainers";
 import ContentLoader from "react-content-loader";
-import { PHOTO_HILL } from "../../assets/imgs/";
+import { LogoAdidas } from "../../assets/imgs/home";
 import { HandleLoad, Wrapper, WrapperLoayalty } from "../../components";
 import { handleLoad } from "../../utils";
 import useResizeObserver from "use-resize-observer";
 import { Button } from "baseui/button";
+import { StyledSpinnerNext } from "baseui/spinner";
 
 function Products(props) {
   const [css, theme] = useStyletron();
   let history = useHistory();
+  const [handleImg, setHandleImg] = useState();
   const [imgsLoadCounter, setImgsLoadCounter] = useState(0);
   const [imgsDidLoad, setImgsDidLoad] = useState(false);
   const [cardHeight, setCardHeight] = useState();
@@ -46,9 +48,10 @@ function Products(props) {
   const {
     products,
     loading,
+    setLoading,
     getProducts,
     page,
-    didGetProductsLoad,
+    getProductsImgs,
   } = useContext(AppContext);
 
   const { querie, setQuerie } = useContext(HeaderContext);
@@ -72,7 +75,11 @@ function Products(props) {
   useEffect(() => {
     // console.log(querie);
     // console.log(products);
+    setImgsDidLoad(false);
+    setLoading(true);
     getProducts({ querie });
+
+    // setImgsDidLoad(true);
   }, [page, querie]);
 
   const { ref } = useResizeObserver({
@@ -94,7 +101,11 @@ function Products(props) {
         );
       });
     } else {
-      return null;
+      return (
+        <FlexGridItem>
+          <StyledSpinnerNext $size="large" />
+        </FlexGridItem>
+      );
     }
   }
 
@@ -150,6 +161,9 @@ function Products(props) {
             <div>
               <StyledHeaderImage
                 src={item.link}
+                // src={loading ? LogoAdidas : item.link}
+
+                // src={item.isLoading ? LogoAdidas : item.link}
                 // height={`${cardHeight}px`}
                 // width="100%"
                 style={{
@@ -158,14 +172,22 @@ function Products(props) {
                   height: `${cardHeight}px`,
                 }}
                 onLoad={() => {
-                  setImgsLoadCounter(imgsLoadCounter + 1);
+                  console.log("Counter");
+                  console.log(imgsLoadCounter);
+                  console.log(products[`${querie.querie}`].length - 1);
+                  console.log(item);
+                  console.log();
 
-                  if (
-                    imgsLoadCounter ===
-                    products[`${querie.querie}`].length - 1
-                  ) {
-                    setImgsDidLoad(true);
-                  }
+                  /* New Method */
+
+                  /* Old method */
+                  // setImgsLoadCounter(imgsLoadCounter + 1);
+                  // if (
+                  //   imgsLoadCounter ===
+                  //   products[`${querie.querie}`].length - 1
+                  // ) {
+                  //   setImgsDidLoad(true);
+                  // }
                 }}
                 alt="Imagem do produto"
               />
@@ -269,12 +291,13 @@ function Products(props) {
   return (
     <div>
       {querie?.querie ? (
-        handleLoad(
-          handleGrid(renderGrid(querie)),
-          handleGrid(renderContentLoader()),
-          imgsDidLoad
-        )
+        handleGrid(renderGrid())
       ) : (
+        // handleLoad(
+        //   handleGrid(renderGrid(querie)),
+        //   handleGrid(renderContentLoader()),
+        //   imgsDidLoad
+        // )
         // renderGrid(querie)
         <p>Querie not seted</p>
       )}

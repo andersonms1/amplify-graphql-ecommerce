@@ -6,7 +6,7 @@ import { Checkout, Cart } from "./pages/Payment";
 import { Grid, Cell } from "baseui/layout-grid";
 import { Home, CreateUpdate } from "./pages";
 import Details from "./pages/Products/Details/Details.js";
-import { ShowCase, Calçados } from "./pages/Products/ShowCase/";
+import { Bolsas, Calçados } from "./pages/Products/ShowCase/";
 import History from "./pages/User/History";
 import Orders from "./pages/Orders/Orders";
 import OrdersDetails from "./pages/Orders/OrdersDetails";
@@ -26,6 +26,7 @@ function App() {
       <Switch>
         <Route exact path={"/"} component={Home} />
         <Route exact path={"/calçados"} component={Calçados} />
+        <Route exact path={"/bolsas"} component={Bolsas} />
         <Route exact path={"/products/:id"} component={Details} />
         <Route exact path={"/products/"} component={CreateUpdate} />
         <Route exact path={"/checkout/"} component={Checkout} />

@@ -7,9 +7,10 @@ const AppContext = createContext({
   loading: false,
   current: 0,
   page: 0,
-  didGetProductsLoad: false,
+  // didGetProductsLoad: false,
   getById: (id) => {},
   getProducts: () => {},
+  setLoading: (isLoading) => {},
   post: (files, data) => {},
   setCurrentStep: () => {},
   setPage: () => {},
@@ -17,6 +18,7 @@ const AppContext = createContext({
   updateItems: () => {},
   uploadPhotos: () => {},
   postOrder: () => {},
+  getProductsImgs: () => {},
 });
 
 export default AppContext;

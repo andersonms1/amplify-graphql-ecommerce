@@ -131,7 +131,7 @@ function Home() {
           <HeadingMedium>Categorias em destaque</HeadingMedium>
         </Cell>
         <Cell span={[4, 4, 6]}>
-          <div className={container}>
+          <div className={container} onClick={() => history.push("/bolsas")}>
             <div>
               <HeadingSmall marginBottom={theme.sizing.scale600}>
                 Bolsas

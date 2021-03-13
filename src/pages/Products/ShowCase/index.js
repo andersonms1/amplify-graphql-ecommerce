@@ -1,4 +1,4 @@
-import ShowCase from "./ShowCase";
-import Calçados from "./Calçados";
+export { default as Calçados } from "./Calçados";
+export { default as Bolsas } from "./Bolsas";
 
-export { ShowCase, Calçados };
+// export { ShowCase, Calçados };

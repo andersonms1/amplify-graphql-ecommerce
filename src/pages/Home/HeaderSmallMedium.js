@@ -99,7 +99,14 @@ function HeaderSmallMedium() {
             <ListItem
               // artwork={(props) => <Receipt {...props} />}
               // artworkSize={ARTWORK_SIZES.MEDIUM}
-              endEnhancer={() => <ChevronRight />}
+              endEnhancer={() => (
+                <ChevronRight
+                  onClick={() => {
+                    history.push("pedidos");
+                    setIsDrwMenu(false);
+                  }}
+                />
+              )}
               // sublist
             >
               <ListItemLabel>Meus pedidos </ListItemLabel>
@@ -115,8 +122,7 @@ function HeaderSmallMedium() {
             </ListItem>
 
             <ProductItem>Academia</ProductItem>
-            <ProductItem link="/acessórios">Acessórios</ProductItem>
-            <ProductItem link="/praia">Praia</ProductItem>
+            <ProductItem link="/bolsas">Bolsas</ProductItem>
             <ProductItem link="/calçados">Calçados</ProductItem>
           </ul>
         </Drawer>

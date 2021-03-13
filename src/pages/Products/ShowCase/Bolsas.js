@@ -5,7 +5,7 @@ import HeaderContext from "../../../context/HeaderContext";
 import { FEMININO, subCategorys } from "../../../utils/CATEGORYSUBCATEGORYS";
 import HeaderFilters from "./HeaderFilters";
 
-const Calçados = () => {
+const Bolsas = () => {
   const { querie, setQuerie } = useContext(HeaderContext);
   const [isQuerie, setIsQuerie] = useState(false);
 
@@ -25,7 +25,7 @@ const Calçados = () => {
 
   return (
     <div>
-      <HeaderFilters title="Calçados" />
+      <HeaderFilters title="Bolsas" />
 
       {isQuerie ? (
         <Products querie={querie.querie} values={querie.values} />
@@ -34,4 +34,4 @@ const Calçados = () => {
   );
 };
 
-export default Calçados;
+export default Bolsas;

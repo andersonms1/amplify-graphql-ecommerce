@@ -190,25 +190,34 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const setLoading = (loading) => {
+    setAppContext((prevState) => {
+      return {
+        ...prevState,
+        loading,
+      };
+    });
+  };
+
   const getProducts = async (args) => {
     const { querie, values } = args.querie;
-    // alert("here");
-    // console.log(querie);
-    // console.log(values);
+
     try {
       const { data } = await stringToQuery(querie, values);
       const { items } = data[`${querie}`];
+
       await Promise.all(
         await items.map(async (i) => {
           const image = await Storage.get(i.photos[0].key, {
             level: "public",
           });
+          i.isLoading = false;
           i.didImgLoad = false;
           return (i.link = image);
         })
       );
+      // setLoading(false);
       console.log(items);
-
       items.map((i) => console.log(i.createdAt));
 
       setAppContext((prevState) => {
@@ -216,12 +225,49 @@ const AppProvider = ({ children }) => {
         _products[`${querie}`] = items;
         return {
           ...prevState,
+          loading: false,
           products: { ..._products },
         };
       });
     } catch (e) {
       new Error(e);
     }
+  };
+
+  const getProductsImgs = async (querie) => {
+    // console.log(products);
+
+    const getImgs = async (_products) => {
+      await Promise.all(
+        await _products.map(async (i) => {
+          const image = await Storage.get(i.photos[0].key, {
+            level: "public",
+          });
+          i.isLoading = false;
+          i.didImgLoad = false;
+          return (i.link = image);
+        })
+      );
+    };
+
+    setAppContext((prevState) => {
+      // const _products = {};
+      // _products[`${querie}`] = items;
+
+      console.log(prevState?.products[querie]);
+
+      if (prevState?.products[querie]) {
+        getImgs(prevState?.products[querie]);
+      }
+
+      console.log(prevState?.products[querie]);
+
+      return {
+        ...prevState,
+        // loading: false,
+        // products: { ..._products },
+      };
+    });
   };
 
   const setCurrentStep = (goTo) => {
@@ -335,18 +381,20 @@ const AppProvider = ({ children }) => {
 
   const appState = {
     items: {},
-    products: { listProducts: [] }, //
+    products: {}, //
     product: null, //was null
-    loading: false,
+    loading: true,
     current: 0,
     page: 0,
     updateItems,
     getById,
+    setLoading,
     getProducts, //
     post,
     setCurrentStep,
     setPage,
     uploadPhotos,
+    getProductsImgs,
   };
 
   const [appContext, setAppContext] = useState(appState);

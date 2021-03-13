@@ -66,7 +66,8 @@ To implement
 ✔ Create orders view page (admin and user) @done(21-02-09 11:04)
 ✔ Create branding page @done(21-02-11 11:31)
 ✔ Create footer @done(21-02-11 11:31)
-☐ Query for the home page, and correct padding
+✔ Query for the home page, and correct padding @done(21-02-16 20:20)
+
 ☐ On add item to cart open drawer
 ☐ Remove icons from addProductsModal. And separete delete?
 

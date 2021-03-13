@@ -27,6 +27,8 @@ import { handleLoad } from "../../../utils";
 import { setObj, getObj } from "../../../utils/localStorage";
 import { FormControl } from "baseui/form-control";
 import { useStyles } from "./useStyles";
+import { LogoAdidas } from "../../../assets/imgs/home";
+import { StyledSpinnerNext } from "baseui/spinner";
 import Loader from "./Loader";
 
 function Details() {
@@ -52,11 +54,14 @@ function Details() {
   const [size, setSize] = useState();
   const [quantity, setQuantity] = useState();
 
+  const [isLoading, setIsloading] = useState(true);
+  const [image, setImage] = useState();
+
   useEffect(() => {
     getById(id);
     setCart(getObj("cart"));
     // console.log(JSON.stringify(getObj("cart")));
-
+    setIsloading(false);
     setImgsDidLoad(false);
   }, [id]);
 
@@ -100,17 +105,18 @@ function Details() {
         return (
           <div key={index}>
             <img
-              src={image.link}
+              src={image ? image.link : LogoAdidas}
               alt="Foto do produto"
               /* The carousel and baseui don't "talk", very well. 
               So the photos were appearing first.  */
               width="100%"
-              style={
-                image.loaded && imgsDidLoad
-                  ? { display: "inline" }
-                  : { display: "none" }
-              }
+              // style={
+              //   image.loaded && imgsDidLoad
+              //     ? { display: "inline" }
+              //     : { display: "none" }
+              // }
               onLoad={() => {
+                setImage(image.link);
                 image.loaded = true;
                 setImgsLoadCounter(imgsLoadCounter + 1);
                 if (imgsLoadCounter === product.photos.length - 1) {
@@ -123,13 +129,13 @@ function Details() {
         );
       });
     } else {
-      return null;
+      return <StyledSpinnerNext $size="large" />;
     }
   };
 
   const renderContent = () => {
-    if (!product) {
-      return null;
+    if (!product || isLoading) {
+      return <StyledSpinnerNext $size="large" />;
     } else {
       return (
         <>
@@ -274,7 +280,8 @@ function Details() {
   return (
     <>
       <Block paddingBottom="10px" />
-      {handleLoad(renderContent(), <Loader />, imgsDidLoad)}
+      {renderContent()}
+      {/* {imgsDidLoad ? renderContent() : <Loader />} */}
     </>
   );
 }

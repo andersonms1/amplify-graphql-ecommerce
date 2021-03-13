@@ -28,28 +28,14 @@ function Orders() {
 
   const orders = [
     {
-      data,
+      data: "18/02/2021",
       products,
       address,
       total,
       status: all_status.wait_payment_confimation,
     },
     {
-      data,
-      products,
-      address,
-      total,
-      status: all_status.delivered_post_office,
-    },
-    {
-      data,
-      products,
-      address,
-      total,
-      status: all_status.delivered_post_office,
-    },
-    {
-      data,
+      data: "05/01/2021",
       products,
       address,
       total,
